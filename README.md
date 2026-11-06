@@ -19,13 +19,15 @@ Planning and research only. Application implementation has not started and requi
 | Document | Purpose |
 | --- | --- |
 | [AGENTS.md](AGENTS.md) | Durable context and working instructions |
-| [planning.md](planning.md) | Product requirements, constraints, and open decisions |
 | [design.md](design.md) | Preliminary screen flow and low-fidelity wireframes |
 | [references.md](references.md) | Incident evidence, report summary, and draft Harvard references |
-| [todo.md](todo.md) | Detailed assessment and delivery checklist |
 | [brief.pdf](brief.pdf) | Original assessment brief |
 
-GitHub issues track deliverable-sized work and dependencies. The detailed checklist remains in `todo.md`; keep both aligned. Creating an implementation issue does not authorize starting it.
+## Source of Truth
+
+[GitHub issues](https://github.com/lipex360x/Heaven-Access/issues) are the **Source of Truth (SoT)** for scope, requirements decisions, tasks, dependencies, acceptance criteria, and progress. The previous `todo.md` and `planning.md` have been migrated into issues and removed to avoid parallel tracking.
+
+Local Markdown files contain supporting research/design and working instructions. Link them from relevant issues; keep actionable status and decisions in GitHub. Creating an implementation issue does not authorize starting development.
 
 ## Assessment target
 

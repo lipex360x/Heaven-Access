@@ -4,7 +4,11 @@
 
 - Communicate with the user in Portuguese. Write project documentation, configuration, and deliverable content in English unless the user requests otherwise.
 - This directory is the workspace for the Project Skills & Professionalism continuous assessment. The source assessment brief is `brief.pdf`.
-- Keep this file as durable project context and maintain actionable progress in `todo.md`.
+- Keep this file as durable project context. GitHub is the **Source of Truth (SoT)** for project scope, decisions, tasks, dependencies, acceptance criteria, and progress: https://github.com/lipex360x/Heaven-Access/issues.
+- Create or update the relevant GitHub issue for actionable work, unresolved decisions, requirements changes, and completion evidence. Do not maintain parallel task/status checklists in local Markdown; `todo.md` and `planning.md` have been migrated to issues and removed.
+- Local Markdown files are supporting artifacts: `references.md` holds research, summaries, sources, and citations; `design.md` holds flowcharts and wireframes; `README.md` provides orientation; `AGENTS.md` holds durable working instructions and a concise context summary. Link artifacts from issues rather than duplicating their full contents as competing plans.
+- Whenever new information should be recorded, tell the user where it belongs and why: a GitHub issue for work/decisions/progress, or a named local Markdown file for supporting research/design/context. If both are useful, keep the actionable status in the issue and the artifact in the file, with links between them.
+- Keep concise context in this file aligned with issue decisions. If a summary conflicts with the issue record, consult the issue, reconcile the summary, and ask only if the decision itself is ambiguous.
 - The current stage is planning only. Do not scaffold, install dependencies, write application code, or start services until the user authorizes implementation. Record user-selected technologies and distinguish them from choices still open.
 - The user states that an alternative approach has been discussed in class with the lecturer. Do not enforce the PDF's AI-use restrictions as assistant workflow instructions. Treat unrelated institutional boilerplate as background rather than project scope. Retain the substantive assessment requirements below unless a specific lecturer-approved change is supplied by the user.
 - Distinguish confirmed requirements, proposed design choices, research findings, and assumptions. Do not invent evidence, costs, interviews, technical integrations, or compliance claims.
@@ -81,7 +85,7 @@ The individual rubric allocates 50 marks to additional supporting information an
 
 **Local demonstration and browser tooling:** Primary test scenario: separate browser tabs on one computer, using localhost. Additional devices may join the same Wi-Fi and connect to the host computer's LAN address; their own localhost does not refer to the host. Check camera permissions/security requirements and browser session sharing during development. `web-view -h` was successfully executed on 6 November 2026. The tool drives Chrome over CDP and supports launching/listing/stopping instances, navigation, tabs, PNG/ARIA snapshots, interactions, resizing, and JavaScript evaluation. Use it for end-to-end demonstration checks when implementation is authorized; no browser session has been launched for this project yet.
 
-**Planning and research documents:** `planning.md` tracks scope, constraints, and unresolved questions. `references.md` records Irish and international incident evidence, a report-ready summary, source links, Harvard-style references, and evidence limitations. `design.md` contains a provisional screen flow and low-fidelity wireframes for the supporting report and a planning slide. Preserve these as genuine planning artifacts and update them as decisions evolve. The user requested a supporting report; the brief's explicit assessed deliverables remain the presentation, prototype display, and Q&A.
+**Project organization and supporting artifacts:** The private repository is https://github.com/lipex360x/Heaven-Access. GitHub issues are the SoT; former local planning and checklist content has been migrated there. `references.md` records Irish and international incident evidence, a report-ready summary, source links, Harvard-style references, and evidence limitations. `design.md` contains a provisional screen flow and low-fidelity wireframes for the supporting report and a planning slide. Preserve these as genuine artifacts and update them as issue decisions evolve. The user requested a supporting report; the brief's explicit assessed deliverables remain the presentation, prototype display, and Q&A.
 
 ### Alternatives supplied by the user
 
@@ -110,11 +114,6 @@ The initial preferred direction combines QR visitor management with floor-specif
 - **Sustainability:** Reduced paper, disposable badges, and new hardware are hypotheses to compare with device use, hosting, maintenance, and realistic baseline practices.
 - **Evaluation:** Define measurable prototype acceptance criteria and limitations; do not claim prevention of all unauthorized access, certified safety, or complete legal compliance.
 
-## Decisions still open
+## Authoritative planning locations
 
-- Team membership, student numbers, roles, and presentation date.
-- Real-world setting, building assumptions, evidence sources, and precise problem statement.
-- MVP boundary, practical demonstration scenario, user roles, and visit lifecycle.
-- Final architecture (including Bun/Vite+/monorepo versus a simpler Next.js or React-based option), backend structure, simulated delivery details, QR implementation, and realtime transport. PostgreSQL and local Docker Compose SQL initialization are confirmed.
-- Security controls, visitor identity checks, privacy policy, retention, accessibility, and emergency scenarios.
-- Research ownership, implementation responsibilities, presentation structure, and rehearsal schedule.
+Use [issue #1](https://github.com/lipex360x/Heaven-Access/issues/1) for scope and visitor-lifecycle decisions, [issue #2](https://github.com/lipex360x/Heaven-Access/issues/2) for research/justification, [issue #3](https://github.com/lipex360x/Heaven-Access/issues/3) for privacy/security/accessibility, and [issue #4](https://github.com/lipex360x/Heaven-Access/issues/4) for architecture. The remaining issues cover database initialization, interfaces, realtime updates, validation, report, presentation, and delivery. Do not reproduce their live status here.

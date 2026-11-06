@@ -2,6 +2,8 @@
 
 Research accessed on **6 November 2026**. This is an initial evidence register for the supporting report, presentation, and Q&A. Summaries are paraphrases. These examples establish possible consequences and control weaknesses; they do not establish the frequency of unauthorized access in Irish office buildings or prove that Heaven Access would have prevented an incident.
 
+[GitHub issues](https://github.com/lipex360x/Heaven-Access/issues) are the Source of Truth for research tasks, decisions and completion. This file stores evidence and bibliography material; verification work is tracked in the research issue.
+
 ## Report-ready background summary
 
 Physical access failures can affect personal safety, business assets, and information security. In Ireland, an unauthorized entry into Áras an Uachtaráin in September 2018 resulted in an investigation and a financial disciplinary sanction reported in 2021 (Kenny, 2021). A 2009 burglary at Bord Gáis offices involved an unencrypted laptop holding bank details for 75,000 customers, illustrating how equipment theft can expose personal information (RTÉ, 2009). More recently, reporting on Dublin office burglaries described stolen equipment, property damage, and businesses unable to open the next morning (Reid, 2026).

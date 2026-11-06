@@ -2,6 +2,8 @@
 
 Planning draft, 6 November 2026. These are low-fidelity artifacts for discussion, the supporting report, and a presentation slide. They are not implemented screens or a final specification. Fields, roles, renewal rules, and the time window remain subject to review.
 
+[GitHub issues](https://github.com/lipex360x/Heaven-Access/issues) are the Source of Truth for design decisions, review tasks and progress. This file stores the visual planning artifact, not an independent backlog.
+
 ## Screen flow
 
 ```mermaid
