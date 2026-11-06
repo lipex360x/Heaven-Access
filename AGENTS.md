@@ -41,7 +41,7 @@
 | `owner:marcia` | Marcia Cristina Schafer dos Santos |
 | `owner:felipe` | Felipe Borges Bambirra |
 
-- Use exactly one primary-owner label on claimed work. No owner label means unclaimed. Do not assign an owner on someone's behalf without an agreed allocation; the initial cards are left available for team discussion.
+- Use exactly one primary-owner label to identify the planned lead. No owner label means unallocated. A label does not mean work has started: the lead confirms the handoff/start in the issue before moving to In Progress. Keep the backlog small, targeting two or three broad issues per member with short acceptance checklists rather than many separate microtasks.
 - Before claiming an issue, check its latest comments, labels, dependencies, board status, and existing branches/PRs. Comment that you are taking it and apply the agreed owner label before moving it to In Progress.
 - Use GitHub Assignees as well when a member's GitHub username is confirmed; do not infer accounts from student emails. Labels organize ownership and do not grant repository/project permissions.
 - Record additional contributors and handoffs in issue comments. Before taking over someone else's work, agree the handoff and note the current branch, remaining work and relevant evidence.
@@ -57,7 +57,7 @@
 - Keep `README.md`, supporting artifacts and these instructions aligned with accepted issue decisions. Do not duplicate live status in local files.
 - These coordination rules do not authorize application implementation while the project remains in planning; await the user's explicit instruction to begin development.
 - `docs/team.md` keeps GitHub accounts in the member table alongside student details; use confirmed handles only. Cris is Marcia Cristina Schafer dos Santos (`Cris-Schafer`), Dani is Daniela, and Bella is Isabella.
-- `docs/work-allocation.md` explains proposed parallel workstreams and handoffs. Accepted assignments and changes belong in issue #1 and the affected owner labels. Bella's legal background supports legal/ethical analysis; layout belongs with Cris per the user's direction. Dani contributed the initial research/alternatives and QR-plus-elevator proposal; preserve that credit in the research and planning narrative.
+- `docs/work-allocation.md` explains the guided parallel workstreams and backup handoffs. Felipe owns infrastructure/security/core integration; Dani works on operational forms and the guided test walkthrough rather than infrastructure; Cris owns simple layouts and a lightweight slide deck; Bella contributes focused legal/text review with shared report preparation and explicit backup coverage. Record availability and handoff needs professionally, without personal assessments. Accepted assignments and changes belong in issue #1 and the affected owner labels. Bella's legal background supports legal/ethical analysis; layout belongs with Cris per the user's direction. Dani contributed the initial research/alternatives and QR-plus-elevator proposal; preserve that credit in the research and planning narrative.
 
 ## Assessment requirements extracted from the brief
 
@@ -161,4 +161,4 @@ The initial preferred direction combines QR visitor management with floor-specif
 
 ## Authoritative planning locations
 
-Use [issue #1](https://github.com/lipex360x/Heaven-Access/issues/1) for scope and visitor-lifecycle decisions, [issue #2](https://github.com/lipex360x/Heaven-Access/issues/2) for research/justification, [issue #3](https://github.com/lipex360x/Heaven-Access/issues/3) for privacy/security/accessibility, and [issue #4](https://github.com/lipex360x/Heaven-Access/issues/4) for architecture. The remaining issues cover database initialization, interfaces, realtime updates, validation, report, presentation, and delivery. Do not reproduce their live status here.
+Use [issue #1](https://github.com/lipex360x/Heaven-Access/issues/1) for scope, architecture and local setup, [issue #3](https://github.com/lipex360x/Heaven-Access/issues/3) for privacy/legal review, and [issue #12](https://github.com/lipex360x/Heaven-Access/issues/12) for evidence and the concise report. The other active issues cover operational screens (#5), layout/mobile pass (#8), QR/device/realtime integration (#9), guided verification (#11), and simple slides/rehearsal/delivery (#13). Earlier issues #2, #4, #6, #7, #10 and #14 were consolidated, not completed. Do not reproduce live status here. Keep SoT policy in these shared instructions instead of repeating it in every issue body.
