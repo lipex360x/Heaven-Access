@@ -22,6 +22,7 @@
 - Issues hold scope, decisions, dependencies, acceptance criteria and evidence. The board's `Status` field holds workflow status; it is a view of the same issues, not a separate backlog. Keep the issue's open/closed state consistent with the board.
 - Cards are sorted by ascending `Execution Order`. Follow this sequence and each issue's dependencies before starting dependent work. Independent research, privacy analysis and report/slide drafts can overlap; the order is not a requirement to serialize all group work. Update the field in GitHub if the team agrees to change the sequence.
 - Add every new project issue to this board and give it an appropriate `Execution Order` and status. Do not create a local task/status tracker.
+- Label post-MVP ideas `future`, keep them in the board's separate future-improvements view, and exclude them from the current execution view/deadline. `docs/future-improvements.md` contains report-ready discussion of optional facial verification for regular occupants, with pros/cons; including that discussion in the current report does not authorize biometric implementation.
 
 ### Board states
 

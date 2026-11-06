@@ -25,6 +25,7 @@ Planning and research only. Application implementation has not started and requi
     ├── design.md
     ├── environment-setup.md
     ├── flow.md
+    ├── future-improvements.md
     ├── references.md
     ├── team.md
     └── work-allocation.md
@@ -40,6 +41,7 @@ Supporting documents live in `docs/`; orientation and agent instructions remain 
 | [environment-setup.md](docs/environment-setup.md) | Initial agent prompt for macOS/Windows readiness and shared tool versions |
 | [design.md](docs/design.md) | Low-fidelity screen wireframes |
 | [flow.md](docs/flow.md) | Visitor journey overview and detailed flowchart |
+| [future-improvements.md](docs/future-improvements.md) | Future options and their benefits, risks, and limitations |
 | [references.md](docs/references.md) | Incident evidence, report summary, and draft Harvard references |
 | [brief.pdf](docs/brief.pdf) | Original assessment brief |
 
