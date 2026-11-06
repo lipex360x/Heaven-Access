@@ -19,9 +19,9 @@ Planning and research only. Application implementation has not started and requi
 | Document | Purpose |
 | --- | --- |
 | [AGENTS.md](AGENTS.md) | Durable context and working instructions |
-| [design.md](design.md) | Preliminary screen flow and low-fidelity wireframes |
-| [references.md](references.md) | Incident evidence, report summary, and draft Harvard references |
-| [brief.pdf](brief.pdf) | Original assessment brief |
+| [design.md](docs/design.md) | Preliminary screen flow and low-fidelity wireframes |
+| [references.md](docs/references.md) | Incident evidence, report summary, and draft Harvard references |
+| [brief.pdf](docs/brief.pdf) | Original assessment brief |
 
 ## Source of Truth
 
