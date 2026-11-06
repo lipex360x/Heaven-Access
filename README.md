@@ -23,6 +23,7 @@ Planning and research only. Application implementation has not started and requi
 └── docs/
     ├── brief.pdf
     ├── design.md
+    ├── environment-setup.md
     ├── flow.md
     ├── references.md
     ├── team.md
@@ -36,6 +37,7 @@ Supporting documents live in `docs/`; orientation and agent instructions remain 
 | Document | Purpose |
 | --- | --- |
 | [AGENTS.md](AGENTS.md) | Durable context and working instructions |
+| [environment-setup.md](docs/environment-setup.md) | Initial agent prompt for macOS/Windows readiness and shared tool versions |
 | [design.md](docs/design.md) | Low-fidelity screen wireframes |
 | [flow.md](docs/flow.md) | Visitor journey overview and detailed flowchart |
 | [references.md](docs/references.md) | Incident evidence, report summary, and draft Harvard references |
@@ -50,5 +52,7 @@ Use the [team execution board](https://github.com/users/lipex360x/projects/19/vi
 Local Markdown files contain supporting research/design and working instructions. Link them from relevant issues; keep actionable status and decisions in GitHub. Creating an implementation issue does not authorize starting development.
 
 Each active issue includes a copyable **Agent handoff prompt** for ChatGPT/Claude. Use it to establish task-specific context or refresh an existing conversation incrementally; language and conversation style are optional preferences.
+
+For a new machine, start with the [environment onboarding prompt](docs/environment-setup.md#copyable-initial-prompt), then use the prompt in your issue. It checks tools and repository access before suggesting installations; application startup remains dependent on the committed run instructions once implementation exists.
 
 Start with [MVP decisions and local setup (#1)](https://github.com/lipex360x/Heaven-Access/issues/1). The board groups the remaining work into focused team workstreams covering interfaces, access validation, privacy, verification, and supporting materials.
