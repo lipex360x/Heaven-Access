@@ -49,4 +49,6 @@ Use the [team execution board](https://github.com/users/lipex360x/projects/19/vi
 
 Local Markdown files contain supporting research/design and working instructions. Link them from relevant issues; keep actionable status and decisions in GitHub. Creating an implementation issue does not authorize starting development.
 
+Each active issue includes a copyable **Agent handoff prompt** for ChatGPT/Claude. Use it to establish task-specific context or refresh an existing conversation incrementally; language and conversation style are optional preferences.
+
 Start with [MVP decisions and local setup (#1)](https://github.com/lipex360x/Heaven-Access/issues/1). The board groups the remaining work into focused team workstreams covering interfaces, access validation, privacy, verification, and supporting materials.
