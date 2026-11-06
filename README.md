@@ -49,4 +49,4 @@ Use the [team execution board](https://github.com/users/lipex360x/projects/19/vi
 
 Local Markdown files contain supporting research/design and working instructions. Link them from relevant issues; keep actionable status and decisions in GitHub. Creating an implementation issue does not authorize starting development.
 
-Start with [MVP scope and visitor lifecycle (#1)](https://github.com/lipex360x/Heaven-Access/issues/1) and [architecture selection (#4)](https://github.com/lipex360x/Heaven-Access/issues/4). The remaining issues cover research, privacy, implementation, verification, report, presentation, and delivery.
+Start with [MVP decisions and local setup (#1)](https://github.com/lipex360x/Heaven-Access/issues/1). The board groups the remaining work into focused team workstreams covering interfaces, access validation, privacy, verification, and supporting materials.
