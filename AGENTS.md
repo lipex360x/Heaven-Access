@@ -59,6 +59,13 @@
 - `docs/team.md` keeps GitHub accounts in the member table alongside student details; use confirmed handles only. Cris is Marcia Cristina Schafer dos Santos (`Cris-Schafer`), Dani is Daniela, and Bella is Isabella.
 - `docs/work-allocation.md` explains the guided parallel workstreams and backup handoffs. Felipe owns infrastructure/security/core integration; Dani works on operational forms and the guided test walkthrough rather than infrastructure; Cris owns simple layouts and a lightweight slide deck; Bella contributes focused legal/text review with shared report preparation and explicit backup coverage. Record availability and handoff needs professionally, without personal assessments. Accepted assignments and changes belong in issue #1 and the affected owner labels. Bella's legal background supports legal/ethical analysis; layout belongs with Cris per the user's direction. Dani contributed the initial research/alternatives and QR-plus-elevator proposal; preserve that credit in the research and planning narrative.
 
+### Agent handoff prompts
+
+- Each active issue includes an `Agent handoff prompt` with a copyable text block for a new or existing assistant conversation. Keep its task focus and targeted reading aligned when scope or responsibilities change; the current issue and accepted decisions take precedence over a pasted prompt snapshot.
+- Reuse reliable context already available in the conversation or an explicit handoff. Check relevant issue updates and repository revisions, then read only changed or missing information needed for the task. Do an initial orientation when context is absent; never claim memory of another conversation or access to private files that is unavailable.
+- Conversation language and style are optional personal preferences within the prompt; Portuguese is the default, and project documentation remains English unless requested otherwise. Do not encode personal mannerisms or stereotypes into shared prompts.
+- A handoff prompt requests orientation first and does not itself authorize application implementation. Preserve explicit task authorization already present in the session, follow the current project stage, and keep a concise in-chat checkpoint rather than a parallel local tracker.
+
 ## Assessment requirements extracted from the brief
 
 | Item | Requirement |
