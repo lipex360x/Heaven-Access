@@ -6,31 +6,7 @@ Planning draft, 6 November 2026. These are low-fidelity artifacts for discussion
 
 ## Screen flow
 
-```mermaid
-flowchart TD
-    A[Public visitor registration] --> B[Privacy information and requested consent step]
-    B --> C[Submit visit request]
-    C --> D[Mobile visitor page: awaiting approval]
-    C --> E[Staff login and pending visit list]
-    E --> F{Staff decision}
-    F -->|Approve| G[Issue approved visitor pass]
-    F -->|Reject| H[Visitor page: request rejected]
-    G --> I[Mobile visitor page: QR and validity window]
-    I --> J[Camera scan at locked access simulator]
-    T[Controlled demo clock] -.-> K
-    J --> K{Backend validates approval, pass, destination and time}
-    K -->|Valid| L[Simulated access granted]
-    K -->|Invalid or expired| M[Remain locked and show reason]
-    M --> N[Request staff assistance]
-    N --> O{Authorized staff action}
-    O -->|Approve replacement under agreed rules| P[Replace credential and invalidate old QR]
-    P --> I
-    O -->|Receptionist manual release| L
-    O -->|Decline| M
-    L --> Q[Return to locked state after agreed interval]
-```
-
-Updates to approval, credential replacement, and device state must appear in the appropriate open tabs without manual refresh. Arrows describe the user journey and shared events; they do not imply that the staff interface is publicly accessible from the registration page. Requesting assistance must not automatically grant access.
+See [flow.md](flow.md) for the presentation overview, detailed visitor journey, validation branches, and receptionist assistance. Keep the flow in that document so the report and slides use the same diagram source.
 
 ## Low-fidelity wireframes
 

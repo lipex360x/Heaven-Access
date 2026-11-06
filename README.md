@@ -23,7 +23,9 @@ Planning and research only. Application implementation has not started and requi
 └── docs/
     ├── brief.pdf
     ├── design.md
-    └── references.md
+    ├── flow.md
+    ├── references.md
+    └── team.md
 ```
 
 Supporting documents live in `docs/`; orientation and agent instructions remain at the root. The application structure will be added after the architecture decision. No application setup or run commands are available yet.
@@ -33,7 +35,8 @@ Supporting documents live in `docs/`; orientation and agent instructions remain 
 | Document | Purpose |
 | --- | --- |
 | [AGENTS.md](AGENTS.md) | Durable context and working instructions |
-| [design.md](docs/design.md) | Preliminary screen flow and low-fidelity wireframes |
+| [design.md](docs/design.md) | Low-fidelity screen wireframes |
+| [flow.md](docs/flow.md) | Visitor journey overview and detailed flowchart |
 | [references.md](docs/references.md) | Incident evidence, report summary, and draft Harvard references |
 | [brief.pdf](docs/brief.pdf) | Original assessment brief |
 
