@@ -36,9 +36,9 @@
 
 | Primary-owner label | Team member |
 | --- | --- |
-| `owner:daniela` | Daniela Alves Paiva da Silva |
+| `owner:dani` | Daniela Alves Paiva da Silva |
 | `owner:bella` | Isabella Maria de Souza Monteiro; use Bella as her preferred short name |
-| `owner:marcia` | Marcia Cristina Schafer dos Santos |
+| `owner:cris` | Marcia Cristina Schafer dos Santos |
 | `owner:felipe` | Felipe Borges Bambirra |
 
 - Use exactly one primary-owner label to identify the planned lead. No owner label means unallocated. A label does not mean work has started: the lead confirms the handoff/start in the issue before moving to In Progress. Keep the backlog small, targeting two or three broad issues per member with short acceptance checklists rather than many separate microtasks.
