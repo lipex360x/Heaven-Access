@@ -16,6 +16,47 @@
 - Distinguish confirmed requirements, proposed design choices, research findings, and assumptions. Do not invent evidence, costs, interviews, technical integrations, or compliance claims.
 - Prefer authoritative sources for technical and legal research. Record source details for Harvard referencing and verify current requirements before making legal claims.
 
+## Shared GitHub workflow
+
+- Repository: https://github.com/lipex360x/Heaven-Access. Private team board: https://github.com/users/lipex360x/projects/19/views/2.
+- Issues hold scope, decisions, dependencies, acceptance criteria and evidence. The board's `Status` field holds workflow status; it is a view of the same issues, not a separate backlog. Keep the issue's open/closed state consistent with the board.
+- Cards are sorted by ascending `Execution Order`. Follow this sequence and each issue's dependencies before starting dependent work. Independent research, privacy analysis and report/slide drafts can overlap; the order is not a requirement to serialize all group work. Update the field in GitHub if the team agrees to change the sequence.
+- Add every new project issue to this board and give it an appropriate `Execution Order` and status. Do not create a local task/status tracker.
+
+### Board states
+
+| Status | Meaning and transition |
+| --- | --- |
+| Backlog | Planned work awaiting selection; check dependencies and scope before claiming. |
+| In Progress | A named owner is actively working on it; add a start comment and branch/PR link when applicable. |
+| Testing | Ready for validation or peer review against acceptance criteria. For research, diagrams and documents, this means content/source review. Record results and return to In Progress if changes are needed. |
+| Done | Acceptance criteria met and review/validation evidence recorded; relevant file changes merged into `main`. Close the issue and set the board status to Done. Do not mark partial work as complete. |
+
+### Ownership and coordination
+
+| Primary-owner label | Team member |
+| --- | --- |
+| `owner:daniela` | Daniela Alves Paiva da Silva |
+| `owner:bella` | Isabella Maria de Souza Monteiro; use Bella as her preferred short name |
+| `owner:marcia` | Marcia Cristina Schafer dos Santos |
+| `owner:felipe` | Felipe Borges Bambirra |
+
+- Use exactly one primary-owner label on claimed work. No owner label means unclaimed. Do not assign an owner on someone's behalf without an agreed allocation; the initial cards are left available for team discussion.
+- Before claiming an issue, check its latest comments, labels, dependencies, board status, and existing branches/PRs. Comment that you are taking it and apply the agreed owner label before moving it to In Progress.
+- Use GitHub Assignees as well when a member's GitHub username is confirmed; do not infer accounts from student emails. Labels organize ownership and do not grant repository/project permissions.
+- Record additional contributors and handoffs in issue comments. Before taking over someone else's work, agree the handoff and note the current branch, remaining work and relevant evidence.
+- Add `blocked` only for an actual impediment, explain it in a comment and link the dependency or decision needed. Keep the current workflow state, then remove the label when resolved; a separate Blocked column is not required.
+
+### Branches, review and synchronization
+
+- For subsequent repository work, start from an up-to-date `main` and use an issue-specific branch such as `feat/7-visitor-registration`, `docs/12-report`, or `fix/9-qr-validation`. Commit or otherwise preserve local work before switching/updating; never overwrite another member's changes.
+- Keep each change focused on its issue. Link the branch/PR and record decisions, progress, blockers and verification evidence in that issue. If simultaneous work touches shared files/interfaces, coordinate there before editing them.
+- Open a pull request targeting `main`, link its issue, explain the behaviour/artifact changed and provide relevant verification. Use a closing reference only when the PR actually completes the entire issue; use a non-closing reference for partial work.
+- Move to Testing when the change is ready for review. Seek another team member's review when possible; record any self-review and its limits if no reviewer is available. Address feedback before marking Done.
+- Merge completed, reviewed changes through the PR, then verify that the issue is closed and the card is Done. Do not assume an automation has synchronized them. For tasks without repository changes, record the reviewed outcome/evidence directly in the issue.
+- Keep `README.md`, supporting artifacts and these instructions aligned with accepted issue decisions. Do not duplicate live status in local files.
+- These coordination rules do not authorize application implementation while the project remains in planning; await the user's explicit instruction to begin development.
+
 ## Assessment requirements extracted from the brief
 
 | Item | Requirement |
