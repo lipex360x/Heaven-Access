@@ -61,6 +61,7 @@
 
 ### Agent handoff prompts
 
+- `docs/environment-setup.md` provides the initial machine-onboarding prompt before issue-specific work. Diagnose the actual OS/shell, repository access, Docker engine/Compose and runtime versions first. Prefer Homebrew for supported macOS packages, native Windows routes such as WinGet, and mise for project Node/Bun versions; distinguish WSL from native Windows and use the agreed committed version pins. Tool readiness is separate from application-run verification. Do not install or start services merely to write/review this prompt.
 - Each active issue includes an `Agent handoff prompt` with a copyable text block for a new or existing assistant conversation. Keep its task focus and targeted reading aligned when scope or responsibilities change; the current issue and accepted decisions take precedence over a pasted prompt snapshot.
 - Reuse reliable context already available in the conversation or an explicit handoff. Check relevant issue updates and repository revisions, then read only changed or missing information needed for the task. Do an initial orientation when context is absent; never claim memory of another conversation or access to private files that is unavailable.
 - Conversation language and style are optional personal preferences within the prompt; Portuguese is the default, and project documentation remains English unless requested otherwise. Do not encode personal mannerisms or stereotypes into shared prompts.
