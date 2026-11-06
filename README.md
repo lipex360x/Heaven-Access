@@ -25,7 +25,8 @@ Planning and research only. Application implementation has not started and requi
     ├── design.md
     ├── flow.md
     ├── references.md
-    └── team.md
+    ├── team.md
+    └── work-allocation.md
 ```
 
 Supporting documents live in `docs/`; orientation and agent instructions remain at the root. The application structure will be added after the architecture decision. No application setup or run commands are available yet.
