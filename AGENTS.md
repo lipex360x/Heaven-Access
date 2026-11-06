@@ -56,6 +56,8 @@
 - Merge completed, reviewed changes through the PR, then verify that the issue is closed and the card is Done. Do not assume an automation has synchronized them. For tasks without repository changes, record the reviewed outcome/evidence directly in the issue.
 - Keep `README.md`, supporting artifacts and these instructions aligned with accepted issue decisions. Do not duplicate live status in local files.
 - These coordination rules do not authorize application implementation while the project remains in planning; await the user's explicit instruction to begin development.
+- `docs/team.md` keeps GitHub accounts in the member table alongside student details; use confirmed handles only. Cris is Marcia Cristina Schafer dos Santos (`Cris-Schafer`), Dani is Daniela, and Bella is Isabella.
+- `docs/work-allocation.md` explains proposed parallel workstreams and handoffs. Accepted assignments and changes belong in issue #1 and the affected owner labels. Bella's legal background supports legal/ethical analysis; layout belongs with Cris per the user's direction. Dani contributed the initial research/alternatives and QR-plus-elevator proposal; preserve that credit in the research and planning narrative.
 
 ## Assessment requirements extracted from the brief
 

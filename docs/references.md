@@ -4,6 +4,12 @@ Research accessed on **6 November 2026**. This is an initial evidence register f
 
 [GitHub issues](https://github.com/lipex360x/Heaven-Access/issues) are the Source of Truth for research tasks, decisions and completion. This file stores evidence and bibliography material; verification work is tracked in the research issue.
 
+## Internal contribution and concept provenance
+
+Felipe confirmed that Dani (Daniela Alves Paiva da Silva) supplied the initial research-led project description: the comparison of turnstiles, QR visitor management, elevator authorization, AI cameras and process-only controls, and the suggested combination of a digital visitor pass with floor-specific elevator authorization. Credit Dani's contribution when explaining how the group developed the idea.
+
+This is an internal team contribution, not a published source. The external sources/methods behind Dani's initial research have not yet been supplied here; factual, legal, cost and sustainability claims still require verification and appropriate references. Do not attribute later incident research in this document to Dani unless she actually performed it.
+
 ## Report-ready background summary
 
 Physical access failures can affect personal safety, business assets, and information security. In Ireland, an unauthorized entry into Áras an Uachtaráin in September 2018 resulted in an investigation and a financial disciplinary sanction reported in 2021 (Kenny, 2021). A 2009 burglary at Bord Gáis offices involved an unencrypted laptop holding bank details for 75,000 customers, illustrating how equipment theft can expose personal information (RTÉ, 2009). More recently, reporting on Dublin office burglaries described stolen equipment, property damage, and businesses unable to open the next morning (Reid, 2026).
