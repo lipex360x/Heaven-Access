@@ -45,7 +45,7 @@ Supporting documents live in `docs/`; orientation and agent instructions remain 
 
 [GitHub issues](https://github.com/lipex360x/Heaven-Access/issues) are the **Source of Truth (SoT)** for scope, requirements decisions, tasks, dependencies, acceptance criteria, and progress. The previous `todo.md` and `planning.md` have been migrated into issues and removed to avoid parallel tracking.
 
-Use the [team execution board](https://github.com/users/lipex360x/projects/19/views/2) to follow `Backlog → In Progress → Testing → Done`. Cards are sorted by `Execution Order`; primary ownership uses `owner:daniela`, `owner:bella`, `owner:marcia`, or `owner:felipe`. Shared collaboration and review conventions are documented in [AGENTS.md](AGENTS.md#shared-github-workflow).
+Use the [team execution board](https://github.com/users/lipex360x/projects/19/views/2) to follow `Backlog → In Progress → Testing → Done`. Cards are sorted by `Execution Order`; primary ownership uses `owner:dani`, `owner:bella`, `owner:cris`, or `owner:felipe`. Shared collaboration and review conventions are documented in [AGENTS.md](AGENTS.md#shared-github-workflow).
 
 Local Markdown files contain supporting research/design and working instructions. Link them from relevant issues; keep actionable status and decisions in GitHub. Creating an implementation issue does not authorize starting development.
 
