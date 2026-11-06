@@ -1,6 +1,6 @@
 # Heaven Access
 
-A visitor-access MVP being planned for the CCT College Dublin Project Skills & Professionalism assessment.
+A visitor-access MVP for managing visit requests and time-limited access to authorized destinations.
 
 Visitors request a visit through a public form. Authorized staff approve it, a mobile-first page displays a time-limited QR pass, and a simulated elevator/gate validates access. A receptionist can grant manual access when appropriate. Changes must propagate between open screens in real time.
 
@@ -45,8 +45,3 @@ Local Markdown files contain supporting research/design and working instructions
 
 Start with [MVP scope and visitor lifecycle (#1)](https://github.com/lipex360x/Heaven-Access/issues/1) and [architecture selection (#4)](https://github.com/lipex360x/Heaven-Access/issues/4). The remaining issues cover research, privacy, implementation, verification, report, presentation, and delivery.
 
-## Assessment target
-
-Submission: **15 November 2026 at 23:59 via Moodle**. Group presentation: **12 minutes maximum, including the prototype demo**, followed by individual Q&A. A supporting report and planning artifacts are also requested by the project team.
-
-All visitor data used in development and demonstrations should be synthetic. Evidence must distinguish observed incidents, inferred risks, and the prototype's actual capabilities.
