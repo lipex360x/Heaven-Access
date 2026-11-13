@@ -42,8 +42,8 @@
 | `owner:cris` | Marcia Cristina Schafer dos Santos |
 | `owner:felipe` | Felipe Borges Bambirra |
 
-- Use exactly one primary-owner label to identify the planned lead. No owner label means unallocated. A label does not mean work has started: the lead confirms the handoff/start in the issue before moving to In Progress. Keep the backlog small, targeting two or three broad issues per member with short acceptance checklists rather than many separate microtasks.
-- Before claiming an issue, check its latest comments, labels, dependencies, board status, and existing branches/PRs. Comment that you are taking it and apply the agreed owner label before moving it to In Progress.
+- Personal owner labels are optional. If used, apply at most one; labels do not establish contribution history or prove work has started. Keep the backlog small, with broad issues and short acceptance checklists.
+- Before claiming an issue, check its latest comments, labels, dependencies, board status, and existing branches/PRs. Record the start and branch/PR before moving it to In Progress; an owner label is not required.
 - Use GitHub Assignees as well when a member's GitHub username is confirmed; do not infer accounts from student emails. Labels organize ownership and do not grant repository/project permissions.
 - Record additional contributors and handoffs in issue comments. Before taking over someone else's work, agree the handoff and note the current branch, remaining work and relevant evidence.
 - Add `blocked` only for an actual impediment, explain it in a comment and link the dependency or decision needed. Keep the current workflow state, then remove the label when resolved; a separate Blocked column is not required.
@@ -61,6 +61,8 @@
 - `docs/work-allocation.md` explains the guided parallel workstreams and backup handoffs. Felipe owns infrastructure/security/core integration; Dani works on operational forms and the guided test walkthrough rather than infrastructure; Cris owns simple layouts and a lightweight slide deck; Bella contributes focused legal/text review with shared report preparation and explicit backup coverage. Record availability and handoff needs professionally, without personal assessments. Accepted assignments and changes belong in issue #1 and the affected owner labels. Bella's legal background supports legal/ethical analysis; layout belongs with Cris per the user's direction. Dani contributed the initial research/alternatives and QR-plus-elevator proposal; preserve that credit in the research and planning narrative.
 
 ### Agent handoff prompts
+
+- Current coordination decisions in GitHub supersede the earlier parallel-work proposal. Approved implementation may proceed across issues in the same working session without waiting for separate member contributions. Preserve the agreed presentation topics and record only actual work/review evidence.
 
 - `docs/environment-setup.md` provides the initial machine-onboarding prompt before issue-specific work. Diagnose the actual OS/shell, repository access, Docker engine/Compose and runtime versions first. Prefer Homebrew for supported macOS packages, native Windows routes such as WinGet, and mise for project Node/Bun versions; distinguish WSL from native Windows and use the agreed committed version pins. Tool readiness is separate from application-run verification. Do not install or start services merely to write/review this prompt.
 - Each active issue includes an `Agent handoff prompt` with a copyable text block for a new or existing assistant conversation. Keep its task focus and targeted reading aligned when scope or responsibilities change; the current issue and accepted decisions take precedence over a pasted prompt snapshot.
