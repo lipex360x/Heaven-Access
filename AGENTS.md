@@ -199,3 +199,13 @@ Resume with environment diagnosis and runtime/version pinning for the accepted N
 ## Foundation authorization — 13 November 2026
 
 After the environment diagnosis, Felipe said to proceed with the environment. This authorizes the minimal Next.js/TypeScript application foundation, dependency installation, local PostgreSQL/Compose/schema/seed and run/build/readiness verification under #1. It is scoped setup work rather than completion of the visitor journey or reassignment of Dani/Cris interfaces. Follow committed pins and README commands; consult #1 for results and remaining foundation work. The user is supplying internet through a phone hotspot. A phone displaying a visitor pass and a phone acting as a camera scanner are distinct tests; the latter needs a suitable secure origin and actual permission/scan verification. No public hosting/tunnel is authorized by the environment request.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
