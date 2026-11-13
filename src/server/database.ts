@@ -1,5 +1,5 @@
 import "server-only";
-import { Pool } from "pg";
+import { Pool, type PoolClient } from "pg";
 
 const globalDatabase = globalThis as typeof globalThis & { databasePool?: Pool };
 
@@ -17,4 +17,19 @@ export function getDatabase(): Pool {
     globalDatabase.databasePool.on("error", () => console.error("Database connection failed"));
   }
   return globalDatabase.databasePool;
+}
+
+export async function transaction<T>(action: (client: PoolClient) => Promise<T>): Promise<T> {
+  const client = await getDatabase().connect();
+  try {
+    await client.query("BEGIN");
+    const value = await action(client);
+    await client.query("COMMIT");
+    return value;
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
 }
