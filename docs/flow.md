@@ -1,8 +1,8 @@
 # Heaven Access — Visitor Access Flow
 
-Planning draft, 6 November 2026. Use these diagrams to explain the proposed MVP to the group and as source material for the report and presentation. GitHub renders the Mermaid diagrams below.
+Planning artifact, revised 13 November 2026. Use these diagrams to explain the proposed MVP to the group and as source material for the report and presentation. GitHub renders the Mermaid diagrams below.
 
-[Issue #1](https://github.com/lipex360x/Heaven-Access/issues/1) is the Source of Truth for lifecycle decisions and review. This artifact illustrates the current proposal; unresolved roles, timing, pass reuse, and replacement rules must be agreed there before implementation. See [design.md](design.md) for screen wireframes.
+[Issue #1](https://github.com/lipex360x/Heaven-Access/issues/1) is the Source of Truth for lifecycle decisions and review. This artifact reflects the accepted single staff role, inclusive ±30-minute Europe/Dublin window, reusable QR and new-request-after-expiry rules. See [design.md](design.md) for screen wireframes.
 
 ## Overview for a presentation slide
 
@@ -21,8 +21,8 @@ This is the successful journey. A request alone does not grant access; failed va
 
 ```mermaid
 flowchart TD
-    A[Public registration: visitor selects destination and visit time]
-    A --> B[Read privacy information and complete agreed privacy interaction]
+    A[Public registration: name, company/room and visit date/time]
+    A --> B[Read privacy notice and acknowledge before submission]
     B --> C[Submit request]
     C --> D[Visitor page: awaiting approval, no usable QR]
     C --> E[Authenticated staff review the request]
@@ -37,11 +37,12 @@ flowchart TD
     K -->|No| M[Keep device locked and show reason]
     M --> N[Visitor requests staff assistance]
     N --> O{Authorized staff decision}
-    O -->|Approve replacement under agreed timing rules| P[Invalidate old QR and issue replacement]
-    P --> I
+    O -->|Expired visit needs new approval| P[Create a new visit request]
+    P --> A
     O -->|Receptionist grants manual release| L
     O -->|Decline| Q[Access remains blocked]
     L --> R[Relock after agreed interval]
+    R --> J
 ```
 
 ## How the screens work together
@@ -53,8 +54,16 @@ flowchart TD
 | Pass | Mobile visitor page / visitor | Approved QR and validity details are available |
 | Validation | Device simulator / camera | Backend checks the pass using the controlled effective time |
 | Access | Device simulator | Device temporarily unlocks or stays locked with a reason |
-| Assistance | Staff interface / receptionist | Authorized replacement or manual release updates the relevant screens |
+| Assistance | Staff interface / receptionist | Staff can manually release access; expiry requires a new request and approval |
 
-Realtime updates should work across the open browser tabs without a manual refresh. A replacement credential does not automatically extend an expired visit; staff must follow the timing/approval rules agreed in the lifecycle issue. Manual release is a separate authenticated action and must not depend on the visitor approving their own request.
+Screens automatically refresh state through approximately one-second polling in the single Next.js application. This is near-real-time synchronization, not immediate server push; WebSocket/SSE infrastructure is not required for the initial prototype. QR validation and manual-release authorization remain server-side and do not depend on the polling interval.
 
-The ±30-minute window is still a proposal. The diagram does not establish occupancy tracking, checkout, physical tailgating prevention, or real elevator integration.
+The public form collects visitor name, seeded company/room destination and scheduled date/time; no email or phone is required. One authenticated staff/reception role can approve, reject and manually release access. The accepted privacy interaction requires an initially unchecked notice acknowledgement before submission. Without acknowledgement, no visit is created; offer reception assistance. Complete notice content, lawful-basis analysis and retention remain under issue #3.
+
+QR authorization is valid from 30 minutes before through 30 minutes after the scheduled time, both boundaries inclusive, in Europe/Dublin. Repeated access within the window is allowed. Expiry requires a new request and approval; the old credential remains expired. The demo clock must be controlled by authorized staff, separate from real session/audit time.
+
+The user requires access counts. Accepted counting semantics for the shared contract: one count per successful QR-authorized unlock, suppressing repeated camera frames while unlocked; denied scans do not count. Manual-release events remain separately identifiable. Display counts in the existing staff interface, without adding a dashboard. The accepted issue #1 contract specifies five-real-second unlocks and atomic event deduplication.
+
+This flow does not establish occupancy tracking, checkout, physical tailgating prevention or real elevator integration. Cross-building blocking is a future extension, outside the single-building prototype.
+
+See [data-state-contract.md](data-state-contract.md) for the accepted data/API boundary and technical defaults, including five-second unlocks, count deduplication, separate manual events and the controlled advancing demo clock. Clock rewind is a staff-only scenario replay, not a renewal operation; derived time states can change during that replay without changing the stored approval window.

@@ -1,0 +1,161 @@
+"""Build synchronized English speaker briefings; document tooling only."""
+from pathlib import Path
+from docx import Document
+from docx.shared import Inches, Pt, RGBColor
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
+
+OUT = Path(__file__).resolve().parent
+VERSION = 'Planning draft v1 • 13 November 2026'
+ISSUE = 'https://github.com/lipex360x/Heaven-Access/issues/13'
+SPEAKERS = {
+'Dani': ('Daniela Alves Paiva da Silva', '2026048', '00:00–02:30', 'Slides 1–2: the problem and evidence'),
+'Cris': ('Marcia Cristina Schafer dos Santos', '2026005', '02:30–05:00', 'Slides 3–4: alternatives and solution flow'),
+'Felipe': ('Felipe Borges Bambirra', '2026033', '05:00–08:30', 'Slide 5: architecture and demonstration'),
+'Bella': ('Isabella Maria de Souza Monteiro', '2026072', '08:30–11:00', 'Slides 6–8: responsibilities, evaluation and close'),
+}
+SCRIPT = {
+'Dani': [
+'Good morning. We are Daniela, Marcia Cristina, Felipe and Isabella. Our project is Heaven Access: a visitor-authorization proposal for commercial buildings containing offices.',
+'The idea came from my work in security, where I have experienced this type of access-control problem at more than one workplace. We used that experience to frame the question, then examined published cases. We are not presenting my experience as a statistical survey, and we are not identifying employers.',
+'The problem we investigate is a gap between arriving at a building and having a visit checked before reaching a controlled area. Visitors, office occupants, reception and security teams, and building management can all be affected. Our working root-cause hypothesis is that a visit request, staff approval and a physical access decision are not always reliably connected. We have not audited a particular building to prove that cause.',
+'One relevant case involved people following employees through card-controlled doors at RBS premises in Edinburgh. Security interrupted the attempted theft. This demonstrates a real workplace access problem, and also shows that a credential does not stop someone following an authorized person. An Irish DPC report separately describes stolen office laptops after forced entry; that illustrates consequences beyond our direct protection.',
+'We do not know how common these incidents are across office buildings. Our aim is narrower: demonstrate a clearer connection between an approved visit, its destination, its time window and an access decision.',
+'Cris will now explain how our group developed the proposal and compared the alternatives.'
+],
+'Cris': [
+'We developed the idea through group discussion and a small initial sketch. We compared physical barriers, QR visitor registration, elevator authorization, camera-based detection and reception procedures. We did not conduct a formal design workshop or claim a new access-control invention.',
+'A turnstile adds a physical checkpoint, but introduces hardware and installation requirements. A QR registration system is easier to demonstrate, but a code on its own does not stop someone bypassing reception. Elevator authorization could connect an approved visit to a floor, but only if the equipment supports a suitable interface. Camera-based detection brings additional privacy and accuracy questions. Reception procedures remain important in every option.',
+'Our choice combines staff approval with a time-limited QR and a simulated access checkpoint. Where an elevator interface is unavailable, a suitable turnstile is a deployment alternative to investigate. We have not confirmed compatibility, costs or installation approval.',
+'The four screens show one journey. First, the visitor submits a name, destination and visit time after acknowledging the privacy notice. Second, an authenticated staff member approves or rejects the request. Third, the visitor sees the mobile pass. Fourth, a camera-enabled simulator sends the QR for a server-side destination and time check.',
+'The agreed window is thirty minutes before to thirty minutes after the visit, including both endpoints, using Dublin time. The QR may be reused within that window, and successful access authorizations are counted. After expiry, the visitor needs a new request and approval.',
+'The design keeps the scope to one building. Felipe will now explain the small technical setup and demonstrate the journey once it has been verified.'
+],
+'Felipe': [
+'We selected one Next.js application with TypeScript and PostgreSQL in Docker Compose. The screens refresh approximately every second. Staff accounts and destinations are seeded; no administration screens are needed.',
+'Here is our synthetic visitor request. It starts pending and cannot authorize QR access. I approve it in the staff screen, and the visitor page displays the QR.',
+'I present the code to the actual camera. The server checks approval, destination and time. The accepted opening duration is five real seconds. One successful opening creates one QR access event; repeated camera frames must not inflate the count.',
+'Now I change the staff-controlled demo time to show an expired pass being refused. The visitor cannot change this clock. It does not change staff-session expiry or the real unlock timer.',
+'If time permits, I show a deliberate repeat or a separate manual release. This is simulated hardware and delivery, not verified physical passage or identity. Bella will explain the responsibilities and limitations.'
+],
+'Bella': [
+'Our design needs to be assessed beyond whether the QR can be scanned. We collect a visitor name, destination and visit time. The prototype is intended to use synthetic visitors, and camera use is for QR decoding, without storing footage.',
+'The agreed form interaction is an initially unchecked confirmation that the visitor has read the privacy notice. It is required before submitting and saving a request. That acknowledgement is not consent as a legal basis and is not proof of GDPR compliance. DPC guidance distinguishes transparency from the legal grounds for processing. A live deployment would need a justified basis, a complete notice, appropriate retention and deletion, security, and an assessment of whether a DPIA is required.',
+'We also need a practical reception-assisted route for people who cannot use the mobile process. That does not automatically mean anonymous access. Professional responsibility includes protecting privacy, avoiding harm and honestly describing limitations; these priorities are reflected in the ACM Code of Ethics.',
+'For evaluation, we will report only the actual tests recorded for the implemented build. At this planning stage there are no completed results to claim. Before delivery, this sentence must be replaced with a concise verified result and any remaining failure.',
+'Possible savings in paper or disposable passes must be weighed against devices, hosting, installation and maintenance. We have no measured environmental saving or verified deployment cost.',
+'Our proposal improves the connection between visitor approval and access authorization. Tailgating, shared codes and other entry routes remain risks. Cross-unit blocking and biometrics are future ideas, not implemented features. Thank you; our references are shown here, and we welcome questions.'
+],
+}
+CUES = {
+'Dani': [('00:00–00:25','Cover, names and one-sentence purpose.'),('00:25–01:00','Professional experience and research method.'),('01:00–02:10','Stakeholders, root-cause hypothesis and one main case.'),('02:10–02:30','Scope/scale limit and handoff to Cris.')],
+'Cris': [('02:30–03:15','Actual discussion/sketch and alternatives.'),('03:15–04:00','Why this combination; integration contingency.'),('04:00–04:45','Four screens and accepted visit rules.'),('04:45–05:00','Single-building scope and handoff to Felipe.')],
+'Felipe': [('05:00–05:25','Architecture in plain language.'),('05:25–06:15','Request, pending state, approval and QR.'),('06:15–07:15','Actual camera scan, unlock and access count.'),('07:15–08:10','Time-window refusal; optional repeat/manual branch.'),('08:10–08:30','Simulation boundary and handoff to Bella.')],
+'Bella': [('08:30–09:30','Privacy interaction and live-deployment obligations.'),('09:30–10:00','Accessibility and professional responsibility.'),('10:00–10:35','Verified result insertion, viability/sustainability limits.'),('10:35–11:00','Conclusion, future boundary and references.')],
+}
+QA = [
+('What does Heaven Access solve?', 'It connects a requested visit, staff approval, destination and time window to a server-side access decision. It does not establish that every unauthorized entry is prevented.'),
+('How did you investigate the problem?', 'Dani supplied professional experience; the group discussed/sketched options and used published cases. There was no formal interview study, site audit or representative incident survey.'),
+('What is original about the proposal?', 'The group applies established visitor-pass and access-control ideas to this office-building scenario. The value to evaluate is the integrated workflow, not an invented claim that QR access is new.'),
+('Why Next.js and PostgreSQL?', 'One application contains UI and server routes; PostgreSQL holds shared persistent state. This reduces separate services. Automatic updates use approximately one-second polling.'),
+('Can a visitor enter without approval or outside the window?', 'QR authorization must be refused. An authenticated manual release is a distinct staff override and must remain separately identifiable; it does not approve or renew the visit.'),
+('What happens when a QR expires or is reused?', 'Reuse is allowed inside the inclusive ±30-minute window. Expiry requires a new request/approval. Count successful QR unlocks, not repeated camera frames or denied scans.'),
+('Does the checkbox make processing lawful?', 'No. It acknowledges the privacy notice. The lawful basis and complete live-deployment privacy requirements need separate assessment; no compliance certification is claimed.'),
+('Does an access count show who is inside?', 'No. An unlock records authorization, not verified physical passage. No reliable occupancy or evacuation register is implemented, and normal lift use in a fire is not promised.'),
+('Can you block someone across all buildings?', 'That is a future extension. It needs reliable identification and clear participating-unit governance. Using the same technology does not by itself authorize sharing a person-level restriction.'),
+('What is actually implemented and proven?', 'Answer from the verified build and issue #11 evidence. Currently this is a planning pack. Never invent test results, security improvement percentages, costs or environmental savings.'),
+]
+SOURCES = [
+('The Newsroom (2018), Edinburgh Evening News, 3 May. Workplace tailgating and interrupted attempted theft; not a prevalence study.', 'https://fallback.jpi.prod.brightsites.co.uk/news/crime/smartly-dressed-youths-foiled-in-brazen-rbs-bike-theft-586087'),
+('Data Protection Commissioner (2012), Annual Report 2011, pp. 16–17, “Theft of Revenue Laptops”. Historical forced entry; not a visitor/elevator failure.', 'https://www.dataprotection.ie/sites/default/files/uploads/2018-12/AnnualReport2011.pdf'),
+('Data Protection Commission (n.d.), Transparency. Use for the full-notice obligations.', 'https://www.dataprotection.ie/en/organisations/know-your-obligations/transparency'),
+('Data Protection Commission (n.d.), Is my consent required for my data to be processed? Consent is not universally required.', 'https://www.dataprotection.ie/en/faqs/general/my-consent-required-my-data-be-processed'),
+('Association for Computing Machinery (2018), Code of Ethics and Professional Conduct, principles 1.2 and 1.6. Suggested professional reference for this project.', 'https://www.acm.org/binaries/content/assets/about/acm-code-of-ethics-booklet.pdf'),
+]
+
+def text(doc, value, style=None):
+    p=doc.add_paragraph(value, style)
+    p.paragraph_format.space_after=Pt(5)
+    return p
+
+def link(doc, label, url):
+    p=doc.add_paragraph()
+    rel=p.part.relate_to(url, 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink', is_external=True)
+    h=OxmlElement('w:hyperlink'); h.set(qn('r:id'), rel)
+    r=OxmlElement('w:r'); props=OxmlElement('w:rPr')
+    color=OxmlElement('w:color'); color.set(qn('w:val'),'176B87'); props.append(color)
+    r.append(props); t=OxmlElement('w:t'); t.text=label; r.append(t); h.append(r); p._p.append(h)
+    p.paragraph_format.space_after=Pt(4)
+
+def table(doc, headers, rows):
+    t=doc.add_table(rows=1, cols=len(headers)); t.style='Light Shading Accent 1'
+    t.autofit=False
+    for col,width in zip(t.columns,(1.05,.7,5.05)): col.width=Inches(width)
+    for c,v in zip(t.rows[0].cells,headers): c.text=v
+    for row in rows:
+        for c,v in zip(t.add_row().cells,row): c.text=v
+    for row in t.rows:
+        trpr=row._tr.get_or_add_trPr(); trpr.append(OxmlElement('w:cantSplit'))
+        for cell in row.cells:
+            for p in cell.paragraphs:
+                p.paragraph_format.space_after=Pt(3)
+                for r in p.runs:r.font.size=Pt(9)
+    return t
+
+def build(who):
+    name, student, slot, slides=SPEAKERS[who]
+    d=Document(); sec=d.sections[0]
+    sec.page_height=Inches(11.69); sec.page_width=Inches(8.27)
+    sec.top_margin=sec.bottom_margin=Inches(.65)
+    sec.left_margin=sec.right_margin=Inches(.72)
+    normal=d.styles['Normal']; normal.font.name='Calibri'; normal.font.size=Pt(10.5)
+    normal.paragraph_format.line_spacing=1.04
+    for hn,size in [('Title',23),('Heading 1',17),('Heading 2',12)]:
+        d.styles[hn].font.name='Calibri'; d.styles[hn].font.size=Pt(size); d.styles[hn].font.color.rgb=RGBColor.from_string('163B50')
+    sec.header.paragraphs[0].text=f'HEAVEN ACCESS  |  {who.upper()}  |  {VERSION}'
+    sec.header.paragraphs[0].style='Caption'
+    foot=sec.footer.paragraphs[0]; foot.text='Internal rehearsal briefing • Proposed speaking allocation • Page '
+    field=OxmlElement('w:fldSimple'); field.set(qn('w:instr'),'PAGE'); foot._p.append(field)
+    d.core_properties.title=f'Heaven Access — {who} speaker briefing'
+    d.core_properties.subject='Synchronized presentation and Q&A preparation'
+    d.core_properties.author='Heaven Access project team'
+    text(d, f'{who}\nSpeaker briefing', 'Title')
+    text(d, f'{name}  |  Student {student}\nYour proposed slot: {slot}  |  {slides}')
+    text(d, 'Shared narrative', 'Heading 1')
+    text(d, 'An office visit request becomes an access authorization only after staff approval, for a particular destination and time. A camera-read QR lets a simulated checkpoint ask the server whether access is allowed.')
+    text(d, 'Planning pack: not a claim of a working prototype. Architecture and core visitor rules are accepted; the application, measured results and final deck are not yet available. The technical defaults are accepted as design; implementation and testing remain pending. Speaking parts are proposed until the team agrees and rehearses.')
+    text(d, 'One clock for all four speakers', 'Heading 2')
+    table(d,['Time','Speaker','Purpose'],[(v[2],k,v[3]) for k,v in SPEAKERS.items()]+[('11:00–12:00','Buffer','Transitions or short recovery; do not add content.')])
+    text(d, 'The brief permits 12 minutes including the demo. Target 11 minutes. Q&A follows; its duration is unspecified. All members must attend and understand the whole assignment.')
+    text(d, 'Facts everyone must say consistently', 'Heading 2')
+    text(d, 'One building; four screens; one staff role. Name + seeded company/room + date/time, without email/phone. Required privacy-notice acknowledgement before submission. Reusable QR within an inclusive ±30-minute Europe/Dublin window. Expiry means new request and approval. Next.js/TypeScript + PostgreSQL/Compose; approximately one-second polling. Hardware and pass delivery are simulated.')
+    link(d,'Current presentation decisions and coordination — issue #13',ISSUE)
+    d.add_page_break()
+    text(d,'Your speaking notes','Heading 1')
+    text(d,'Rehearsal wording — adapt naturally; do not memorize unsupported claims. Dani must personally confirm any first-person account. Felipe must use the action wording only after the complete journey has been verified. Bella must replace the results sentence only after issue #11 supplies evidence.','Caption')
+    for s in SCRIPT[who]: text(d,s)
+    text(d,'Timing cues','Heading 2')
+    for time,cue in CUES[who]: text(d,f'{time}  {cue}')
+    d.add_page_break()
+    text(d,'Whole-project Q&A','Heading 1')
+    text(d,'Each member prepares these answers, including topics outside their speaking slot. Give a direct answer, then one reason or limitation. If evidence is missing, say what would need investigation.')
+    for q,a in QA:
+        p=text(d,q); p.runs[0].bold=True
+        text(d,a)
+    d.add_page_break()
+    text(d,'Synchronization and evidence','Heading 1')
+    text(d,'Slide and handoff map','Heading 2')
+    text(d,'1 Cover → Dani. 2 Problem/evidence/analysis → Dani. 3 Creative process/alternatives → Cris. 4 Solution/flow → Cris. 5 Demo → Felipe. 6 Responsibilities → Bella. 7 Evaluation/viability/sustainability/limits → Bella. 8 References → Bella closes. Keep the references visible for Q&A. Include the CCT cover material and all four names/student numbers.')
+    text(d,'Demo sequence shared by everyone','Heading 2')
+    text(d,'Use a synthetic visitor and a known seeded destination. Show request → pending → approval → QR → actual camera scan → simulated unlock/relock → time-window refusal. A deliberate repeat/count or manual release is optional within the demo slot. Use a short recording of the same verified journey if the live camera/network fails; identify the recording. Cut optional branches before cutting reasoning or legal/ethical coverage.')
+    text(d,'Before the final rehearsal','Heading 2')
+    text(d,'Use one final deck and one verified build, rather than four separate slide versions. Read the previous speaker’s final sentence and the next speaker’s opening. Rehearse with a running timer. Replace the planning/result sentences using issue #11 evidence, and update all four documents together. Do not add AI, production integrations or cross-building functions to the spoken MVP. Live date, attendance and final delivery confirmation remain in issue #13.')
+    text(d,'Evidence and references','Heading 2')
+    text(d,'Third-party material needs Harvard citations on the relevant slide and a bibliography. These compact source notes are reading pointers, not a substitute for the final bibliography. Accessed 13 November 2026; the DPC report publication year should be reconfirmed for final export.')
+    for label,url in SOURCES: link(d,label,url)
+    text(d,'Internal sources: docs/brief.pdf (12-minute presentation and individual Q&A); docs/team.md (names/numbers); docs/references.md (case details/limits); issues #1, #3, #11, #12 and #13 (decisions, privacy, actual tests and preparation). No formal interview study or cost/environmental measurement is available.','Caption')
+    path=OUT/f'Heaven-Access-{who}-Briefing.docx'; d.save(path)
+    return path
+
+if __name__=='__main__':
+    for who in SPEAKERS: print(build(who).name)
