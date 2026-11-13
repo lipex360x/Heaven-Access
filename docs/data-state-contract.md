@@ -1,6 +1,6 @@
 # Heaven Access — Minimal Data and State Contract
 
-Accepted technical contract, 13 November 2026. [Issue #1](https://github.com/lipex360x/Heaven-Access/issues/1) owns decisions and review. This is a supporting interface specification, not application code or a task tracker. Felipe accepted the product rules and technical defaults described below. No implementation is authorized by this document.
+Accepted technical contract, 13 November 2026. [Issue #1](https://github.com/lipex360x/Heaven-Access/issues/1) owns decisions and review. This is a supporting interface specification, not application code or a task tracker. Felipe accepted the product rules and technical defaults described below. This document does not independently authorize implementation; subsequent environment/foundation authorization is recorded in #1 and AGENTS.md.
 
 ## Accepted baseline
 

@@ -6,11 +6,11 @@ Visitors request a visit through a public form. Authorized staff approve it, a m
 
 ## Current status
 
-Planning and research only. Application implementation has not started and requires explicit authorization. The architecture and core visitor rules have been agreed in issue #1.
+The local application foundation is being prepared under issue #1. The visitor workflow, staff authentication and camera simulator are not implemented yet. Architecture and core visitor rules are defined in the accepted contract.
 
 - Confirmed: PostgreSQL, local Docker Compose, and SQL initialization of schema, staff accounts, and departments/destinations.
 - No reference-data administration screens are planned.
-- Selected architecture: one Next.js application with TypeScript, React screens and server API routes; no separate backend or monorepo. Staff sessions use cookies and server-side authorization. Runtime/package versions remain to be pinned.
+- Selected architecture: one Next.js application with TypeScript, React screens and server API routes; no separate backend or monorepo. Planned staff sessions use cookies and server-side authorization.
 - Main demonstration: separate browser tabs on localhost. Additional devices may connect through the same Wi-Fi using the host's LAN address.
 - Real elevator/gate hardware and real email delivery are outside the current prototype requirement.
 
@@ -20,6 +20,14 @@ Planning and research only. Application implementation has not started and requi
 .
 ├── AGENTS.md
 ├── README.md
+├── mise.toml
+├── package.json
+├── package-lock.json
+├── compose.yaml
+├── database/init/
+├── scripts/
+├── src/app/
+├── src/server/
 └── docs/
     ├── brief.pdf
     ├── briefings/
@@ -33,7 +41,51 @@ Planning and research only. Application implementation has not started and requi
     └── work-allocation.md
 ```
 
-Supporting documents live in `docs/`; orientation and agent instructions remain at the root. The application structure will be added when implementation is authorized. No application setup or run commands are available yet.
+Supporting documents live in `docs/`; orientation and agent instructions remain at the root. The application and server routes share `src/app`; server-only database code lives in `src/server`.
+
+## Local setup
+
+Requirements: mise-managed Node **24.16.0**, npm **11.13.0**, and a working Docker engine with Compose. Bun is not required. Next.js/React and all dependencies are locked in `package-lock.json`; PostgreSQL uses `17.12-bookworm` pinned to an image digest. Biome provides lint/format checks and TypeScript checks types. Use synthetic data only.
+
+```sh
+mise trust mise.toml
+mise install
+node --version
+npm --version
+cp .env.example .env
+npm ci
+npm run db:up
+npm run dev
+```
+
+Inspect `mise.toml` before trusting it; it selects only the project Node version. Do not overwrite an existing `.env`. If mise is not active in your shell, use `mise exec -- npm ci` and `mise exec -- npm run dev`. The committed Node distribution includes the selected npm version. Keep `.env` private and keep its `DATABASE_URL` consistent with the database settings if you change them.
+
+Open [localhost:3000](http://localhost:3000). The initial page is a placeholder. [The readiness endpoint](http://localhost:3000/api/health) returns `200` only when the initialized destination table is reachable, otherwise `503`. It exposes no credentials or visitor data. Registration/login/QR routes do not exist yet.
+
+PostgreSQL binds only to `127.0.0.1:54329`, avoiding the usual host PostgreSQL port. Initialization SQL runs on the first empty project volume and seeds three fictional destinations plus the local-demo account `reception` / `HeavenDemo-2026!` with a scrypt hash. These published credentials are demonstration fixtures; the sign-in flow is not available yet. The local database account owns the database; this is not a production deployment configuration.
+
+```sh
+npm run lint
+npm run typecheck
+npm run build
+npm start
+```
+
+Stop the application with Ctrl+C. `npm run db:down` stops PostgreSQL while preserving its data. To deliberately delete **all local project database data** and rerun the schema/seed, stop the app and run:
+
+```sh
+npm run db:reset -- --confirm
+```
+
+The reset command refuses to proceed without `--confirm`. It removes only this Compose project's volume. Schema/seed changes do not run automatically against an existing volume; reset is intended only for disposable local demonstration data.
+
+## Camera and additional devices
+
+The development server binds to loopback by default. A camera on the same computer can use localhost once the simulator is implemented. A phone displaying the visitor QR can be scanned by the computer camera; the phone does not itself need camera permission for that role.
+
+For another device to connect, both devices must be reachable through the hotspot/Wi-Fi and the server must explicitly listen on a reachable interface, for example `npm run dev -- --hostname 0.0.0.0`. Its address is the **computer's LAN address**, not the phone's localhost. This exposes the demo application to that network, while PostgreSQL remains loopback-only. Do not expose this setup to the public internet.
+
+If the phone itself will scan QR codes, camera access normally requires a trusted HTTPS origin; plain HTTP on a LAN IP is insufficient. Hotspot internet access alone proves neither device-to-device reachability nor browser camera availability. The HTTPS method, camera permission and actual QR scan must be verified separately when the simulator exists. See [browser camera requirements](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#privacy_and_security). No tunnel or public deployment is configured by this foundation.
 
 ## Project documents
 
