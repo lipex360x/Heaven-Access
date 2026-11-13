@@ -2,15 +2,15 @@
 
 A visitor-access MVP for managing visit requests and time-limited access to authorized destinations.
 
-Visitors request a visit through a public form. Authorized staff approve it, a mobile-first page displays a time-limited QR pass, and a simulated elevator/gate validates access. A receptionist can grant manual access when appropriate. Changes must propagate between open screens in real time.
+Visitors request a visit through a public form. Authorized staff approve it, a mobile-first page displays a time-limited QR pass, and a simulated elevator/gate validates access. A receptionist can grant manual access when appropriate. Open screens update automatically through approximately one-second polling; validation and unlocking are decided by the server.
 
 ## Current status
 
-Planning and research only. Application implementation has not started and requires explicit authorization after the remaining scope and architecture decisions are discussed.
+Planning and research only. Application implementation has not started and requires explicit authorization. The architecture and core visitor rules have been agreed in issue #1.
 
 - Confirmed: PostgreSQL, local Docker Compose, and SQL initialization of schema, staff accounts, and departments/destinations.
 - No reference-data administration screens are planned.
-- Architecture remains open: the initial Bun/Vite+/monorepo approach will be compared with simpler Next.js or React-based options.
+- Selected architecture: one Next.js application with TypeScript, React screens and server API routes; no separate backend or monorepo. Staff sessions use cookies and server-side authorization. Runtime/package versions remain to be pinned.
 - Main demonstration: separate browser tabs on localhost. Additional devices may connect through the same Wi-Fi using the host's LAN address.
 - Real elevator/gate hardware and real email delivery are outside the current prototype requirement.
 
@@ -22,6 +22,7 @@ Planning and research only. Application implementation has not started and requi
 ├── README.md
 └── docs/
     ├── brief.pdf
+    ├── data-state-contract.md
     ├── design.md
     ├── environment-setup.md
     ├── flow.md
@@ -31,7 +32,7 @@ Planning and research only. Application implementation has not started and requi
     └── work-allocation.md
 ```
 
-Supporting documents live in `docs/`; orientation and agent instructions remain at the root. The application structure will be added after the architecture decision. No application setup or run commands are available yet.
+Supporting documents live in `docs/`; orientation and agent instructions remain at the root. The application structure will be added when implementation is authorized. No application setup or run commands are available yet.
 
 ## Project documents
 
@@ -41,6 +42,7 @@ Supporting documents live in `docs/`; orientation and agent instructions remain 
 | [environment-setup.md](docs/environment-setup.md) | Initial agent prompt for macOS/Windows readiness and shared tool versions |
 | [design.md](docs/design.md) | Low-fidelity screen wireframes |
 | [flow.md](docs/flow.md) | Visitor journey overview and detailed flowchart |
+| [data-state-contract.md](docs/data-state-contract.md) | Proposed minimal records, screen/API boundaries, access counts and demonstration controls |
 | [future-improvements.md](docs/future-improvements.md) | Future options and their benefits, risks, and limitations |
 | [references.md](docs/references.md) | Incident evidence, report summary, and draft Harvard references |
 | [brief.pdf](docs/brief.pdf) | Original assessment brief |

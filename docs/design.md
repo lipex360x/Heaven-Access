@@ -1,12 +1,14 @@
 # Heaven Access — Preliminary Screen Flow and Wireframes
 
-Planning draft, 6 November 2026. These are low-fidelity artifacts for discussion, the supporting report, and a presentation slide. They are not implemented screens or a final specification. Fields, roles, renewal rules, and the time window remain subject to review.
+Planning artifact, revised 13 November 2026. These are low-fidelity artifacts for discussion, the supporting report, and a presentation slide. They are not implemented screens or a final specification. The accepted rules in issue #1 govern these screens; the privacy-notice acknowledgement is also accepted; the technical contract is accepted, while the full notice remains under review.
 
 [GitHub issues](https://github.com/lipex360x/Heaven-Access/issues) are the Source of Truth for design decisions, review tasks and progress. This file stores the visual planning artifact, not an independent backlog.
 
 ## Screen flow
 
 See [flow.md](flow.md) for the presentation overview, detailed visitor journey, validation branches, and receptionist assistance. Keep the flow in that document so the report and slides use the same diagram source.
+
+See [data-state-contract.md](data-state-contract.md) for accepted screen inputs/outputs, visitor-link isolation, access counts and demo controls. The simulator uses the existing staff session; there is no separate device enrollment screen. Camera use decodes QR data without storing footage.
 
 ## Low-fidelity wireframes
 
@@ -17,7 +19,6 @@ See [flow.md](flow.md) for the presentation overview, detailed visitor journey, 
 | HEAVEN ACCESS           Visit request |
 |                                      |
 | Your name       [..................] |
-| Contact method* [..................] |
 | Company         [Select          v] |
 | Department/room [Select          v] |
 | Visit date      [  DD / MM / YYYY  ] |
@@ -25,14 +26,14 @@ See [flow.md](flow.md) for the presentation overview, detailed visitor journey, 
 |                                      |
 | Why we need your information         |
 | [Read privacy notice]                |
-| [ ] Consent interaction*             |
+| [ ] I have read the privacy notice.  |
 |                                      |
 |          [ Request visit ]           |
 | Approval is required before access.  |
 +--------------------------------------+
 ```
 
-*Exact contact fields and the lawful basis/wording of consent remain open. The public form does not create an immediately usable pass. No administration of companies or departments is included.
+*No email or phone is collected. The user accepted an initially unchecked privacy-notice acknowledgement before submission. Show a short purpose summary and a link to the full notice. Without acknowledgement, do not create a visit; offer reception assistance. Lawful-basis analysis, the complete notice and retention remain under issue #3. The public form does not create an immediately usable pass. No administration of companies or departments is included.
 
 ### 2. Staff login and operational visit review
 
@@ -45,8 +46,8 @@ See [flow.md](flow.md) for the presentation overview, detailed visitor journey, 
 +--------------------------+    | Alex      Room 401     14:00   Pending  |
                                 |                                         |
                                 | Selected visit details                  |
-                                | [Approve] [Reject*]                     |
-                                | [Replace pass*]                         |
+                                | [Approve] [Reject]                     |
+                                | QR accesses: 0                          |
                                 |                                         |
                                 | Receptionist assistance                 |
                                 | Device [Select v]  Reason [..........]  |
@@ -54,7 +55,7 @@ See [flow.md](flow.md) for the presentation overview, detailed visitor journey, 
                                 +-----------------------------------------+
 ```
 
-*Suggested operational controls for discussion. Approval and manual release are confirmed; separate role permissions, logs, rejection, and replacement rules need refinement. Seeded staff accounts remove the need for a user-management area.
+One staff/reception role can approve, reject and manually release access. The existing detail view shows the required QR access count; manual releases remain distinguishable. No special renewal/replacement control is included. Access-log layout and manual-release reason details remain to be refined. Seeded staff accounts remove the need for a user-management area.
 
 ### 3. Access-device simulator
 
@@ -108,12 +109,12 @@ State variants: access granted, outside validity window, invalid/revoked QR, cam
 +---------------------------+
 ```
 
-*Times are illustrative of the proposed ±30-minute window. Before approval, display a waiting state without a usable QR. On expiry/revocation, make the unavailable state clear. An authorized replacement updates the same visitor view; reissuing must not silently extend access without an agreed approval rule. Simulated delivery and the private link mechanism remain to be defined.
+*The accepted window is ±30 minutes, with inclusive boundaries, in Europe/Dublin. Before approval, display a waiting state without a usable QR. On expiry, show a new-request link: a new approval is required and the old pass stays expired. Repeated QR access within the window is allowed. Simulated delivery and the private link mechanism remain to be defined. Screens update automatically through approximately one-second polling.
 
 ## Use in the report and presentation
 
 - Report: include the reviewed flow, explain actors and alternative paths, and cite this planning artifact by date/version.
-- Planning slide: place reduced versions of the four wireframes side by side, connected as request → approval → pass → validation. Label it “Initial low-fidelity design — 6 November 2026”.
+- Planning slide: place reduced versions of the four wireframes side by side, connected as request → approval → pass → validation. Label it “Low-fidelity design — revised 13 November 2026”.
 - Suggested slide caption: “We separated registration, staff authorization, visitor credentials, and access validation before implementation. Early wireframes exposed decisions about expiry, manual assistance, and live updates.”
 - Preserve meaningful revisions and describe changes actually made. Do not invent completed user testing, interviews, or approvals.
 - Export clean diagram/wireframe graphics when assembling the final report/slides; these Markdown drafts are the source material for now.
