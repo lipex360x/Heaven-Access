@@ -1,7 +1,7 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
 import type { PoolClient } from "pg";
-import type { AccessCode, AccessResult, Device } from "../domain/device";
+import type { AccessCode, AccessResult, DeviceSnapshot } from "../domain/device";
 import { type Decision, parseVisitTime, visitState } from "../domain/visit-time";
 import { getDatabase, transaction } from "./database";
 import { ApiError } from "./http";
@@ -13,7 +13,13 @@ const validRevision = (value: unknown): value is number =>
 
 export async function readDevice(
   client: PoolClient | ReturnType<typeof getDatabase> = getDatabase(),
-): Promise<Device> {
+): Promise<DeviceSnapshot["device"]> {
+  return (await readDeviceSnapshot(client)).device;
+}
+
+export async function readDeviceSnapshot(
+  client: PoolClient | ReturnType<typeof getDatabase> = getDatabase(),
+): Promise<DeviceSnapshot> {
   const result = await client.query<{
     id: number;
     destination_id: number;
@@ -24,24 +30,40 @@ export async function readDevice(
     unlocked_until: Date;
     clock_offset_ms: string;
     now: Date;
-  }>(`SELECT x.*, d.company_label, d.room_label, d.floor_label, clock_timestamp() AS now
-      FROM demo_device x JOIN destinations d ON d.id = x.destination_id WHERE x.id = 1`);
+    feedback_code: AccessCode | null;
+    feedback_at: Date | null;
+  }>(`SELECT x.*, d.company_label, d.room_label, d.floor_label, clock_timestamp() AS now,
+        recent.code AS feedback_code, recent.created_at AS feedback_at
+      FROM demo_device x JOIN destinations d ON d.id = x.destination_id
+      LEFT JOIN LATERAL (
+        SELECT r.response->>'code' AS code, r.created_at FROM device_requests r
+        WHERE r.response->'device'->>'revision' = x.revision::text
+          AND r.response->>'code' NOT IN ('already_unlocked', 'stale_device_state')
+          AND r.created_at > clock_timestamp() - interval '8 seconds'
+        ORDER BY r.created_at DESC LIMIT 1
+      ) recent ON true WHERE x.id = 1`);
   const row = result.rows[0];
   if (!row) throw new Error("Device is not initialized");
   return {
-    id: row.id,
-    destination: {
-      id: row.destination_id,
-      companyLabel: row.company_label,
-      roomLabel: row.room_label,
-      floorLabel: row.floor_label,
+    device: {
+      id: row.id,
+      destination: {
+        id: row.destination_id,
+        companyLabel: row.company_label,
+        roomLabel: row.room_label,
+        floorLabel: row.floor_label,
+      },
+      revision: row.revision,
+      state: row.unlocked_until > row.now ? "unlocked" : "locked",
+      unlockedUntil: row.unlocked_until.toISOString(),
+      serverNow: row.now.toISOString(),
+      effectiveNow: new Date(row.now.getTime() + Number(row.clock_offset_ms)).toISOString(),
+      clockMode: Number(row.clock_offset_ms) === 0 ? "real" : "demo",
     },
-    revision: row.revision,
-    state: row.unlocked_until > row.now ? "unlocked" : "locked",
-    unlockedUntil: row.unlocked_until.toISOString(),
-    serverNow: row.now.toISOString(),
-    effectiveNow: new Date(row.now.getTime() + Number(row.clock_offset_ms)).toISOString(),
-    clockMode: Number(row.clock_offset_ms) === 0 ? "real" : "demo",
+    feedback:
+      row.feedback_code && row.feedback_at
+        ? { code: row.feedback_code, occurredAt: row.feedback_at.toISOString() }
+        : null,
   };
 }
 

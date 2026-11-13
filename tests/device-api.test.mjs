@@ -133,6 +133,10 @@ test("atomic device access, manual override and advancing demo scenarios", async
       assert.equal((await scan(qr)).data.code, "too_early");
       await settings({ effectiveLocal: "2026-11-13T12:30:01" });
       assert.equal((await scan(qr)).data.code, "expired");
+      const deniedSnapshot = (await req("/api/device")).data;
+      assert.equal(deniedSnapshot.feedback.code, "expired");
+      assert.deepEqual(Object.keys(deniedSnapshot.feedback).sort(), ["code", "occurredAt"]);
+      assert.ok(!JSON.stringify(deniedSnapshot).includes(qr));
       await settings({ effectiveLocal: "2026-11-13T12:00", destinationId: 2 });
       assert.equal((await scan(qr)).data.code, "wrong_destination");
       assert.equal(await total("qr"), 0);
@@ -156,6 +160,7 @@ test("atomic device access, manual override and advancing demo scenarios", async
         assert.deepEqual(outcomes[2].data, outcomes[0].data);
         assert.equal(await total("qr"), 1);
         const opened = outcomes.find((outcome) => outcome.data.code === "granted").data.device;
+        assert.equal((await req("/api/device")).data.feedback.code, "granted");
         assert.equal(new Date(opened.unlockedUntil) - new Date(opened.serverNow), 5000);
         assert.equal((await scan(qr)).data.device.unlockedUntil, opened.unlockedUntil);
         assert.equal(
@@ -179,6 +184,7 @@ test("atomic device access, manual override and advancing demo scenarios", async
         const after = (await settings({ destinationId: 2 })).data.device;
         assert.equal(after.state, "locked");
         assert.equal(after.revision, before.revision + 1);
+        assert.equal((await req("/api/device")).data.feedback, null);
         assert.equal(
           (await scan(qr, { expectedRevision: before.revision })).data.code,
           "stale_device_state",

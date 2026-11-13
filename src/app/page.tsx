@@ -5,7 +5,7 @@ export default function Home() {
       <h1>Visitor access, with a clear approval.</h1>
       <p>
         Test QR access and assisted manual release with the staff gate simulator. Visitor
-        registration, approval and mobile pass screens are being prepared.
+        registration and staff approval screens are being prepared.
       </p>
       <a href="/device">Open access simulator</a>
     </main>

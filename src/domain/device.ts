@@ -20,6 +20,8 @@ export type AccessCode =
   | "stale_device_state";
 
 export type AccessResult = { code: AccessCode; device: Device };
+export type DeviceFeedback = { code: AccessCode; occurredAt: string };
+export type DeviceSnapshot = { device: Device; feedback: DeviceFeedback | null };
 
 export const ACCESS_MESSAGES: Record<AccessCode, string> = {
   granted: "Access authorized. The simulated gate opens for five real seconds.",

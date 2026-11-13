@@ -31,6 +31,8 @@ p {
 }
 .stack {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
   gap: 1rem;
 }
 .panel {
@@ -112,4 +114,103 @@ video {
 }
 small {
   line-height: 1.6;
+}
+.gate-display {
+  text-align: center;
+  display: grid;
+  gap: 0.8rem;
+  padding: clamp(1.5rem, 4vw, 3rem);
+}
+.gate-title {
+  font-size: clamp(1.8rem, 4.5vw, 3.5rem);
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+.gate-detail {
+  font-size: 1.25rem;
+  font-weight: bold;
+  min-height: 3rem;
+}
+.gate-display p {
+  margin-inline: auto;
+}
+.gate-open {
+  color: #14532d;
+  background: #dcfce7;
+  border-color: #166534;
+}
+.gate-denied {
+  color: #7f1d1d;
+  background: #fee2e2;
+  border-color: #991b1b;
+}
+.gate-illustration {
+  display: block;
+  width: 100%;
+  height: clamp(10rem, 20vw, 13rem);
+  margin: 0 auto;
+}
+.barrier-arm {
+  transform-box: view-box;
+  transform-origin: 50px 220px;
+  transform: rotate(0deg);
+  transition: transform 650ms ease-in-out;
+}
+.barrier-arm.is-open {
+  transform: rotate(-65deg);
+}
+.elevator-door {
+  transition: transform 650ms ease-in-out;
+}
+.elevator-left.is-open {
+  transform: translateX(-100px);
+}
+.elevator-right.is-open {
+  transform: translateX(100px);
+}
+[aria-pressed="false"] {
+  background: white;
+  color: #28665c;
+}
+@media (prefers-reduced-motion: reduce) {
+  .barrier-arm,
+  .elevator-door {
+    transition: none;
+  }
+}
+.action-feedback {
+  padding: 1rem;
+  background: white;
+  border-left: 0.4rem solid #28665c;
+  font-weight: bold;
+}
+.device-display-page {
+  max-width: 60rem;
+  padding-block: 1.5rem;
+}
+.device-display-page h1 {
+  font-size: 1.25rem;
+}
+.device-display-page .gate-display {
+  min-height: min(34rem, calc(100svh - 14rem));
+  padding: clamp(1rem, 2.5vw, 2rem);
+  align-content: center;
+}
+.view-switch {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.pass-page {
+  max-width: 32rem;
+  padding-block: 2rem;
+}
+.pass-qr {
+  justify-items: center;
+}
+.pass-qr canvas {
+  width: min(100%, 22.5rem);
+  max-width: 100%;
+  height: auto;
+  background: white;
 }

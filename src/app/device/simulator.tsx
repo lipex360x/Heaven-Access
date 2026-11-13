@@ -3,9 +3,15 @@
 import { useEffect, useState } from "react";
 import { ClientError, requestJson, sendJson } from "@/client/api";
 import { usePolling } from "@/client/use-polling";
+import { type GateSnapshot, GateStatus, gateSnapshot } from "@/components/gate-status";
 import { QrCamera } from "@/components/qr-camera";
 import { StaffSignIn } from "@/components/staff-sign-in";
-import { ACCESS_MESSAGES, type AccessResult, type Device } from "@/domain/device";
+import {
+  ACCESS_MESSAGES,
+  type AccessResult,
+  type Device,
+  type DeviceSnapshot,
+} from "@/domain/device";
 
 type Visit = {
   id: string;
@@ -15,34 +21,24 @@ type Visit = {
   manualReleaseCount: number;
   destination: Device["destination"];
 };
-type Snapshot = {
-  device: Device;
+type Snapshot = GateSnapshot & {
   visits: Visit[];
   destinations: Device["destination"][];
-  deadline: number;
 };
 type Action = { path: string; body: Record<string, unknown> };
 
 async function load(signal: AbortSignal): Promise<Snapshot> {
   const started = performance.now();
-  const { device } = await requestJson<{ device: Device }>("/api/device", { signal });
-  // Conservative deadline: include request round-trip rather than extending a stale opening.
-  const deadline =
-    started + new Date(device.unlockedUntil).getTime() - new Date(device.serverNow).getTime();
+  const snapshot = gateSnapshot(
+    await requestJson<DeviceSnapshot>("/api/device", { signal }),
+    started,
+  );
   const { visits } = await requestJson<{ visits: Visit[] }>("/api/staff/visits", { signal });
   const { destinations } = await requestJson<{ destinations: Device["destination"][] }>(
     "/api/destinations",
     { signal },
   );
-  return { device, visits, destinations, deadline };
-}
-
-function dublin(instant: string) {
-  return new Intl.DateTimeFormat("en-IE", {
-    timeZone: "Europe/Dublin",
-    dateStyle: "medium",
-    timeStyle: "medium",
-  }).format(new Date(instant));
+  return { ...snapshot, visits, destinations };
 }
 
 export function DeviceSimulator() {
@@ -83,27 +79,15 @@ export function DeviceSimulator() {
       {error && (
         <p role="alert">{error.message} New access is paused until the connection recovers.</p>
       )}
-      <section
-        className={`panel gate ${remaining > 0 ? "gate-open" : ""}`}
-        aria-label="Simulated gate status"
-      >
-        <h2>{remaining > 0 ? "Unlocked" : "Locked"}</h2>
-        <p>
-          {data.device.destination.companyLabel} · {data.device.destination.roomLabel} · Floor{" "}
-          {data.device.destination.floorLabel ?? "—"}
+      <GateStatus snapshot={data} />
+      <a href="/device/display" target="_blank" rel="noreferrer">
+        Open gate display on another screen
+      </a>
+      {message && (
+        <p className="action-feedback" role="status">
+          {message}
         </p>
-        <p role="status">
-          {remaining > 0
-            ? `Relocks in ${(remaining / 1000).toFixed(1)} real seconds`
-            : "Present an approved visitor QR to request access."}
-        </p>
-        <small>
-          Europe/Dublin: {dublin(data.device.effectiveNow)} ·{" "}
-          {data.device.clockMode === "demo" ? "Advancing demo clock" : "Real clock"} · Scenario{" "}
-          {data.device.revision}
-        </small>
-      </section>
-      {message && <p role="status">{message}</p>}
+      )}
       {retry && (
         <div className="panel stack">
           <p>

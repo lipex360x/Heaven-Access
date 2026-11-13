@@ -6,7 +6,7 @@ Visitors request a visit through a public form. Authorized staff approve it, a m
 
 ## Current status
 
-The local foundation, visitor/staff API and authenticated camera/device simulator are implemented. Public registration, staff approval and mobile-pass screens remain to be connected. Architecture and core visitor rules are defined in the accepted contract; the [API handoff](docs/api.md) describes the implemented endpoints. Current validation evidence and remaining integrated-camera checks belong in issues #9/#11.
+The local foundation, visitor/staff API, mobile visitor pass and authenticated camera/device simulator are implemented. Public registration and staff approval screens remain to be connected. Architecture and core visitor rules are defined in the accepted contract; the [API handoff](docs/api.md) describes the implemented endpoints. Current validation evidence and remaining integrated-camera checks belong in issues #9/#11.
 
 - Confirmed: PostgreSQL, local Docker Compose, and SQL initialization of schema, staff accounts, and departments/destinations.
 - No reference-data administration screens are planned.
@@ -63,7 +63,7 @@ npm run dev
 
 Inspect `mise.toml` before trusting it; it selects only the project Node version. Do not overwrite an existing `.env`. If mise is not active in your shell, use `mise exec -- npm ci` and `mise exec -- npm run dev`. The committed Node distribution includes the selected npm version. Keep `.env` private and keep its `DATABASE_URL` consistent with the database settings if you change them.
 
-Open [localhost:3000](http://localhost:3000). The initial page is a placeholder; the authenticated [device simulator](http://localhost:3000/device) is available. [The readiness endpoint](http://localhost:3000/api/health) returns `200` only when the initialized destination table is reachable, otherwise `503`. It exposes no credentials or visitor data. Destination, visit request, private-pass and authenticated staff API routes are available; see [request/response shapes and UI states](docs/api.md). Registration/approval/pass forms are still pending.
+Open [localhost:3000](http://localhost:3000). The home page links to the authenticated [device simulator](http://localhost:3000/device). Use `/device/display` for a clean synchronized screen on another tab/tablet; its Gate/Elevator buttons select the visualization, and `?mode=elevator` opens the elevator view directly. Both use the same server authorization/deadline and need staff sign-in. A visitor opens their private `/pass#<capability>` link to view the current status/QR or download its image; it requires no staff login. Registration and staff approval forms are still pending. [The readiness endpoint](http://localhost:3000/api/health) returns `200` only when the initialized destination table is reachable, otherwise `503`. See [request/response shapes and UI states](docs/api.md).
 
 PostgreSQL binds only to `127.0.0.1:54329`, avoiding the usual host PostgreSQL port. Initialization SQL runs on the first empty project volume and seeds three fictional destinations plus the local-demo account `reception` / `HeavenDemo-2026!` with a scrypt hash. These published credentials are demonstration fixtures; sign in at `/device`. The local database account owns the database; this is not a production deployment configuration. For an existing foundation volume, use the additive migrations in [the API handoff](docs/api.md#updating-an-existing-local-database) instead of resetting its data.
 
