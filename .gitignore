@@ -10,3 +10,5 @@ coverage/
 *.log
 postgres-data/
 pgdata/
+*.tsbuildinfo
+next-env.d.ts
