@@ -6,7 +6,7 @@ Visitors request a visit through a public form. Authorized staff approve it, a m
 
 ## Current status
 
-The local application foundation is being prepared under issue #1. The visitor workflow, staff authentication and camera simulator are not implemented yet. Architecture and core visitor rules are defined in the accepted contract.
+The local foundation and visitor/staff API are implemented under issue #1. Public registration, staff and mobile-pass screens and the camera/device simulator remain to be connected. Architecture and core visitor rules are defined in the accepted contract; the [API handoff](docs/api.md) describes the implemented endpoints.
 
 - Confirmed: PostgreSQL, local Docker Compose, and SQL initialization of schema, staff accounts, and departments/destinations.
 - No reference-data administration screens are planned.
@@ -27,8 +27,11 @@ The local application foundation is being prepared under issue #1. The visitor w
 ├── database/init/
 ├── scripts/
 ├── src/app/
+├── src/domain/
 ├── src/server/
+├── tests/
 └── docs/
+    ├── api.md
     ├── brief.pdf
     ├── briefings/
     ├── data-state-contract.md
@@ -60,9 +63,9 @@ npm run dev
 
 Inspect `mise.toml` before trusting it; it selects only the project Node version. Do not overwrite an existing `.env`. If mise is not active in your shell, use `mise exec -- npm ci` and `mise exec -- npm run dev`. The committed Node distribution includes the selected npm version. Keep `.env` private and keep its `DATABASE_URL` consistent with the database settings if you change them.
 
-Open [localhost:3000](http://localhost:3000). The initial page is a placeholder. [The readiness endpoint](http://localhost:3000/api/health) returns `200` only when the initialized destination table is reachable, otherwise `503`. It exposes no credentials or visitor data. Registration/login/QR routes do not exist yet.
+Open [localhost:3000](http://localhost:3000). The initial page is a placeholder. [The readiness endpoint](http://localhost:3000/api/health) returns `200` only when the initialized destination table is reachable, otherwise `503`. It exposes no credentials or visitor data. Destination, visit request, private-pass and authenticated staff API routes are available; see [request/response shapes and UI states](docs/api.md). The four workflow screens and QR/device integration are not available yet.
 
-PostgreSQL binds only to `127.0.0.1:54329`, avoiding the usual host PostgreSQL port. Initialization SQL runs on the first empty project volume and seeds three fictional destinations plus the local-demo account `reception` / `HeavenDemo-2026!` with a scrypt hash. These published credentials are demonstration fixtures; the sign-in flow is not available yet. The local database account owns the database; this is not a production deployment configuration.
+PostgreSQL binds only to `127.0.0.1:54329`, avoiding the usual host PostgreSQL port. Initialization SQL runs on the first empty project volume and seeds three fictional destinations plus the local-demo account `reception` / `HeavenDemo-2026!` with a scrypt hash. These published credentials are demonstration fixtures; login currently works through the API. The local database account owns the database; this is not a production deployment configuration. For an existing foundation volume, use the additive migration in [the API handoff](docs/api.md#updating-an-existing-local-database) instead of resetting its data.
 
 ```sh
 npm run lint
@@ -78,6 +81,8 @@ npm run db:reset -- --confirm
 ```
 
 The reset command refuses to proceed without `--confirm`. It removes only this Compose project's volume. Schema/seed changes do not run automatically against an existing volume; reset is intended only for disposable local demonstration data.
+
+`npm test` checks Dublin time parsing and visit-window boundaries. `npm run test:api` exercises the local API/database with synthetic fixtures; run it only when another demonstration is not using the shared clock. It refuses remote database/server targets and cleans its own fixtures. See [verification details](docs/api.md#verification).
 
 ## Camera and additional devices
 
@@ -96,6 +101,7 @@ If the phone itself will scan QR codes, camera access normally requires a truste
 | [design.md](docs/design.md) | Low-fidelity screen wireframes |
 | [flow.md](docs/flow.md) | Visitor journey overview and detailed flowchart |
 | [data-state-contract.md](docs/data-state-contract.md) | Accepted records, screen/API boundaries, access counts and demonstration controls |
+| [api.md](docs/api.md) | Implemented visitor/staff endpoints, UI-state handoff, additive database migration and API tests |
 | [future-improvements.md](docs/future-improvements.md) | Future options and their benefits, risks, and limitations |
 | [references.md](docs/references.md) | Incident evidence, report summary, and draft Harvard references |
 | [brief.pdf](docs/brief.pdf) | Original assessment brief |
