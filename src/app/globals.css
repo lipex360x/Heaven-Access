@@ -29,3 +29,87 @@ p {
   color: #28665c;
   font-weight: bold;
 }
+.stack {
+  display: grid;
+  gap: 1rem;
+}
+.panel {
+  padding: 1.5rem;
+  background: white;
+  border: 1px solid #cbd5d1;
+  border-radius: 0.75rem;
+}
+.panel h2,
+.panel p {
+  margin: 0;
+}
+label {
+  display: grid;
+  gap: 0.5rem;
+  font-weight: bold;
+}
+input,
+select,
+button {
+  font: inherit;
+  padding: 0.75rem;
+  border: 1px solid #80968f;
+  border-radius: 0.35rem;
+  min-width: 0;
+  max-width: 100%;
+}
+input,
+select {
+  width: 100%;
+  background: white;
+  color: inherit;
+}
+button {
+  cursor: pointer;
+  background: #28665c;
+  color: white;
+  font-weight: bold;
+}
+button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+:focus-visible {
+  outline: 3px solid #a45d05;
+  outline-offset: 3px;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-weight: normal;
+  line-height: 1.5;
+}
+.check input {
+  width: auto;
+  margin-top: 0.3rem;
+}
+.gate {
+  border: 2px solid #80968f;
+}
+.gate-open {
+  border-color: #28665c;
+  background: #e7f5ec;
+}
+video {
+  width: 100%;
+  max-height: 25rem;
+  background: #182a34;
+  border-radius: 0.5rem;
+}
+[hidden] {
+  display: none;
+}
+small {
+  line-height: 1.6;
+}

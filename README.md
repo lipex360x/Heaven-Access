@@ -6,7 +6,7 @@ Visitors request a visit through a public form. Authorized staff approve it, a m
 
 ## Current status
 
-The local foundation and visitor/staff API are implemented under issue #1. Public registration, staff and mobile-pass screens and the camera/device simulator remain to be connected. Architecture and core visitor rules are defined in the accepted contract; the [API handoff](docs/api.md) describes the implemented endpoints.
+The local foundation, visitor/staff API and authenticated camera/device simulator are implemented. Public registration, staff approval and mobile-pass screens remain to be connected. Architecture and core visitor rules are defined in the accepted contract; the [API handoff](docs/api.md) describes the implemented endpoints. Current validation evidence and remaining integrated-camera checks belong in issues #9/#11.
 
 - Confirmed: PostgreSQL, local Docker Compose, and SQL initialization of schema, staff accounts, and departments/destinations.
 - No reference-data administration screens are planned.
@@ -63,9 +63,9 @@ npm run dev
 
 Inspect `mise.toml` before trusting it; it selects only the project Node version. Do not overwrite an existing `.env`. If mise is not active in your shell, use `mise exec -- npm ci` and `mise exec -- npm run dev`. The committed Node distribution includes the selected npm version. Keep `.env` private and keep its `DATABASE_URL` consistent with the database settings if you change them.
 
-Open [localhost:3000](http://localhost:3000). The initial page is a placeholder. [The readiness endpoint](http://localhost:3000/api/health) returns `200` only when the initialized destination table is reachable, otherwise `503`. It exposes no credentials or visitor data. Destination, visit request, private-pass and authenticated staff API routes are available; see [request/response shapes and UI states](docs/api.md). The four workflow screens and QR/device integration are not available yet.
+Open [localhost:3000](http://localhost:3000). The initial page is a placeholder; the authenticated [device simulator](http://localhost:3000/device) is available. [The readiness endpoint](http://localhost:3000/api/health) returns `200` only when the initialized destination table is reachable, otherwise `503`. It exposes no credentials or visitor data. Destination, visit request, private-pass and authenticated staff API routes are available; see [request/response shapes and UI states](docs/api.md). Registration/approval/pass forms are still pending.
 
-PostgreSQL binds only to `127.0.0.1:54329`, avoiding the usual host PostgreSQL port. Initialization SQL runs on the first empty project volume and seeds three fictional destinations plus the local-demo account `reception` / `HeavenDemo-2026!` with a scrypt hash. These published credentials are demonstration fixtures; login currently works through the API. The local database account owns the database; this is not a production deployment configuration. For an existing foundation volume, use the additive migration in [the API handoff](docs/api.md#updating-an-existing-local-database) instead of resetting its data.
+PostgreSQL binds only to `127.0.0.1:54329`, avoiding the usual host PostgreSQL port. Initialization SQL runs on the first empty project volume and seeds three fictional destinations plus the local-demo account `reception` / `HeavenDemo-2026!` with a scrypt hash. These published credentials are demonstration fixtures; sign in at `/device`. The local database account owns the database; this is not a production deployment configuration. For an existing foundation volume, use the additive migrations in [the API handoff](docs/api.md#updating-an-existing-local-database) instead of resetting its data.
 
 ```sh
 npm run lint
@@ -82,15 +82,15 @@ npm run db:reset -- --confirm
 
 The reset command refuses to proceed without `--confirm`. It removes only this Compose project's volume. Schema/seed changes do not run automatically against an existing volume; reset is intended only for disposable local demonstration data.
 
-`npm test` checks Dublin time parsing and visit-window boundaries. `npm run test:api` exercises the local API/database with synthetic fixtures; run it only when another demonstration is not using the shared clock. It refuses remote database/server targets and cleans its own fixtures. See [verification details](docs/api.md#verification).
+`npm test` checks Dublin time parsing, visit-window boundaries and scanner rearming. `npm run test:api` and `npm run test:device` exercise the local API/database with synthetic fixtures; run them sequentially, only when another demonstration is not using the shared clock/device. Both refuse remote database/server targets and clean their own fixtures. See [verification details](docs/api.md#verification).
 
 ## Camera and additional devices
 
-The development server binds to loopback by default. A camera on the same computer can use localhost once the simulator is implemented. A phone displaying the visitor QR can be scanned by the computer camera; the phone does not itself need camera permission for that role.
+The development server binds to loopback by default. A camera on the same computer can use localhost at `/device`. Start the camera explicitly and allow browser access. QR decoding stays in the browser; frames are not recorded or uploaded. Keep a used QR out of view briefly before presenting it again. A phone displaying the visitor QR can be scanned by the computer camera; the phone does not itself need camera permission for that role.
 
-For another device to connect, both devices must be reachable through the hotspot/Wi-Fi and the server must explicitly listen on a reachable interface, for example `npm run dev -- --hostname 0.0.0.0`. Its address is the **computer's LAN address**, not the phone's localhost. This exposes the demo application to that network, while PostgreSQL remains loopback-only. Do not expose this setup to the public internet.
+For another device to connect, both devices must be reachable through the hotspot/Wi-Fi and the server must explicitly listen on a reachable interface, for example `npm run dev -- --hostname 0.0.0.0`. Set `DEV_ALLOWED_HOSTS` in `.env` to the computer's current LAN IP (hostname only, no scheme/port) so Next.js permits development assets from that host. Its address is the **computer's LAN address**, not the phone's localhost. This exposes the demo application to that network, while PostgreSQL remains loopback-only. Do not expose this setup to the public internet.
 
-If the phone itself will scan QR codes, camera access normally requires a trusted HTTPS origin; plain HTTP on a LAN IP is insufficient. Hotspot internet access alone proves neither device-to-device reachability nor browser camera availability. The HTTPS method, camera permission and actual QR scan must be verified separately when the simulator exists. See [browser camera requirements](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#privacy_and_security). No tunnel or public deployment is configured by this foundation.
+If the phone itself will scan QR codes, camera access normally requires a trusted HTTPS origin; plain HTTP on a LAN IP is insufficient. Hotspot internet access alone proves neither device-to-device reachability nor browser camera availability. The HTTPS method, camera permission and actual QR scan must be verified separately. See [browser camera requirements](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#privacy_and_security). No tunnel or public deployment is configured by this foundation.
 
 ## Project documents
 

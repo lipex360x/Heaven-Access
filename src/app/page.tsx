@@ -4,9 +4,10 @@ export default function Home() {
       <p className="eyebrow">Heaven Access</p>
       <h1>Visitor access, with a clear approval.</h1>
       <p>
-        The local prototype is being prepared. Visitor registration, staff approval and the
-        simulated access device will be available here.
+        Test QR access and assisted manual release with the staff gate simulator. Visitor
+        registration, approval and mobile pass screens are being prepared.
       </p>
+      <a href="/device">Open access simulator</a>
     </main>
   );
 }
