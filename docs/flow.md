@@ -22,7 +22,7 @@ This is the successful journey. A request alone does not grant access; failed va
 ```mermaid
 flowchart TD
     A[Public registration: name, company/room and visit date/time]
-    A --> B[Read privacy information and complete agreed privacy interaction]
+    A --> B[Read privacy notice and acknowledge before submission]
     B --> C[Submit request]
     C --> D[Visitor page: awaiting approval, no usable QR]
     C --> E[Authenticated staff review the request]
@@ -58,7 +58,7 @@ flowchart TD
 
 Screens automatically refresh state through approximately one-second polling in the single Next.js application. This is near-real-time synchronization, not immediate server push; WebSocket/SSE infrastructure is not required for the initial prototype. QR validation and manual-release authorization remain server-side and do not depend on the polling interval.
 
-The public form collects visitor name, seeded company/room destination and scheduled date/time; no email or phone is required. One authenticated staff/reception role can approve, reject and manually release access. The privacy interaction remains subject to the focused review in issue #3.
+The public form collects visitor name, seeded company/room destination and scheduled date/time; no email or phone is required. One authenticated staff/reception role can approve, reject and manually release access. The accepted privacy interaction requires an initially unchecked notice acknowledgement before submission. Without acknowledgement, no visit is created; offer reception assistance. Complete notice content, lawful-basis analysis and retention remain under issue #3.
 
 QR authorization is valid from 30 minutes before through 30 minutes after the scheduled time, both boundaries inclusive, in Europe/Dublin. Repeated access within the window is allowed. Expiry requires a new request and approval; the old credential remains expired. The demo clock must be controlled by authorized staff, separate from real session/audit time.
 

@@ -15,7 +15,7 @@ The QR is reusable from 30 minutes before through 30 minutes after the scheduled
 | Staff account | ID, username, password hash; a single staff role. Seeded, without account-management UI. |
 | Staff session | Random session secret stored as a hash, staff ID, real creation/expiry times. Cookie carries the secret; never use the demo clock for sessions. |
 | Destination | ID, company label, room label and optional floor label. Seeded reference data. |
-| Visit | ID, visitor name, destination ID, scheduled instant, decision (`pending`, `approved`, `rejected`), decision actor/time, real creation time and the agreed privacy record when #3 defines it. |
+| Visit | ID, visitor name, destination ID, scheduled instant, decision (`pending`, `approved`, `rejected`), decision actor/time, real creation time and notice version and real server acknowledgement time at successful submission. |
 | Visitor credentials | Visit ID, separate random visitor-page and QR secrets. The visitor-page capability must never be accepted as an access QR; the QR must never expose the visitor page or visit list. See credential handling below. |
 | Access event | ID, visit ID, device ID, method (`qr` or `manual`), real occurrence time, effective visit-validation time, selected destination, manual actor/reason where applicable, and request deduplication key. Store successful unlocks; rejected reads return a result but do not create counted access events. |
 | Demo device/settings | One fixed simulated device, selected destination, `unlockedUntil` in real server time, clock offset and revision. No device-management or destination CRUD screens. |
@@ -46,7 +46,7 @@ Paths below are proposed contracts; changing their spelling does not require a n
 | Request | Caller | Input / output |
 | --- | --- | --- |
 | `GET /api/destinations` | Public | Seeded ID/label options only. |
-| `POST /api/visits` | Public | Name, destination ID, scheduled local date/time and the privacy interaction defined by #3. Return a private visitor-page link; create a pending visit, never automatic approval. |
+| `POST /api/visits` | Public | Name, destination ID, scheduled local date/time and an explicit privacy-notice acknowledgement and displayed notice version; reject missing acknowledgement or an outdated notice version without creating a visit. Return a private visitor-page link; create a pending visit, never automatic approval. |
 | `GET /api/visitor/visit` | Visitor capability | Own name, destination label, scheduled time, validity bounds, display state, effective time; QR payload only for an approved, unexpired visit. No other visits, staff information or access logs. |
 | `POST /api/staff/login`; `POST /api/staff/logout` | Staff | Credentials to establish a cookie session; logout invalidates it. No session secrets in response JSON. |
 | `GET /api/staff/visits` | Staff session | Visit summary/detail data, decision, effective display state, QR access count and separate manual-release count. Never return visitor/QR secrets. |
@@ -75,11 +75,21 @@ Proposed technical defaults for review:
 
 Use stable result codes: `granted`, `already_unlocked`, `invalid_qr`, `not_approved`, `too_early`, `expired`, `wrong_destination`, `stale_device_state`, `unauthenticated`, `invalid_input` and `conflict`. Unknown/invalid credentials must not disclose another visitor's information. Database/network failures never authorize new QR access.
 
+## Accepted privacy interaction — 13 November 2026
+
+Before submission, show this short purpose summary and a link labelled “Read privacy notice”:
+
+> We use your name, destination and visit time to review your request and manage access. Successful access events are recorded.
+
+Require an initially unchecked checkbox labelled “I have read the privacy notice.” Persist the visit only after an explicit acknowledgement and submission; verify the acknowledgement server-side. Record the displayed notice version and real server acknowledgement time with the visit. This records the interaction, not proof of comprehension or consent as the processing basis.
+
+If the visitor does not continue, create no visit and direct them to reception. Do not promise anonymous entry or imply that manual assistance removes every data requirement. Do not persist unsubmitted visitor details through drafts, analytics or debug logs. The short summary is a first layer, not a complete live-service privacy notice or a compliance claim.
+
 ## Review boundaries and evidence
 
 The accepted scope/rules above are already recorded in #1. The credential design, API shape, counting semantics, five-second opening, manual override details and demo clock behaviour are technical proposals for that issue's review, not new accepted product requirements or completed features.
 
-Privacy wording, the requested interaction before storage, lawful-basis analysis, retention/deletion and the assisted-access procedure remain under #3. Do not preselect a legal basis, retention period or compliance claim. Use synthetic visitors for the prototype. Nothing is persisted from an unsubmitted public form; registration persists only after the required interaction is completed and submitted. Do not store camera footage.
+The visitor interaction below was accepted by Felipe on 13 November 2026. Complete notice wording, lawful-basis analysis, retention/deletion and the detailed assisted-access procedure remain under #3. Do not preselect a legal basis, retention period or compliance claim. Use synthetic visitors for the prototype. Nothing is persisted from an unsubmitted public form; registration persists only after the required interaction is completed and submitted. Do not store camera footage.
 
 Verification under #11 should demonstrate both inclusive time boundaries and outside them, pending/rejected denial, wrong destination, repeated deliberate access, duplicate/concurrent scans and request retries, five-second relock, manual-event separation, unauthorized settings changes, clock revision races, polling recovery and visitor data isolation. These are acceptance scenarios, not claims of tests already executed.
 

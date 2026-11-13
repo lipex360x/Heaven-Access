@@ -1,6 +1,6 @@
 # Heaven Access — Preliminary Screen Flow and Wireframes
 
-Planning artifact, revised 13 November 2026. These are low-fidelity artifacts for discussion, the supporting report, and a presentation slide. They are not implemented screens or a final specification. The accepted rules in issue #1 govern these screens; privacy wording and the remaining data/state details still need review.
+Planning artifact, revised 13 November 2026. These are low-fidelity artifacts for discussion, the supporting report, and a presentation slide. They are not implemented screens or a final specification. The accepted rules in issue #1 govern these screens; the privacy-notice acknowledgement is also accepted; full notice content and remaining data/state details still need review.
 
 [GitHub issues](https://github.com/lipex360x/Heaven-Access/issues) are the Source of Truth for design decisions, review tasks and progress. This file stores the visual planning artifact, not an independent backlog.
 
@@ -26,14 +26,14 @@ See [data-state-contract.md](data-state-contract.md) for proposed screen inputs/
 |                                      |
 | Why we need your information         |
 | [Read privacy notice]                |
-| [ ] Consent interaction*             |
+| [ ] I have read the privacy notice.  |
 |                                      |
 |          [ Request visit ]           |
 | Approval is required before access.  |
 +--------------------------------------+
 ```
 
-*No email or phone is collected. The lawful basis and wording of the requested privacy interaction remain subject to issue #3. The public form does not create an immediately usable pass. No administration of companies or departments is included.
+*No email or phone is collected. The user accepted an initially unchecked privacy-notice acknowledgement before submission. Show a short purpose summary and a link to the full notice. Without acknowledgement, do not create a visit; offer reception assistance. Lawful-basis analysis, the complete notice and retention remain under issue #3. The public form does not create an immediately usable pass. No administration of companies or departments is included.
 
 ### 2. Staff login and operational visit review
 
