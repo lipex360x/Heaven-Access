@@ -1,4 +1,5 @@
 import "server-only";
+import { attachDatabasePool } from "@vercel/functions";
 import { Pool, type PoolClient } from "pg";
 
 const globalDatabase = globalThis as typeof globalThis & { databasePool?: Pool };
@@ -10,11 +11,12 @@ export function getDatabase(): Pool {
       connectionString: process.env.DATABASE_URL,
       max: 5,
       connectionTimeoutMillis: 3000,
-      idleTimeoutMillis: 10000,
+      idleTimeoutMillis: 5000,
       statement_timeout: 5000,
     });
     // Do not log database errors containing connection details or query values.
     globalDatabase.databasePool.on("error", () => console.error("Database connection failed"));
+    if (process.env.VERCEL === "1") attachDatabasePool(globalDatabase.databasePool);
   }
   return globalDatabase.databasePool;
 }
