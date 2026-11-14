@@ -116,7 +116,10 @@ function AuthorizedPass({ capability }: { capability: string }) {
         <p>Your pass becomes usable when the access window starts.</p>
       )}
       {(visit.state === "expired" || visit.state === "rejected") && (
-        <p>A new request and approval are required. Please contact reception.</p>
+        <p>
+          A new request and approval are required. <a href="/register">Request a new visit</a> or
+          contact reception.
+        </p>
       )}
       <p>No smartphone or difficulty using the pass? Ask reception for assisted access.</p>
     </section>
