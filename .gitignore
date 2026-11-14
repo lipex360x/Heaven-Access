@@ -14,3 +14,4 @@ pgdata/
 next-env.d.ts
 # Local, disposable bearer-credential images used only for manual camera checks.
 /public/demo-qr-*.png
+.vercel

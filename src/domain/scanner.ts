@@ -1,4 +1,4 @@
-// A continuously visible code cannot reopen the gate after its five-second deadline.
+// A continuously visible code cannot reopen the gate after its eight-second deadline.
 export class ScannerLatch {
   private latched = false;
   private clearFrames = 0;

@@ -4,14 +4,16 @@ A visitor-access MVP for managing visit requests and time-limited access to auth
 
 Visitors request a visit through a public form. Authorized staff approve it, a mobile-first page displays a time-limited QR pass, and a simulated elevator/gate validates access. A receptionist can grant manual access when appropriate. Open screens update automatically through approximately one-second polling; validation and unlocking are decided by the server.
 
+Online prototype: **https://heaven-access.vercel.app**. Use fictional visitor details only. The hosted application uses Vercel and Neon PostgreSQL; local Docker data is separate.
+
 ## Current status
 
-The public request form, authenticated reception screen, mobile visitor pass and camera/device simulator are implemented against the local PostgreSQL API. Reception can approve/reject and explicitly release access manually, with QR/manual counts kept separate. Architecture and core visitor rules are defined in the accepted contract; the [API handoff](docs/api.md) describes the endpoints. Consult issues #5/#9/#11 for verification evidence and remaining delivery checks.
+The public request form, authenticated reception screen, mobile visitor pass and camera/device simulator are implemented against the shared server API and PostgreSQL. Reception can approve/reject and explicitly release access manually, with QR/manual counts kept separate. Architecture and core visitor rules are defined in the accepted contract; the [API handoff](docs/api.md) describes the endpoints. Consult issues #5/#9/#11 for verification evidence and remaining delivery checks.
 
 - Confirmed: PostgreSQL, local Docker Compose, and SQL initialization of schema, staff accounts, and departments/destinations.
 - No reference-data administration screens are planned.
-- Selected architecture: one Next.js application with TypeScript, React screens and server API routes; no separate backend or monorepo. Planned staff sessions use cookies and server-side authorization.
-- Main demonstration: separate browser tabs on localhost. Additional devices may connect through the same Wi-Fi using the host's LAN address.
+- Selected architecture: one Next.js application with TypeScript, React screens and server API routes; no separate backend or monorepo. Staff sessions use cookies and server-side authorization.
+- Online demonstration: computer, phone and tablet use the same HTTPS address. The local build remains available; additional devices can connect through the same Wi-Fi using the host's LAN address.
 - Real elevator/gate hardware and real email delivery are outside the current prototype requirement.
 
 ## Repository structure

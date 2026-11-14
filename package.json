@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@js-temporal/polyfill": "0.5.1",
+    "@vercel/functions": "3.11.3",
     "jsqr": "1.4.0",
     "next": "16.4.6",
     "pg": "8.23.1",

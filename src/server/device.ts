@@ -154,7 +154,7 @@ export async function accessDevice(
       if (visit.destination_id !== current.destination.id)
         return finish("wrong_destination", current);
     }
-    const deadline = new Date(new Date(current.serverNow).getTime() + 5000);
+    const deadline = new Date(new Date(current.serverNow).getTime() + 8000);
     await client.query("UPDATE demo_device SET unlocked_until = $1 WHERE id = 1", [deadline]);
     await client.query(
       `INSERT INTO access_events

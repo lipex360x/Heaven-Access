@@ -94,6 +94,12 @@ function AuthorizedPass({ capability }: { capability: string }) {
   return (
     <section className="panel stack">
       <h2 role="status">{LABELS[visit.state]}</h2>
+      {visit.qrPayload && (
+        <>
+          <PassQr payload={visit.qrPayload} />
+          <p>Show this QR to the access reader. Keep your private pass link and QR to yourself.</p>
+        </>
+      )}
       <p>{visit.visitorName}</p>
       <p>
         {visit.destination.companyLabel} · {visit.destination.roomLabel} · Floor{" "}
@@ -103,12 +109,6 @@ function AuthorizedPass({ capability }: { capability: string }) {
         Access window: {time(visit.validFrom)} – {time(visit.validUntil)} (Europe/Dublin)
       </p>
       {error && <p role="alert">{error.message} Access still requires server validation.</p>}
-      {visit.qrPayload && (
-        <>
-          <PassQr payload={visit.qrPayload} />
-          <p>Show this QR to the access reader. Keep your private pass link and QR to yourself.</p>
-        </>
-      )}
       {visit.state === "pending" && (
         <p>Reception must approve your visit. This page updates automatically.</p>
       )}
