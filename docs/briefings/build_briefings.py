@@ -6,7 +6,7 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 
 OUT = Path(__file__).resolve().parent
-VERSION = 'Planning draft v1 • 13 November 2026'
+VERSION = 'Rehearsal draft v2 • 14 November 2026'
 ISSUE = 'https://github.com/lipex360x/Heaven-Access/issues/13'
 SPEAKERS = {
 'Dani': ('Daniela Alves Paiva da Silva', '2026048', '00:00–02:30', 'Slides 1–2: the problem and evidence'),
@@ -29,20 +29,20 @@ SCRIPT = {
 'Our choice combines staff approval with a time-limited QR and a simulated access checkpoint. Where an elevator interface is unavailable, a suitable turnstile is a deployment alternative to investigate. We have not confirmed compatibility, costs or installation approval.',
 'The four screens show one journey. First, the visitor submits a name, destination and visit time after acknowledging the privacy notice. Second, an authenticated staff member approves or rejects the request. Third, the visitor sees the mobile pass. Fourth, a camera-enabled simulator sends the QR for a server-side destination and time check.',
 'The agreed window is thirty minutes before to thirty minutes after the visit, including both endpoints, using Dublin time. The QR may be reused within that window, and successful access authorizations are counted. After expiry, the visitor needs a new request and approval.',
-'The design keeps the scope to one building. Felipe will now explain the small technical setup and demonstrate the journey once it has been verified.'
+'The prototype keeps the scope to one building. The device display can show a gate or elevator on a separate tablet, using the same access decision. Felipe will now explain the technical setup and demonstrate the journey.'
 ],
 'Felipe': [
-'We selected one Next.js application with TypeScript and PostgreSQL in Docker Compose. The screens refresh approximately every second. Staff accounts and destinations are seeded; no administration screens are needed.',
-'Here is our synthetic visitor request. It starts pending and cannot authorize QR access. I approve it in the staff screen, and the visitor page displays the QR.',
-'I present the code to the actual camera. The server checks approval, destination and time. The accepted opening duration is five real seconds. One successful opening creates one QR access event; repeated camera frames must not inflate the count.',
+'We use one Next.js application with TypeScript and PostgreSQL. Locally, Docker Compose runs the database. Visible screens refresh approximately every second. Staff accounts and destinations are seeded; no administration screens are needed.',
+'Here I submit a fictional visit through the public form. The private pass starts pending, without a QR. I approve the request in reception, and the phone page displays the QR, with an option to download its image.',
+'I present the QR to the camera reader. The server checks approval, destination and time. The tablet shows the same simulated gate or elevator opening for five real seconds, then closing. A successful opening adds one QR authorization; repeated camera frames do not inflate the count.',
 'Now I change the staff-controlled demo time to show an expired pass being refused. The visitor cannot change this clock. It does not change staff-session expiry or the real unlock timer.',
-'If time permits, I show a deliberate repeat or a separate manual release. This is simulated hardware and delivery, not verified physical passage or identity. Bella will explain the responsibilities and limitations.'
+'If time permits, I show a deliberate repeat or a separately counted manual release, with a staff reason and confirmation. Gate and elevator are visualizations of one simulated device, not hardware integrations or proof of physical passage or identity. Bella will explain the responsibilities and limitations.'
 ],
 'Bella': [
-'Our design needs to be assessed beyond whether the QR can be scanned. We collect a visitor name, destination and visit time. The prototype is intended to use synthetic visitors, and camera use is for QR decoding, without storing footage.',
+'Our design needs to be assessed beyond whether the QR can be scanned. We collect a visitor name, destination and visit time. The prototype uses fictional visitor details and provides a notice explaining its actual processing. Camera frames are decoded locally, without recording or uploading footage.',
 'The agreed form interaction is an initially unchecked confirmation that the visitor has read the privacy notice. It is required before submitting and saving a request. That acknowledgement is not consent as a legal basis and is not proof of GDPR compliance. DPC guidance distinguishes transparency from the legal grounds for processing. A live deployment would need a justified basis, a complete notice, appropriate retention and deletion, security, and an assessment of whether a DPIA is required.',
-'We also need a practical reception-assisted route for people who cannot use the mobile process. That does not automatically mean anonymous access. Professional responsibility includes protecting privacy, avoiding harm and honestly describing limitations; these priorities are reflected in the ACM Code of Ethics.',
-'For evaluation, we will report only the actual tests recorded for the implemented build. At this planning stage there are no completed results to claim. Before delivery, this sentence must be replaced with a concise verified result and any remaining failure.',
+'Reception can make an explicit assisted manual release with a reason and confirmation. It is counted separately and does not approve or renew a visit. This does not promise anonymous entry. Professional responsibility includes protecting privacy, avoiding harm and honestly describing limitations, as reflected in the ACM Code of Ethics.',
+'Local tests verified request and approval forms, pass updates, expiry refusal, repeated-request protection, separate access counts and reconnect behavior. A synthetic camera stream exercised QR decoding and synchronized opening/closing. These results support prototype behavior, not a measured reduction in real incidents; a successful physical-camera opening still needs confirmation before the live demo.',
 'Possible savings in paper or disposable passes must be weighed against devices, hosting, installation and maintenance. We have no measured environmental saving or verified deployment cost.',
 'Our proposal improves the connection between visitor approval and access authorization. Tailgating, shared codes and other entry routes remain risks. Cross-unit blocking and biometrics are future ideas, not implemented features. Thank you; our references are shown here, and we welcome questions.'
 ],
@@ -51,7 +51,7 @@ CUES = {
 'Dani': [('00:00–00:25','Cover, names and one-sentence purpose.'),('00:25–01:00','Professional experience and research method.'),('01:00–02:10','Stakeholders, root-cause hypothesis and one main case.'),('02:10–02:30','Scope/scale limit and handoff to Cris.')],
 'Cris': [('02:30–03:15','Actual discussion/sketch and alternatives.'),('03:15–04:00','Why this combination; integration contingency.'),('04:00–04:45','Four screens and accepted visit rules.'),('04:45–05:00','Single-building scope and handoff to Felipe.')],
 'Felipe': [('05:00–05:25','Architecture in plain language.'),('05:25–06:15','Request, pending state, approval and QR.'),('06:15–07:15','Actual camera scan, unlock and access count.'),('07:15–08:10','Time-window refusal; optional repeat/manual branch.'),('08:10–08:30','Simulation boundary and handoff to Bella.')],
-'Bella': [('08:30–09:30','Privacy interaction and live-deployment obligations.'),('09:30–10:00','Accessibility and professional responsibility.'),('10:00–10:35','Verified result insertion, viability/sustainability limits.'),('10:35–11:00','Conclusion, future boundary and references.')],
+'Bella': [('08:30–09:30','Privacy interaction and live-deployment obligations.'),('09:30–10:00','Accessibility and professional responsibility.'),('10:00–10:35','Recorded test findings, viability/sustainability limits.'),('10:35–11:00','Conclusion, future boundary and references.')],
 }
 QA = [
 ('What does Heaven Access solve?', 'It connects a requested visit, staff approval, destination and time window to a server-side access decision. It does not establish that every unauthorized entry is prevented.'),
@@ -63,7 +63,7 @@ QA = [
 ('Does the checkbox make processing lawful?', 'No. It acknowledges the privacy notice. The lawful basis and complete live-deployment privacy requirements need separate assessment; no compliance certification is claimed.'),
 ('Does an access count show who is inside?', 'No. An unlock records authorization, not verified physical passage. No reliable occupancy or evacuation register is implemented, and normal lift use in a fire is not promised.'),
 ('Can you block someone across all buildings?', 'That is a future extension. It needs reliable identification and clear participating-unit governance. Using the same technology does not by itself authorize sharing a person-level restriction.'),
-('What is actually implemented and proven?', 'Answer from the verified build and issue #11 evidence. Currently this is a planning pack. Never invent test results, security improvement percentages, costs or environmental savings.'),
+('What is actually implemented and proven?', 'The request/reception forms, private QR page and device/display work locally. Unit/API checks and browser tests cover their rules and integrated workflow; synthetic frames verified decoding and opening. Physical QR expiry refusals were recorded; a successful physical opening still needs confirmation. Public hosting and the final deck are pending. Use issue #11 for current evidence, never invented percentages or results.'),
 ]
 SOURCES = [
 ('The Newsroom (2018), Edinburgh Evening News, 3 May. Workplace tailgating and interrupted attempted theft; not a prevalence study.', 'https://fallback.jpi.prod.brightsites.co.uk/news/crime/smartly-dressed-youths-foiled-in-brazen-rbs-bike-theft-586087'),
@@ -123,16 +123,16 @@ def build(who):
     text(d, f'{name}  |  Student {student}\nYour proposed slot: {slot}  |  {slides}')
     text(d, 'Shared narrative', 'Heading 1')
     text(d, 'An office visit request becomes an access authorization only after staff approval, for a particular destination and time. A camera-read QR lets a simulated checkpoint ask the server whether access is allowed.')
-    text(d, 'Planning pack: not a claim of a working prototype. Architecture and core visitor rules are accepted; the application, measured results and final deck are not yet available. The technical defaults are accepted as design; implementation and testing remain pending. Speaking parts are proposed until the team agrees and rehearses.')
+    text(d, 'Rehearsal draft aligned with the local prototype and issue #11 evidence. Request/reception forms, private QR pass and synchronized gate/elevator display are implemented. Hosting, final slides and successful physical-camera opening remain to be confirmed. The target delivery is an online link and live demonstration, with the local build as backup. No video will be produced. Speaking topics and timing are unchanged; rehearse together before delivery.')
     text(d, 'One clock for all four speakers', 'Heading 2')
     table(d,['Time','Speaker','Purpose'],[(v[2],k,v[3]) for k,v in SPEAKERS.items()]+[('11:00–12:00','Buffer','Transitions or short recovery; do not add content.')])
     text(d, 'The brief permits 12 minutes including the demo. Target 11 minutes. Q&A follows; its duration is unspecified. All members must attend and understand the whole assignment.')
     text(d, 'Facts everyone must say consistently', 'Heading 2')
-    text(d, 'One building; four screens; one staff role. Name + seeded company/room + date/time, without email/phone. Required privacy-notice acknowledgement before submission. Reusable QR within an inclusive ±30-minute Europe/Dublin window. Expiry means new request and approval. Next.js/TypeScript + PostgreSQL/Compose; approximately one-second polling. Hardware and pass delivery are simulated.')
+    text(d, 'One building; four interfaces; one staff role. Name + seeded company/room + date/time; no email/phone. Required privacy-notice acknowledgement. Reusable QR within inclusive ±30 minutes in Europe/Dublin; expiry requires a new request/approval. An opening lasts five real seconds; QR/manual counts are separate. Next.js/TypeScript + PostgreSQL; local Compose and approximately one-second visible-page polling. Phone: private pass and QR download. Tablet: shared gate/elevator visualization. Hardware and pass delivery are simulated; online Vercel + Neon delivery is planned, not yet deployed.')
     link(d,'Current presentation decisions and coordination — issue #13',ISSUE)
     d.add_page_break()
     text(d,'Your speaking notes','Heading 1')
-    text(d,'Rehearsal wording — adapt naturally; do not memorize unsupported claims. Dani must personally confirm any first-person account. Felipe must use the action wording only after the complete journey has been verified. Bella must replace the results sentence only after issue #11 supplies evidence.','Caption')
+    text(d,'Rehearsal wording — adapt naturally. Dani must confirm her first-person account. Felipe must check the physical camera and full live setup before using the action script. Bella distinguishes automated/synthetic-stream evidence from physical validation. Recheck issue #11 before delivery.','Caption')
     for s in SCRIPT[who]: text(d,s)
     text(d,'Timing cues','Heading 2')
     for time,cue in CUES[who]: text(d,f'{time}  {cue}')
@@ -144,12 +144,14 @@ def build(who):
         text(d,a)
     d.add_page_break()
     text(d,'Synchronization and evidence','Heading 1')
-    text(d,'Slide and handoff map','Heading 2')
+    text(d,'Working slide and handoff map','Heading 2')
     text(d,'1 Cover → Dani. 2 Problem/evidence/analysis → Dani. 3 Creative process/alternatives → Cris. 4 Solution/flow → Cris. 5 Demo → Felipe. 6 Responsibilities → Bella. 7 Evaluation/viability/sustainability/limits → Bella. 8 References → Bella closes. Keep the references visible for Q&A. Include the CCT cover material and all four names/student numbers.')
     text(d,'Demo sequence shared by everyone','Heading 2')
-    text(d,'Use a synthetic visitor and a known seeded destination. Show request → pending → approval → QR → actual camera scan → simulated unlock/relock → time-window refusal. A deliberate repeat/count or manual release is optional within the demo slot. Use a short recording of the same verified journey if the live camera/network fails; identify the recording. Cut optional branches before cutting reasoning or legal/ethical coverage.')
+    text(d,'Use fictional details and a seeded destination. Public form → pending pass → reception approval → QR on phone → camera scan → tablet unlock/relock → expiry refusal. Gate and elevator show the same authorization; choose one mode for the live sequence. A repeat/count or manual-release branch is optional. Check the real/demo clock, destination, camera permission and links before starting. Cut optional branches before cutting reasoning or legal/ethical coverage.')
+    text(d,'Delivery and recovery — no video','Heading 2')
+    text(d,'Plan an application link in the presentation PDF and a live demo on Vercel + Neon; the deployment is still pending. Keep a prepared local build/database as backup. If the camera fails, state that limitation and, if useful, show an explicit manual override without calling it a QR success. If the network fails, use the local build. Do not substitute a recording or pretend a failed step succeeded.')
     text(d,'Before the final rehearsal','Heading 2')
-    text(d,'Use one final deck and one verified build, rather than four separate slide versions. Read the previous speaker’s final sentence and the next speaker’s opening. Rehearse with a running timer. Replace the planning/result sentences using issue #11 evidence, and update all four documents together. Do not add AI, production integrations or cross-building functions to the spoken MVP. Live date, attendance and final delivery confirmation remain in issue #13.')
+    text(d,'Use one final deck and build. Align the provisional slide numbers, verified public URL and evidence with issues #11/#13; update all four briefings together. Read the adjacent speakers’ handoffs and rehearse with a timer. Do not add AI, real integrations or cross-building functions to the MVP. Live date, attendance and delivery confirmation remain in issue #13.')
     text(d,'Evidence and references','Heading 2')
     text(d,'Third-party material needs Harvard citations on the relevant slide and a bibliography. These compact source notes are reading pointers, not a substitute for the final bibliography. Accessed 13 November 2026; the DPC report publication year should be reconfirmed for final export.')
     for label,url in SOURCES: link(d,label,url)
