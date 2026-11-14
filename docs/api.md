@@ -1,6 +1,6 @@
 # Heaven Access — Visitor API Handoff
 
-The accepted product/state rules remain in [the contract](data-state-contract.md) and [issue #1](https://github.com/lipex360x/Heaven-Access/issues/1). This document describes the implemented API boundary for the operational forms (#5) and mobile pass (#8), without transferring their UI ownership. The device API and real QR scanning remain #9.
+The accepted product/state rules remain in [the contract](data-state-contract.md) and [issue #1](https://github.com/lipex360x/Heaven-Access/issues/1). This document describes the implemented visitor/staff and device API boundaries for the operational forms (#5), mobile pass (#8) and simulator (#9). Consult #11 for actual verification evidence; an implemented endpoint is not proof of a real camera scan.
 
 ## Requests and errors
 
@@ -42,7 +42,7 @@ Import the demonstration notice constants from `src/domain/privacy.ts`. Show the
 
 Names are trimmed and limited to 100 characters; control characters are rejected. Date/time is local **Europe/Dublin**, without a zone or offset. Seconds and millisecond precision are optional; the normal `datetime-local` minute value works. Invalid dates and ambiguous/nonexistent DST times return `400`, rather than being shifted silently. The server creates a pending visit and records real acknowledgement time only after valid submission. No email/phone is required.
 
-Success (`201`) returns `{ visitId, visitorPath, decision: "pending" }`. Navigate to the returned relative `visitorPath`, such as `/pass#<private-capability>`. The `/pass` UI is a separate deliverable; it is not implemented by these endpoints. Do not log or put this path in shared staff lists.
+Success (`201`) returns `{ visitId, visitorPath, decision: "pending" }`. Navigate to the returned relative `visitorPath`, such as `/pass#<private-capability>`. The implemented `/pass` page reads the fragment, polls only the capability-scoped endpoint and displays the current state. Approved, unexpired responses render the QR locally and offer a PNG download; saved images do not bypass server expiry. Do not log or put this path in shared staff lists.
 
 ## Private visitor page
 
@@ -84,7 +84,20 @@ Only approved, unexpired responses contain `qrPayload`. It is an independent ran
 - `GET /api/staff/visits`: `{ visits: [...] }`, newest 200 records. Each record includes the common visitor fields above (without `qrPayload`), `decision`, `createdAt`, nullable `decidedAt`/`decisionBy`, `qrAccessCount` and `manualReleaseCount`. No visitor or QR secrets are returned. These are recorded authorizations, not a measured count of people physically inside.
 - `POST /api/staff/visits/:id/decision`: `{ decision: "approve" }` or `{ decision: "reject" }` → `{ visitId, decision: "approved" | "rejected" }`. Only pending, unexpired requests can change. Concurrent or repeated decisions return one success and then `409`, without regenerating QR credentials.
 
-The SQL device/settings row already supplies a shared effective clock for visit states. No browser is allowed to send its own effective time in a visit/decision request. Public demo-clock controls, scanning, manual-release actions and polling components are not implemented here. Staff UI should refresh after mutations; use the accepted approximately one-second visible-page polling pattern when implementing its components.
+The shared device/settings row supplies the effective clock for visit states. No browser is allowed to send its own effective time in a visit/decision request. Staff UI should refresh after mutations. `src/client/use-polling.ts` supplies visible-page polling, one in-flight sequential loader and focus/reconnect refresh; the device screen uses it and the other screens can reuse it.
+
+## Authenticated device simulator
+
+`/device` provides staff sign-in, camera scanning, gate status, scenario controls and explicit assisted manual release. `/device/display` is a clean, authenticated view of the same device for a separate tablet/tab, with Gate/Elevator visualization modes (`?mode=elevator` selects the latter initially). Hinge/door animations last 650 ms and respect reduced-motion preferences; they visualize the existing server deadline and do not add separate devices, travel simulation or hardware control. These endpoints all require the staff cookie; mutations also require same-origin requests and JSON. Polling reads never open the gate or add events.
+
+- `GET /api/device` → `{ device, feedback }`: device has `id`, `destination`, `revision`, `state` (`locked`/`unlocked`), `unlockedUntil`, `serverNow`, `effectiveNow`, and `clockMode` (`real`/`demo`). `feedback` is null or `{ code, occurredAt }` for the most recent actual authorization outcome in the current scenario, visible for eight real seconds. It includes no visitor information or credential. Duplicate/stale reads do not replace it; changing scenario clears it. Both screens display prominent authorization/denial and return to locked after the real deadline. All timestamps are UTC instants; display the clock in Europe/Dublin.
+- `POST /api/device/scan`: `{ qrPayload, expectedRevision, requestId }` → `{ code, device }`. `requestId` is a fresh UUID v4 for each deliberate presentation. Send decoded data, never navigate to it. The server uses its own configured destination/time. Access codes: `granted`, `already_unlocked`, `invalid_qr`, `not_approved`, `too_early`, `expired`, `wrong_destination`, `stale_device_state`. Denied authorizations use HTTP 200 with a result code; malformed inputs/authentication still use the HTTP errors above.
+- `POST /api/device/manual-release`: `{ visitId, reason, expectedRevision, requestId }` → `{ code, device }`. A selected visit and trimmed 1–200-character reason are required. An explicit override may release an expired/pending/rejected visit; it never changes that visit's decision, time or QR count. The UI shows the visit state/destination and requires confirmation. The event records the authenticated actor and actual device destination.
+- `PATCH /api/demo/settings`: `{ expectedRevision, destinationId?, effectiveLocal?, resetClock? }` → `{ device }`. Include at least one setting. `effectiveLocal` uses the same strict Europe/Dublin parser as registration; `resetClock: true` is mutually exclusive with it. Clock/destination changes relock, increment revision and serialize with access/approval operations. Stale settings return HTTP 409; stale scans return the result code without opening. Clock rewinds explicitly replay time-derived states, without changing stored visit windows.
+
+Each opening and successful access event commit atomically under the shared PostgreSQL device lock. The deadline is five real seconds; repeated frames while open do not extend it or add an event. QR/manual counts remain separate. The camera latch requires three clear decoded frames while locked before rearming after a presentation; a continuously visible QR cannot reopen the gate after its deadline. Scenario changes also require a fresh presentation. Camera frames remain local in memory, without uploads or recording.
+
+Retry a timed-out scan/manual action with **exactly the same request ID and body**. `device_requests` stores hashed input identity and the original result, including denied/duplicate outcomes; those records are not counted access events. Reusing an ID for different input/actor returns 409. A replayed success is historical: it does not extend/reopen the gate. Refresh `GET /api/device` for the current state. The simulator retains an uncertain action for explicit retry and derives countdowns from server time plus a monotonic browser deadline, independent of the fictional clock.
 
 ## Updating an existing local database
 
@@ -92,6 +105,7 @@ New empty Compose volumes run all files in `database/init` automatically. To pre
 
 ```sh
 docker compose exec -T db psql -U heaven_access -d heaven_access -v ON_ERROR_STOP=1 < database/init/003-visits.sql
+docker compose exec -T db psql -U heaven_access -d heaven_access -v ON_ERROR_STOP=1 < database/init/004-device-requests.sql
 ```
 
 Use the configured user/database names if different. The migration is transactional and can be reapplied without deleting records. `npm run db:reset -- --confirm` remains an intentional destructive reset for disposable local data, not an automatic migration step.
@@ -102,8 +116,11 @@ Use the configured user/database names if different. The migration is transactio
 npm test
 # With the local database initialized and the app running:
 npm run test:api
+npm run test:device
 ```
 
 Integration tests refuse a remote database/server. They create a temporary synthetic staff account/visits, exercise actual HTTP and PostgreSQL behavior, temporarily set the shared clock, then remove their fixtures and restore the original offset. Run them without another demonstration in progress. They verify session/capability separation, notice validation, invalid input, approval races, rejection/expiry, QR/manual summary separation and logout/real-time session expiry. Seeded access events in tests are summary fixtures, not evidence of working device unlocks. Unit tests cover DST rejection and inclusive millisecond boundaries.
 
-Online delivery uses the accepted Vercel + Neon route; provisioning and deployment checks are still separate. This local API implementation does not establish public-deployment readiness, a complete privacy notice, working screens or a tested camera scan.
+Run the two integration suites sequentially. Device checks exercise real HTTP/PostgreSQL authorization, concurrent/retried opens, real five-second relocking, denied scans, revision races, manual-event separation and demo/session clock separation. They restore the original device configuration and remove their own fixtures. Unit checks also cover continuous-frame suppression and scanner rearming. Browser verification with a synthetic video stream is distinct from a physical camera scan; record both accurately in #11.
+
+Online delivery uses the accepted Vercel + Neon route; provisioning and deployment checks are still separate. This implementation does not establish public-deployment readiness, a complete privacy notice or completed registration/staff approval screens. Consult #11 for the distinction between synthetic-stream tests, user-reported physical QR reads and successful live-opening evidence.

@@ -16,6 +16,90 @@
 - Distinguish confirmed requirements, proposed design choices, research findings, and assumptions. Do not invent evidence, costs, interviews, technical integrations, or compliance claims.
 - Prefer authoritative sources for technical and legal research. Record source details for Harvard referencing and verify current requirements before making legal claims.
 
+## How the application works and how to start it on another machine
+
+These are the current practical onboarding instructions, added on 14 November 2026. Keep this guidance in **AGENTS.md only for now**; do not copy or expand it into README.md or other onboarding documents until requested. This section supersedes older planning-only and environment snapshots below for startup. GitHub issues remain authoritative for scope and verification evidence.
+
+### Runtime and available interfaces
+
+- One Next.js application runs on the host machine using Node/npm. Its React pages and server API share the same origin. Only PostgreSQL runs in Docker Compose; do not try to start the whole application as a container or install PostgreSQL directly on the host.
+- A visitor request starts pending. Staff approval issues a reusable QR for one destination, valid within the inclusive 30 minutes before/after the scheduled instant in Europe/Dublin. The server checks destination, decision and time on each scan. Successful authorization opens the simulated device for five real seconds and records one event. Repeated frames/retries do not add openings; the code must leave the view before another presentation. Manual releases have separate counts and an attributable reason.
+- The four intended interfaces are public registration, staff reception/approval, private visitor pass, and the access-device simulator. At this revision, registration and staff-approval **forms are still pending**; their APIs exist. Do not claim a complete form-based journey on a new machine.
+- `/` links to the simulator. `/device` provides staff sign-in, camera scanning, shared device state, destination/demo-clock controls and manual release. The local synthetic staff account is `reception` / `HeavenDemo-2026!`.
+- `/pass#<capability>` is the private, mobile-first visitor page: pending/approved/rejected/early/expired/invalid states, approved QR display and PNG download. The capability comes from the visitor-request API, not from the database seed. It needs no staff login; do not put private links in shared issues or logs.
+- `/device/display` is a clean authenticated view for a separate tablet/tab. Select Gate or Elevator; `/device/display?mode=elevator` selects elevator initially. These are two visualizations of the **same** simulated device/state, not separate physical integrations. Shared polling updates visible screens approximately once per second; both modes animate opening/closing and show prominent grant/denial feedback.
+- The fictional clock advances globally. Visit windows use it; staff sessions, audit timestamps and the five-second opening use real time. Old demo links/images can expire. Use a new request and approval for a new visit, or explicitly label a staff clock rewind as scenario replay. Never silently change a visit time, extend an old QR or treat a saved image as permanently valid.
+
+### Mandatory readiness check before startup
+
+When someone asks to initialize or run the project, **check the machine first**. Detect the OS, CPU architecture, shell, repository location/revision and uncommitted work. Do not assume another person has Felipe's paths or tools. Reuse a recent reliable diagnosis, but verify missing/changed prerequisites. If local execution is unavailable, request the small relevant diagnostic output and do not claim the machine was checked.
+
+Check executable paths as well as versions. On macOS/Linux, use the following applicable read-only commands; skip commands for tools already established as missing rather than abandoning the whole diagnosis:
+
+```sh
+command -v git mise node npm docker
+git --version
+node --version
+npm --version
+docker --version
+docker compose version
+docker context show
+docker info --format '{{.ServerVersion}}'
+```
+
+On native Windows PowerShell, use `Get-Command git,mise,node,npm,docker -ErrorAction SilentlyContinue` for discovery, followed by the same available tools' version/Compose/context/engine commands. Distinguish native Windows from WSL; keep runtimes, paths and Docker integration in the chosen environment. Do not mix shell syntax.
+
+Before continuing, establish all of the following:
+
+- Git can access the private repository using the person's own authorized account. Diagnose authentication failures instead of treating the repository as empty; never request or print tokens.
+- The **active** Node/npm match the committed pins: currently Node **24.16.0**, npm **11.13.0**, specified in `mise.toml`/`package.json`. `engine-strict` is enabled. A different globally installed Node is not sufficient. Bun is not required.
+- Docker CLI **and** `docker compose` are installed, and `docker info` confirms a reachable Linux-container engine. CLI presence alone is insufficient. Start the existing Docker Desktop/engine if it is installed but stopped; diagnose context/backend/virtualization errors separately from missing installation.
+- The project folder contains `package.json`, `package-lock.json`, `.env.example`, `compose.yaml` and `database/init/`. Check for an existing application or database service/port before starting another instance; preserve local changes and database volumes.
+
+If anything is missing, resolve the specific prerequisite before running `npm ci` or starting services. Prefer an existing compatible setup. For installation, verify current official platform requirements: Homebrew is appropriate for supported macOS packages, WinGet/official installers for native Windows, and mise for the committed Node version. Preserve unrelated runtime managers/projects; do not change global versions, select `latest`, install Bun or host PostgreSQL as a shortcut. A request to run the project authorizes its routine dependency/container/application startup; do not ask again for steps already covered by that request. Explain any necessary machine-level change and respect the user's existing authorization.
+
+### First run after readiness passes
+
+Work from the person's actual checkout directory. If no checkout exists, clone `https://github.com/lipex360x/Heaven-Access.git` into an appropriate local folder using their authenticated Git access. For an existing checkout, preserve changes before updating and use the agreed revision/main; never reset it to fix setup.
+
+If mise supplies Node, inspect the committed configuration before trusting it, then run:
+
+```sh
+mise trust mise.toml
+mise install
+mise exec -- node --version
+mise exec -- npm --version
+```
+
+Activate mise in the current shell or prefix subsequent npm commands with `mise exec --` when needed. With the pinned Node/npm active:
+
+1. If `.env` does **not** exist, copy `.env.example` to `.env` (`cp .env.example .env` on macOS/Linux; `Copy-Item .env.example .env` in PowerShell). Preserve an existing file; check only the required settings without printing it. The example contains local demonstration values, not production credentials.
+2. Run `npm ci` using the committed lockfile. Do not use another package manager or regenerate the lockfile to bypass a wrong runtime.
+3. Run `npm run db:up`. Compose waits for database health. On a new empty volume, PostgreSQL applies all SQL files in `database/init/` and seeds three fictional destinations and the hashed demo staff account. It does not seed a ready-to-use visitor pass.
+4. For a pre-existing foundation database, apply any missing additive migrations instead of resetting its volume. The current repeatable additions are `003-visits.sql` and `004-device-requests.sql`. On macOS/Linux, from the repository root:
+
+```sh
+docker compose exec -T db psql -U heaven_access -d heaven_access -v ON_ERROR_STOP=1 < database/init/003-visits.sql
+docker compose exec -T db psql -U heaven_access -d heaven_access -v ON_ERROR_STOP=1 < database/init/004-device-requests.sql
+```
+
+In PowerShell, use `Get-Content -Raw database/init/003-visits.sql | docker compose exec -T db psql -U heaven_access -d heaven_access -v ON_ERROR_STOP=1`, then the same command for `004-device-requests.sql`. Adjust user/database names if the local configuration intentionally differs. Do not use Bash input redirection in PowerShell.
+
+5. Run `npm run dev` and keep that process running. Open `http://localhost:3000/device` on that computer. Next.js binds to loopback by default. The database binds only to `127.0.0.1:54329`; keep it that way.
+6. Verify `docker compose ps` reports a healthy database and `http://localhost:3000/api/health` returns HTTP 200 with `database: "ready"`. Then verify staff sign-in and the simulator/display pages. Report tools readiness, API health and demonstrated functionality separately.
+
+To prepare a synthetic visitor before the registration/approval forms exist, use the actual APIs documented in `docs/api.md`: read destinations; submit name, destination, a current scheduled Dublin local time, `privacyAcknowledged: true` and the current notice version from `src/domain/privacy.ts`; retain the returned private `visitorPath`; authenticate staff with a cookie and approve that pending visit. Open the returned link on the visitor's device. Generate this machine's own fixture through the API; do not copy another machine's old private link/image or invent database records. Use only synthetic data and do not log credentials/capabilities. Preparing this fixture is part of a requested runnable demonstration, not permission to add new features.
+
+### Phone/iPad demonstration and shutdown
+
+- On the host computer, the reader can use `http://localhost:3000/device`. Start camera capture explicitly and grant browser permission. A successful health check is not evidence of camera permission or a physical scan.
+- For a phone/iPad, discover the **current computer LAN IP** on the shared network/hotspot. Put that hostname/IP in `.env` as `DEV_ALLOWED_HOSTS` (no scheme/port; comma-separated if needed), restart the development server with `npm run dev -- --hostname 0.0.0.0`, and use `http://<computer-LAN-IP>:3000`. Do not hardcode Felipe's previous IP or give a phone a `localhost`/`127.0.0.1` address.
+- Open the newly returned `/pass#<capability>` link with that LAN origin on the phone. Open `/device/display` or `/device/display?mode=elevator` on the iPad and sign in there. Cookies are origin-specific; different hostnames/devices may require separate staff sign-in. The visitor pass stays capability-scoped even when a staff cookie is also present.
+- A phone displaying a QR and an iPad only displaying the shared gate/elevator state do not need camera access. If the phone/iPad itself will scan, plain LAN HTTP normally does not provide the required secure camera origin; use a verified trusted HTTPS deployment. Check network reachability/firewall and browser permissions rather than assuming a hotspot proves connectivity.
+- Keep the LAN demonstration limited to its intended network; PostgreSQL stays loopback-only. No real hardware, real email, video or cross-building blocking is implemented. Vercel/Neon publication remains separate work.
+- Stop the application with Ctrl+C. `npm run db:down` stops the project's database while preserving data. Never run `npm run db:reset -- --confirm` as routine startup or troubleshooting: it deliberately deletes the local project database.
+- When validating changes, use `npm run lint`, `npm run typecheck`, `npm test` and `npm run build` as appropriate. Run `npm run test:api` and `npm run test:device` sequentially only against the disposable local database with no demonstration in progress: they temporarily change the shared clock/device and restore their fixtures/configuration. Record actual results and remaining limitations in #11, not a parallel local status file.
+
 ## Shared GitHub workflow
 
 - Repository: https://github.com/lipex360x/Heaven-Access. Private team board: https://github.com/users/lipex360x/projects/19/views/2.
@@ -141,7 +225,7 @@ The individual rubric allocates 50 marks to additional supporting information an
 
 **Accepted data/state contract — 13 November 2026:** `docs/data-state-contract.md` specifies records, screen/API boundaries, deduplicated QR access counts, separately recorded manual releases, five-real-second unlocks and a staff-controlled advancing demo clock. `docs/api.md` is the implemented visitor/staff API handoff; device endpoints and actual camera tests remain separate. Consult #1/#11 for current evidence instead of treating the accepted design as proof of completion. Issue #3 owns the complete privacy review.
 
-**Local demonstration and browser tooling:** Primary test scenario: separate browser tabs on one computer, using localhost. Additional devices may join the same Wi-Fi and connect to the host computer's LAN address; their own localhost does not refer to the host. Check camera permissions/security requirements and browser session sharing during development. `web-view -h` was successfully executed on 6 November 2026. The tool drives Chrome over CDP and supports launching/listing/stopping instances, navigation, tabs, PNG/ARIA snapshots, interactions, resizing, and JavaScript evaluation. Use it for end-to-end demonstration checks when implementation is authorized; no browser session has been launched for this project yet.
+**Local demonstration and browser tooling:** Primary test scenario: separate browser tabs on one computer, using localhost. Additional devices may join the same Wi-Fi and connect to the host computer's LAN address; their own localhost does not refer to the host. Check camera permissions/security requirements and browser session sharing during development. The `web-view` CLI drives Chrome over CDP and supports navigation, tabs, PNG/ARIA snapshots, interactions, resizing and JavaScript evaluation. On 13 November 2026, it was used for actual browser/API verification, including shared staff sessions and logout across tabs; evidence and limitations are recorded in issue #11. This does not establish a working form-based journey or a verified camera scan. Reuse a suitable project browser instance after checking `web-view list`; preserve unrelated instances.
 
 **Project organization and supporting artifacts:** The private repository is https://github.com/lipex360x/Heaven-Access. GitHub issues are the SoT; former local planning and checklist content has been migrated there. `docs/references.md` records Irish and international incident evidence, a report-ready summary, source links, Harvard-style references, and evidence limitations. `docs/design.md` contains low-fidelity wireframes, `docs/flow.md` contains the visitor flow diagrams, and `docs/team.md` contains the four supplied group members and student details for the supporting report/presentation. Preserve these as genuine artifacts and update them as issue decisions evolve. The user requested a supporting report; the brief's explicit assessed deliverables remain the presentation, prototype display, and Q&A.
 

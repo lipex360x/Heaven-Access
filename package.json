@@ -15,16 +15,19 @@
     "typecheck": "next typegen && tsc --noEmit",
     "lint": "biome check .",
     "format": "biome format --write .",
-    "test": "node --test tests/visit-time.test.mjs",
+    "test": "node --test tests/visit-time.test.mjs tests/scanner.test.mjs",
     "test:api": "node --env-file=.env --test tests/visit-api.test.mjs",
+    "test:device": "node --env-file=.env --test tests/device-api.test.mjs",
     "db:up": "docker compose up -d --wait db",
     "db:down": "docker compose down",
     "db:reset": "node --env-file=.env scripts/reset-database.mjs"
   },
   "dependencies": {
     "@js-temporal/polyfill": "0.5.1",
+    "jsqr": "1.4.0",
     "next": "16.4.6",
     "pg": "8.23.1",
+    "qrcode": "1.5.4",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "server-only": "0.0.1"
@@ -33,6 +36,7 @@
     "@biomejs/biome": "2.6.7",
     "@types/node": "24.19.2",
     "@types/pg": "8.23.1",
+    "@types/qrcode": "1.5.6",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "typescript": "5.9.3"
