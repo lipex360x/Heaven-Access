@@ -143,7 +143,7 @@ test("atomic device access, manual override and advancing demo scenarios", async
       assert.equal(await total("qr"), 0);
     });
     await t.test(
-      "concurrent scans yield one real five-second opening with retry deduplication",
+      "concurrent scans yield one real eight-second opening with retry deduplication",
       async () => {
         await settings({ destinationId: 1 });
         const revision = (await device()).revision;
@@ -162,7 +162,7 @@ test("atomic device access, manual override and advancing demo scenarios", async
         assert.equal(await total("qr"), 1);
         const opened = outcomes.find((outcome) => outcome.data.code === "granted").data.device;
         assert.equal((await req("/api/device")).data.feedback.code, "granted");
-        assert.equal(new Date(opened.unlockedUntil) - new Date(opened.serverNow), 5000);
+        assert.equal(new Date(opened.unlockedUntil) - new Date(opened.serverNow), 8000);
         assert.equal((await scan(qr)).data.device.unlockedUntil, opened.unlockedUntil);
         assert.equal(
           (await req("/api/device/scan", { ...body, qrPayload: "different" })).response.status,
@@ -293,7 +293,7 @@ test("atomic device access, manual override and advancing demo scenarios", async
         });
         assert.equal(
           new Date(manual.data.device.unlockedUntil) - new Date(manual.data.device.serverNow),
-          5000,
+          8000,
         );
         await settings({ effectiveLocal: "2026-01-01T00:00" });
         assert.equal((await req("/api/staff/session")).response.status, 200);

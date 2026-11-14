@@ -64,11 +64,11 @@ The visitor-page secret should be passed in an authorization header for polling,
 
 Accepted technical defaults:
 
-- A successful QR validation opens the simulator for **five real seconds** and creates one QR access event in the same database transaction. It records an authorization, not proof that a person physically passed through.
+- A successful QR validation opens the simulator for **eight real seconds** and creates one QR access event in the same database transaction. It records an authorization, not proof that a person physically passed through.
 - While open, further camera frames return `already_unlocked` with the existing deadline. They do not extend the opening or add events. After relocking, require the code to leave the camera view before rearming the scanner; a later deliberate presentation can create a new access.
 - A unique request ID makes retrying a timed-out scan/manual action return its earlier result without another event. Serialize device opening decisions in PostgreSQL so two tabs cannot count the same opening twice.
 - Manual release is an explicit staff override, including when normal QR access is unavailable. Require a selected visit and reason, and show the decision state/time warning before confirmation. It never approves, renews or changes the visit and never increases its QR count. This does not control real emergency egress.
-- The default clock is real time. Staff may set a **global demo clock offset**: the fictional time advances normally from the selected instant, and all screens use the same value. Reset removes the offset. Session expiry, real event timestamps and the five-second opening always use real server time.
+- The default clock is real time. Staff may set a **global demo clock offset**: the fictional time advances normally from the selected instant, and all screens use the same value. Reset removes the offset. Session expiry, real event timestamps and the eight-second opening always use real server time.
 - A destination/clock change relocks the simulator and increments its revision. An old scan is rejected as `stale_device_state`, then the client refreshes and waits for a new presentation. Scans and settings changes must be serialized so an in-flight decision cannot unlock the wrong scenario.
 - A pending request whose window has ended cannot be approved. Do not silently change its time. Local times in a DST gap or overlap are rejected with a clear correction request rather than guessed; store accepted times as unambiguous instants.
 - Poll once per second while visible, with only one in-flight read per screen. Refresh on focus/reconnect and after mutations. Show connection errors and recover from server state; do not create access records from a polling read or a visual state transition.
@@ -87,10 +87,10 @@ If the visitor does not continue, create no visit and direct them to reception. 
 
 ## Review boundaries and evidence
 
-Felipe accepted the credential design, API shape, counting semantics, five-second opening, manual override details and demo clock behaviour on 13 November 2026. This is design acceptance recorded in #1, not evidence of completed implementation or tests.
+Felipe accepted the credential design, API shape, counting semantics, the initial five-second opening, manual override details and demo clock behaviour on 13 November 2026. On 14 November, Felipe changed the opening duration to eight real seconds for both QR and manual releases. This is design acceptance recorded in #1, not evidence of completed implementation or tests.
 
 The visitor interaction above was accepted by Felipe on 13 November 2026. Complete notice wording, lawful-basis analysis, retention/deletion and the detailed assisted-access procedure remain under #3. Do not preselect a legal basis, retention period or compliance claim. Use synthetic visitors for the prototype. Nothing is persisted from an unsubmitted public form; registration persists only after the required interaction is completed and submitted. Do not store camera footage.
 
-Verification under #11 should demonstrate both inclusive time boundaries and outside them, pending/rejected denial, wrong destination, repeated deliberate access, duplicate/concurrent scans and request retries, five-second relock, manual-event separation, unauthorized settings changes, clock revision races, polling recovery and visitor data isolation. These are acceptance scenarios, not claims of tests already executed.
+Verification under #11 should demonstrate both inclusive time boundaries and outside them, pending/rejected denial, wrong destination, repeated deliberate access, duplicate/concurrent scans and request retries, eight-second relock, manual-event separation, unauthorized settings changes, clock revision races, polling recovery and visitor data isolation. These are acceptance scenarios, not claims of tests already executed.
 
 This specification does not introduce a separate visitor identity registry, AI, biometrics, hardware integration, email service, analytics dashboard or cross-company restriction sharing.

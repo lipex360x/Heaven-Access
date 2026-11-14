@@ -24,7 +24,7 @@ export type DeviceFeedback = { code: AccessCode; occurredAt: string };
 export type DeviceSnapshot = { device: Device; feedback: DeviceFeedback | null };
 
 export const ACCESS_MESSAGES: Record<AccessCode, string> = {
-  granted: "Access authorized. The simulated gate opens for five real seconds.",
+  granted: "Access authorized. The simulated gate opens for eight real seconds.",
   already_unlocked: "The gate is already open. No additional access was recorded.",
   invalid_qr: "This is not an available Heaven Access QR pass.",
   not_approved: "This visit is not approved.",
