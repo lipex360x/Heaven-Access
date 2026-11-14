@@ -36,7 +36,7 @@ Import the demonstration notice constants from `src/domain/privacy.ts`. Show the
   "destinationId": 1,
   "scheduledLocal": "2026-11-13T12:00",
   "privacyAcknowledged": true,
-  "noticeVersion": "demo-2026-11-13"
+  "noticeVersion": "demo-2026-11-14"
 }
 ```
 
@@ -123,4 +123,12 @@ Integration tests refuse a remote database/server. They create a temporary synth
 
 Run the two integration suites sequentially. Device checks exercise real HTTP/PostgreSQL authorization, concurrent/retried opens, real five-second relocking, denied scans, revision races, manual-event separation and demo/session clock separation. They restore the original device configuration and remove their own fixtures. Unit checks also cover continuous-frame suppression and scanner rearming. Browser verification with a synthetic video stream is distinct from a physical camera scan; record both accurately in #11.
 
-Online delivery uses the accepted Vercel + Neon route; provisioning and deployment checks are still separate. This implementation does not establish public-deployment readiness, a complete privacy notice or completed registration/staff approval screens. Consult #11 for the distinction between synthetic-stream tests, user-reported physical QR reads and successful live-opening evidence.
+## Registration and reception screens
+
+`/register` uses the seeded destinations and requires the initially unchecked acknowledgement. `/privacy` explains actual prototype processing; notice revision `demo-2026-11-14` replaces the earlier summary-only revision. This is a demonstration notice, not an approved live-service policy. Submission navigates to the returned private pass; no form drafts are saved. A failed/unknown submission outcome warns that a request may already exist and disables resubmission until reception can assist, rather than silently retrying and duplicating a visit.
+
+`/staff` reuses the sign-in component and polls its session, latest 200 visits and current device sequentially. Cards show decision/time-derived state, destination/time, QR count and separate manual count. Pending, unexpired requests offer approve/reject. Assisted override requires a reason and confirmation showing the visit state and actual device destination; uncertain manual outcomes retain their exact request ID for retry. Expired/rejected visitor pages link back to a new request. A connection error pauses staff actions until server state recovers.
+
+Client request IDs use `crypto.randomUUID` on secure origins and cryptographic `getRandomValues` UUID-v4 generation for LAN HTTP, where `randomUUID` may be unavailable. This does not make an insecure camera origin usable; camera access still requires localhost or trusted HTTPS.
+
+Online delivery uses the accepted Vercel + Neon route; provisioning and deployment checks are still separate. The prototype notice does not establish live-deployment legal basis/retention or compliance. Consult #11 for the distinction between synthetic-stream tests, user-reported physical QR reads and successful live-opening evidence.

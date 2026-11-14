@@ -3,6 +3,7 @@ import { randomUUID } from "node:crypto";
 import test from "node:test";
 import { setTimeout as delay } from "node:timers/promises";
 import pg from "pg";
+import { PRIVACY_NOTICE_VERSION } from "../src/domain/privacy.ts";
 
 const base = process.env.TEST_BASE_URL ?? "http://127.0.0.1:3000";
 const databaseUrl = new URL(process.env.DATABASE_URL);
@@ -65,7 +66,7 @@ test("atomic device access, manual override and advancing demo scenarios", async
       destinationId,
       scheduledLocal: time,
       privacyAcknowledged: true,
-      noticeVersion: "demo-2026-11-13",
+      noticeVersion: PRIVACY_NOTICE_VERSION,
     });
     assert.equal(made.response.status, 201);
     return { id: made.data.visitId, capability: made.data.visitorPath.split("#")[1] };

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ClientError, requestJson, sendJson } from "@/client/api";
+import { ClientError, newRequestId, requestJson, sendJson } from "@/client/api";
 import { usePolling } from "@/client/use-polling";
 import { type GateSnapshot, GateStatus, gateSnapshot } from "@/components/gate-status";
 import { QrCamera } from "@/components/qr-camera";
@@ -109,7 +109,7 @@ export function DeviceSimulator() {
             body: {
               qrPayload,
               expectedRevision: data.device.revision,
-              requestId: crypto.randomUUID(),
+              requestId: newRequestId(),
             },
           });
         }}
@@ -218,7 +218,7 @@ export function DeviceSimulator() {
                 visitId: selectedId,
                 reason: values.get("reason"),
                 expectedRevision: data.device.revision,
-                requestId: crypto.randomUUID(),
+                requestId: newRequestId(),
               },
             });
             form.reset();

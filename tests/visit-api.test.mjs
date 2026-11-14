@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { createHash, randomUUID } from "node:crypto";
 import test from "node:test";
 import pg from "pg";
+import { PRIVACY_NOTICE_VERSION } from "../src/domain/privacy.ts";
 
 const base = process.env.TEST_BASE_URL ?? "http://127.0.0.1:3000";
 const databaseUrl = new URL(process.env.DATABASE_URL);
@@ -48,7 +49,7 @@ test("visit and authentication HTTP boundaries", async (t) => {
     destinationId: 1,
     scheduledLocal: "2026-11-13T12:00",
     privacyAcknowledged: true,
-    noticeVersion: "demo-2026-11-13",
+    noticeVersion: PRIVACY_NOTICE_VERSION,
   };
   const setClock = async (iso) =>
     db.query(

@@ -45,6 +45,24 @@ p {
 .panel p {
   margin: 0;
 }
+.panel h2 {
+  overflow-wrap: anywhere;
+}
+.demo-note {
+  padding: 0.75rem;
+  background: #edf4f1;
+  border-radius: 0.35rem;
+}
+.visit-state {
+  font-weight: bold;
+}
+.state-pending {
+  color: #704600;
+}
+.manual-warning {
+  border-left: 0.3rem solid #a45d05;
+  padding-left: 1rem;
+}
 label {
   display: grid;
   gap: 0.5rem;
