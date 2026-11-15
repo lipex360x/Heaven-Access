@@ -30,12 +30,16 @@ def main():
     section.header.is_linked_to_previous = False
     section.footer.is_linked_to_previous = False
     for paragraph, label in [
-        (section.header.paragraphs[0], "HEAVEN ACCESS | STRUCTURE DRAFT"),
-        (section.footer.paragraphs[0], "Draft structure - not the submission file"),
+        (section.header.paragraphs[0], "HEAVEN ACCESS"),
+        (section.footer.paragraphs[0], "Visitor access authorisation | Simulated prototype"),
     ]:
         run = paragraph.add_run(label)
         run.font.name = "Arial"
         run.font.size = Pt(9)
+    document.core_properties.title = "Heaven Access Presentation"
+    document.core_properties.subject = "Project Skills & Professionalism"
+    document.core_properties.author = "Heaven Access group"
+    document.core_properties.comments = ""
     document.save(OUTPUT)
     print(OUTPUT.relative_to(ROOT))
 
