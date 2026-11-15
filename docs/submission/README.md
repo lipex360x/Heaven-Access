@@ -7,7 +7,7 @@
 - `content.yaml`: assessment/team fields, alphabetically ordered full names with matching student numbers, shared styles and the eight presentation-page slots. Dates on the cover are `15/11/2026`, as requested. This is not proof of a Moodle upload.
 - `templates/CA Cover Sheet.docx`: byte-identical copy of the cover supplied by Felipe from his Virtualisation project. Its declaration is preserved; the actual submitters review the final cover before submission.
 - `prepare_template.py`: derives `templates/Presentation-Template.docx` using python-docx. It keeps the CCT page portrait, adds a 16:9 landscape body section and labels the appended pages as a structure draft. It does not generate presentation content.
-- `inputs/`: independently authored evidence/technical contributions for the assembler, following the issue's work packages.
+- `inputs/`: prepared problem/alternative and prototype/evaluation text plus `verified-sources.md`, which contains the selected checked Harvard sources and claim/access limits. `../legal-ethical-note.md` supplies the academic legal/ethical analysis. These are inputs for final page assembly, not evidence that a final PDF exists.
 - `assets/`: editable figure sources; `images/`: rendered figures for YAML.
 - `output/Heaven-Access-Presentation-Structure.docx`: generated structural preview, opened in Microsoft Word. Do not upload this draft as the final PDF.
 
@@ -42,3 +42,5 @@ Supplied source: `/Users/lipex360/www/cct/second_semester/virtualisation/ca2/rep
 Original/copy SHA-256: `e2ff81a5ab78bdd074967d33f7b128750cb6de6f5bf224f5f90874c054d4fd15`.
 
 The copied original is portable with the repository. The source in the other project is never overwritten. The derived presentation template is rebuildable from this copy; only its value-cell styling and appended presentation section differ. The supplied declaration is not rewritten or treated as an independently verified student attestation.
+
+The complete actor/responsibility flow must fit one dedicated, readable presentation page. Use a small set of genuine application screenshots with fictional data; distinguish real UI captures from planning diagrams. The brief has no fixed slide count, but the live presentation including demonstration is limited to twelve minutes.
