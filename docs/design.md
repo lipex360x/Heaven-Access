@@ -1,120 +1,128 @@
-# Heaven Access — Preliminary Screen Flow and Wireframes
+# Heaven Access — Screen Flow and Low-Fidelity Wireframes
 
-Planning artifact, revised 13 November 2026. These are low-fidelity artifacts for discussion, the supporting report, and a presentation slide. They are not implemented screens or a final specification. The accepted rules in issue #1 govern these screens; the privacy-notice acknowledgement is also accepted; the technical contract is accepted, while the full notice remains under review.
-
-[GitHub issues](https://github.com/lipex360x/Heaven-Access/issues) are the Source of Truth for design decisions, review tasks and progress. This file stores the visual planning artifact, not an independent backlog.
+Supporting design artifact, revised 15 November 2026 to reflect the implemented visitor prototype. These simplified wireframes explain the structure; they are not screenshots or evidence of completed native-device testing. GitHub issues remain the Source of Truth for scope, decisions and validation. Earlier designs were revised after implementation of the QR download, dedicated reader/display and confirmed revocation.
 
 ## Screen flow
 
-See [flow.md](flow.md) for the presentation overview, detailed visitor journey, validation branches, and receptionist assistance. Keep the flow in that document so the report and slides use the same diagram source.
+See [flow.md](flow.md) for the shared visitor journey and refusal/assistance branches, and [data-state-contract.md](data-state-contract.md) for authorization/count rules. Four functional interfaces remain: registration, reception, visitor pass and access device. The access interface has a control screen plus dedicated reader and display views of the **same** simulated device.
 
-See [data-state-contract.md](data-state-contract.md) for accepted screen inputs/outputs, visitor-link isolation, access counts and demo controls. The simulator uses the existing staff session; there is no separate device enrollment screen. Camera use decodes QR data without storing footage.
+## 1. Public visit request — `/register`
 
-## Low-fidelity wireframes
+```text
++-----------------------------------------+
+| HEAVEN ACCESS             Visit request |
+| Your name       [.....................] |
+| Destination     [Company / room      v] |
+| Visit date/time [.....................] |
+| Time zone: Europe/Dublin                |
+| [Read prototype privacy notice]         |
+| [ ] I have read the privacy notice.     |
+| [Request visit]                         |
++-----------------------------------------+
+```
 
-### 1. Public visit request
+No email/phone is collected. The acknowledgement starts unchecked; without it no visit is created. Submission opens a private pending pass, without a QR. Destinations and staff accounts are seeded; no administrative CRUD is implemented. The notice is for fictional prototype use; the full live-deployment privacy assessment remains under #3.
+
+## 2. Reception — `/staff`
+
+Staff sign in with username/password. The recent-visit filter offers All, Pending, Approved, Rejected and Revoked; each visit has its own card.
+
+```text
++----------------------------------------------+
+| HEAVEN ACCESS                   Reception    |
+| [New request] [QR reader] [Device display]    |
+| Show visits [All recent visits             v]|
+|----------------------------------------------|
+| Alex · Approved, valid now                   |
+| Example Company · Room 401 · scheduled time  |
+| QR authorizations: 1 · Manual: 0             |
+| [Approve] [Reject]    (pending requests only) |
+| [Revoke access]       (approved passes only) |
+|                                              |
+| Revocation confirmation, when opened:        |
+| Blocks future QR access, including images.  |
+| [ ] I confirm revocation for Alex.           |
+| [Confirm revocation] [Cancel]                |
+|                                              |
+| [Assisted manual release]                    |
+| Reason [..................................] |
+| [ ] I checked visitor/destination.           |
+| [Confirm manual release]                     |
+| [Sign out]                                   |
++----------------------------------------------+
+```
+
+Revocation preserves original approval/access history and records real actor/time. Polling changes the private pass to Access revoked and removes its QR/download; saved images cannot authorize new openings. An existing opening completes its original eight-second period. Revocation cannot be reversed by a clock rewind or another approval of the same visit. A new request is needed. Explicit, reasoned manual override remains separate and does not restore QR access.
+
+## 3. Access interface — controls, dedicated reader and display
+
+`/device` keeps the existing camera, shared gate status, destination/demo-clock controls and manual release. The minimal presentation can use two dedicated views:
+
+### Camera phone — `/device/reader`
 
 ```text
 +--------------------------------------+
-| HEAVEN ACCESS           Visit request |
-|                                      |
-| Your name       [..................] |
-| Company         [Select          v] |
-| Department/room [Select          v] |
-| Visit date      [  DD / MM / YYYY  ] |
-| Visit time      [      HH:MM       ] |
-|                                      |
-| Why we need your information         |
-| [Read privacy notice]                |
-| [ ] I have read the privacy notice.  |
-|                                      |
-|          [ Request visit ]           |
-| Approval is required before access.  |
+| HEAVEN ACCESS              QR reader |
+| READY TO SCAN / ACCESS GRANTED        |
+|               / ACCESS DENIED        |
+| Selected company / room              |
+| Denial reason when applicable        |
+|--------------------------------------|
+| Local camera processing; no footage  |
+| recording/upload. Remove QR before   |
+| presenting it again.                 |
+| +----------------------------------+ |
+| |       LIVE CAMERA PREVIEW        | |
+| +----------------------------------+ |
+| [Start camera] [Stop camera]         |
+| [Recover previous reading]*         |
+| [Demonstration controls] [Sign out]  |
 +--------------------------------------+
 ```
 
-*No email or phone is collected. The user accepted an initially unchecked privacy-notice acknowledgement before submission. Show a short purpose summary and a link to the full notice. Without acknowledgement, do not create a visit; offer reception assistance. Lawful-basis analysis, the complete notice and retention remain under issue #3. The public form does not create an immediately usable pass. No administration of companies or departments is included.
+The recovery button appears only for an uncertain outcome and retains the exact request identity. The dedicated reader requires staff sign-in, requests the rear camera, and omits scenario/manual controls and visitor lists. Phone camera use needs the hosted trusted HTTPS origin and explicit browser permission. Frames are decoded locally; the server decides authorization.
 
-### 2. Staff login and operational visit review
-
-```text
-+--------------------------+    +-----------------------------------------+
-| STAFF SIGN IN            |    | HEAVEN ACCESS     Staff       [Sign out]|
-| Username [.............] |    | Pending visits | Approved | Access log* |
-| Password [*************] |    |-----------------------------------------|
-|       [ Sign in ]        |    | Visitor   Destination  Time    Status   |
-+--------------------------+    | Alex      Room 401     14:00   Pending  |
-                                |                                         |
-                                | Selected visit details                  |
-                                | [Approve] [Reject]                     |
-                                | QR accesses: 0                          |
-                                |                                         |
-                                | Receptionist assistance                 |
-                                | Device [Select v]  Reason [..........]  |
-                                | [Manual release]                        |
-                                +-----------------------------------------+
-```
-
-One staff/reception role can approve, reject and manually release access. The existing detail view shows the required QR access count; manual releases remain distinguishable. No special renewal/replacement control is included. Access-log layout and manual-release reason details remain to be refined. Seeded staff accounts remove the need for a user-management area.
-
-### 3. Access-device simulator
+### Tablet — `/device/display`
 
 ```text
-+--------------------------------------------------+
-| HEAVEN ACCESS          Elevator / gate simulator   |
-|                                                  |
-|                   LOCKED                         |
-|                                                  |
-|        +-------------------------------+         |
-|        |                               |         |
-|        |      CAMERA QR SCAN AREA      |         |
-|        |                               |         |
-|        +-------------------------------+         |
-|               [ Enable camera ]                  |
-|                                                  |
-| Result: Waiting for a visitor pass                |
-| Destination: --                                  |
-|                                                  |
-| DEMONSTRATION CONTROLS                            |
-| Fictional current date/time [..................] |
-| [Apply demo time]       [Reset demo time*]         |
-| Simulation only - no physical hardware connected |
-+--------------------------------------------------+
++--------------------------------------+
+| HEAVEN ACCESS          Access display|
+| [Gate] [Elevator]                    |
+|                                      |
+|       ACCESS GRANTED / DENIED         |
+|       or GATE / ELEVATOR LOCKED       |
+|       [Animated barrier / doors]     |
+|       Relock countdown / reason     |
+|       Selected company / room        |
+|       Effective Dublin time          |
+|       Simulated hardware             |
++--------------------------------------+
 ```
 
-State variants: access granted, outside validity window, invalid/revoked QR, camera permission denied, and connection unavailable. Manual release originates from authorized staff action and updates this view. The fictional clock is a controlled demo feature, not a visitor permission.
+Both modes visualize the same device. Successful authorization opens it for eight real seconds; repeated frames/retries do not extend that deadline or inflate counts. Expired, revoked, wrong-destination and invalid passes cannot authorize a new opening. Camera denial and connection failure are distinct from an authorization refusal.
 
-### 4. Mobile-first visitor pass
+## 4. Private visitor pass — `/pass#<capability>`
 
 ```text
-+---------------------------+
-|       HEAVEN ACCESS       |
-|       Your visit pass     |
-|                           |
-| Status: Approved          |
-| Alex - Company A          |
-| Destination: Room 401     |
-| Visit: 14:00              |
-| Valid: 13:30 - 14:30*     |
-|                           |
-|     +---------------+     |
-|     |               |     |
-|     | QR PLACEHOLDER|     |
-|     |               |     |
-|     +---------------+     |
-|                           |
-| Present at the scanner.   |
-| [Request assistance*]     |
-| [Privacy information]     |
-+---------------------------+
++--------------------------------------+
+| HEAVEN ACCESS          Your visit    |
+| Approved · ready for access          |
+| +----------------------------------+ |
+| |           VISITOR QR             | |
+| +----------------------------------+ |
+| [Download QR image]                  |
+| Alex · Company / room · floor        |
+| Valid window (Europe/Dublin)         |
+| Ask reception for assisted access.  |
++--------------------------------------+
 ```
 
-*The accepted window is ±30 minutes, with inclusive boundaries, in Europe/Dublin. Before approval, display a waiting state without a usable QR. On expiry, show a new-request link: a new approval is required and the old pass stays expired. Repeated QR access within the window is allowed. Simulated delivery and the private link mechanism remain to be defined. Screens update automatically through approximately one-second polling.
+QR/download appear before visit details. The inclusive ±30-minute window and destination are checked server-side. Pending/rejected/expired/revoked pages show their state without a usable QR; expiry/revocation requires a new request. Approval and revocation update automatically through approximately one-second visible-page polling. The private link is not a public staff-list field or an access credential itself.
 
-## Use in the report and presentation
+## Scope and presentation use
 
-- Report: include the reviewed flow, explain actors and alternative paths, and cite this planning artifact by date/version.
-- Planning slide: place reduced versions of the four wireframes side by side, connected as request → approval → pass → validation. Label it “Low-fidelity design — revised 13 November 2026”.
-- Suggested slide caption: “We separated registration, staff authorization, visitor credentials, and access validation before implementation. Early wireframes exposed decisions about expiry, manual assistance, and live updates.”
-- Preserve meaningful revisions and describe changes actually made. Do not invent completed user testing, interviews, or approvals.
-- Export clean diagram/wireframe graphics when assembling the final report/slides; these Markdown drafts are the source material for now.
+The current flow is for temporary visitors. Bella raised the needs of employees and other regular occupants; managed recurring credentials are an unimplemented future option, described in [future-improvements.md](future-improvements.md). Staff application authentication must not be presented as employee physical-entry authorization. Bella covers that boundary in her existing closing/evaluation slot; Felipe identifies the demo as a temporary visit.
+
+Use phone 1 for the visitor QR, phone 2 for the dedicated camera reader, and a tablet for the gate/elevator display. Show one refusal (confirmed revocation/saved-image refusal, or expiry if rehearsed), without adding every optional branch to the twelve-minute presentation.
+
+For the report/slides, label these “Low-fidelity design — revised 15 November 2026”, distinguish them from actual screenshots, and describe only genuine revisions and test results. Export portable graphics when assembling the final deliverables. No hardware integration, employee enrollment, occupancy tracking or biometric implementation is supplied by these wireframes.

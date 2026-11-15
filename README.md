@@ -4,6 +4,8 @@ A visitor-access MVP for managing visit requests and time-limited access to auth
 
 Visitors request a visit through a public form. Authorized staff approve it, a mobile-first page displays a time-limited QR pass, and a simulated elevator/gate validates access. A receptionist can grant manual access when appropriate. Open screens update automatically through approximately one-second polling; validation and unlocking are decided by the server.
 
+The implemented workflow is for temporary visitors. Recurring employee/occupant credentials are a future extension; staff sign-in authorizes application operations rather than physical employee entry. See [the future-access discussion](docs/future-improvements.md).
+
 Online prototype: **https://heaven-access.vercel.app**. Use fictional visitor details only. The hosted application uses Vercel and Neon PostgreSQL; local Docker data is separate.
 
 ## Current status

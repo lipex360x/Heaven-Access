@@ -6,6 +6,8 @@ Accepted technical contract, 13 November 2026. [Issue #1](https://github.com/lip
 
 One Next.js/TypeScript application contains the four React screens and server API. PostgreSQL runs through Docker Compose, with SQL-seeded staff accounts and destinations. One authenticated staff/reception role approves, rejects and manually releases access. Visitor fields are name, destination and scheduled date/time; no email or phone. A destination is one seeded company/room option, with a display floor where applicable; separate company/room administration is unnecessary.
 
+This contract implements temporary visitor access. Staff sessions authorize operating reception/device functions, not employee physical-entry credentials. Bella raised the separate recurring-occupant scenario: managed credentials with destination/schedule permissions, review and revocation remain a proposed future extension, independent of biometrics; see [future-improvements.md](future-improvements.md). Do not extend a visitor expiry indefinitely to imply employee support.
+
 The QR is reusable from 30 minutes before through 30 minutes after the scheduled instant, both boundaries inclusive, interpreted in Europe/Dublin. Expiry requires a new request and approval. There is no renewal, replacement, visit editing, occupancy tracking or cross-building blocking in this MVP. Screens refresh automatically through approximately one-second polling.
 
 ## Minimal records

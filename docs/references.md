@@ -114,3 +114,12 @@ The DPC identifies six Article 6 bases: consent, contract, legal obligation, vit
 - Use IE-04 and INT-02 as optional supporting evidence for layered protection and verification of visit purpose.
 - Keep the report-ready summary's citations and link each cited work to the bibliography. Verify the college's exact Harvard punctuation/formatting conventions before delivery.
 - Supplement these cases with research on access-control design, measured visitor-management needs, and feasibility. Selected incidents are not a representative statistical sample.
+
+
+## Access-lifecycle design sources
+
+### DESIGN-01 — Recurring occupants are distinct from visitors
+
+NIST SP 800-53 Rev. 5, PE-2 distinguishes permanent physical-access credentials from visitor access and describes authorization lists, review and removal when access is no longer required. This supports discussing Bella’s recurring-occupant question separately from the temporary visitor flow. It does not prescribe the proposed destinations/schedules, demonstrate implementation or establish an Irish legal obligation. The future design comparison is in [future-improvements.md](future-improvements.md).
+
+**Reference:** Joint Task Force (2020) *Security and Privacy Controls for Information Systems and Organizations*. NIST Special Publication 800-53, Revision 5, PE-2, p. 180. Available at: https://doi.org/10.6028/NIST.SP.800-53r5 (Accessed: 15 November 2026).
