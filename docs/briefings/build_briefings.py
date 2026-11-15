@@ -6,17 +6,18 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 
 OUT = Path(__file__).resolve().parent
-VERSION = 'Rehearsal draft v4 • 15 November 2026'
+VERSION = 'Presentation briefing v5 • 15 November 2026'
 ISSUE = 'https://github.com/lipex360x/Heaven-Access/issues/13'
 SPEAKERS = {
-'Dani': ('Daniela Alves Paiva da Silva', '2026048', '00:00–02:30', 'Slides 1–2: the problem and evidence'),
-'Cris': ('Marcia Cristina Schafer dos Santos', '2026005', '02:30–05:00', 'Slides 3–4: alternatives and solution flow'),
-'Felipe': ('Felipe Borges Bambirra', '2026033', '05:00–08:30', 'Slide 5: architecture and demonstration'),
-'Bella': ('Isabella Maria de Souza Monteiro', '2026072', '08:30–11:00', 'Slides 6–8: responsibilities, evaluation and close'),
+'Dani': ('Daniela Alves Paiva da Silva', '2026048', '00:00–02:30', 'Pages 1–4: title, agenda, problem/proposal and evidence'),
+'Cris': ('Marcia Cristina Schafer dos Santos', '2026005', '02:30–05:00', 'Pages 5–6: alternatives and complete actor flow'),
+'Felipe': ('Felipe Borges Bambirra', '2026033', '05:00–08:30', 'Pages 7–8: prototype and central access decision/demo'),
+'Bella': ('Isabella Maria de Souza Monteiro', '2026072', '08:30–11:00', 'Pages 9–12: responsibilities, evaluation, references and close'),
 }
 SCRIPT = {
 'Dani': [
 'Good morning. We are Daniela, Marcia Cristina, Felipe and Isabella. Our project is Heaven Access: a visitor-authorization proposal for commercial buildings containing offices.',
+'Our route is the challenge, the proposal, the live demonstration and the evaluation. In this office-building scenario, a visitor may reach a controlled floor without the visit being checked. We propose connecting reception approval to a destination/time check at the access point. The on-screen gate/elevator is a simulation.',
 'The idea came from my work in security, where I have experienced this type of access-control problem at more than one workplace. We used that experience to frame the question, then examined published cases. We are not presenting my experience as a statistical survey, and we are not identifying employers.',
 'The problem we investigate is a gap between arriving at a building and having a visit checked before reaching a controlled area. Visitors, office occupants, reception and security teams, and building management can all be affected. Our working root-cause hypothesis is that a visit request, staff approval and a physical access decision are not always reliably connected. We have not audited a particular building to prove that cause.',
 'One relevant case involved people following employees through card-controlled doors at RBS premises in Edinburgh. Security interrupted the attempted theft. This demonstrates a real workplace access problem, and also shows that a credential does not stop someone following an authorized person. An Irish DPC report separately describes stolen office laptops after forced entry; that illustrates consequences beyond our direct protection.',
@@ -32,7 +33,7 @@ SCRIPT = {
 'The prototype covers temporary visitors in one building. A second phone can use the dedicated QR reader while a tablet shows the gate or elevator, sharing one access decision. Felipe will now explain the technical setup and demonstrate the journey.'
 ],
 'Felipe': [
-'We use one Next.js application with TypeScript and PostgreSQL. Locally, Docker Compose runs the database. Visible screens refresh approximately every second. Staff accounts and destinations are seeded; no administration screens are needed.',
+'The screens ask one central server whether access is allowed. It checks the visit permission and records the result, so reception, the reader and the display share the same decision. Framework, database and hosting details are supporting Q&A material, not the main explanation.',
 'I demonstrate a temporary visitor: I submit fictional details through the public form. The private pass starts pending, without a QR. I approve the request in reception, and the phone page displays the QR, with an option to download its image.',
 'I present the first phone’s QR to the dedicated reader on a second phone. The server checks approval, revocation, destination and time. The tablet shows the same simulated gate or elevator opening for eight real seconds, then closing. A successful opening adds one QR authorization; repeated camera frames do not inflate the count.',
 'For the refusal example, I revoke the approval in reception and confirm. The visitor page removes its QR; a previously downloaded image is also refused. Earlier access counts remain. Expired passes are refused too and need a new request.',
@@ -48,9 +49,9 @@ SCRIPT = {
 ],
 }
 CUES = {
-'Dani': [('00:00–00:25','Cover, names and one-sentence purpose.'),('00:25–01:00','Professional experience and research method.'),('01:00–02:10','Stakeholders, root-cause hypothesis and one main case.'),('02:10–02:30','Scope/scale limit and handoff to Cris.')],
+'Dani': [('00:00–00:10','Page 1: title; names are visible, avoid reading the full table.'),('00:10–00:20','Page 2: agenda in one sentence.'),('00:20–00:45','Page 3: setting, problem and proposed solution.'),('00:45–01:15','Page 4: professional experience and method.'),('01:15–02:10','Main case, stakeholders and root-cause hypothesis.'),('02:10–02:30','Scale/scope limit and handoff to Cris.')],
 'Cris': [('02:30–03:15','Actual discussion/sketch and alternatives.'),('03:15–04:00','Why this combination; integration contingency.'),('04:00–04:45','Four screens and accepted visit rules.'),('04:45–05:00','Single-building scope and handoff to Felipe.')],
-'Felipe': [('05:00–05:25','Architecture in plain language.'),('05:25–06:15','Request, pending state, approval and QR.'),('06:15–07:15','Actual camera scan, unlock and access count.'),('07:15–08:10','Confirmed revocation/refusal, or rehearsed expiry; optional manual branch.'),('08:10–08:30','Simulation boundary and handoff to Bella.')],
+'Felipe': [('05:00–05:25','Pages 7–8: central validation in plain language; stack only if asked.'),('05:25–06:15','Request, pending state, approval and QR.'),('06:15–07:15','Actual camera scan, unlock and access count.'),('07:15–08:10','Confirmed revocation/refusal, or rehearsed expiry; optional manual branch.'),('08:10–08:30','Simulation boundary and handoff to Bella.')],
 'Bella': [('08:30–09:30','Privacy interaction and live-deployment obligations.'),('09:30–10:00','Accessibility and professional responsibility.'),('10:00–10:35','Recorded test findings, viability/sustainability limits.'),('10:35–11:00','Visitor-only boundary, Bella’s recurring-access question and references.')],
 }
 QA = [
@@ -64,14 +65,14 @@ QA = [
 ('Does the checkbox make processing lawful?', 'No. It acknowledges the privacy notice. The lawful basis and complete live-deployment privacy requirements need separate assessment; no compliance certification is claimed.'),
 ('Does an access count show who is inside?', 'No. An unlock records authorization, not verified physical passage. No reliable occupancy or evacuation register is implemented, and normal lift use in a fire is not promised.'),
 ('Can you block someone across all buildings?', 'That is a future extension. It needs reliable identification and clear participating-unit governance. Using the same technology does not by itself authorize sharing a person-level restriction.'),
-('What is actually implemented and proven?', 'Forms, private QR/download, revocation, dedicated reader and shared display work locally and online. The retained browser test asserts approval, synthetic-video opening, revocation and saved-image refusal. It is not a physical-camera test. Felipe reports successful online checks; use issue #11 for exact evidence. The final deck remains pending.'),
+('What is actually implemented and proven?', 'Forms, private QR/download, revocation, dedicated reader and shared display work locally and online. The retained browser test asserts approval, synthetic-video opening, revocation and saved-image refusal. It is not a physical-camera test. Felipe reports successful online checks; use issue #11 for exact evidence. The numbered presentation is available under docs/submission/output/Heaven-Access-Presentation.pdf; use its simulation and evidence limits.'),
 ]
 SOURCES = [
 ('The Newsroom (2018), Edinburgh Evening News, 3 May. Workplace tailgating and interrupted attempted theft; not a prevalence study.', 'https://fallback.jpi.prod.brightsites.co.uk/news/crime/smartly-dressed-youths-foiled-in-brazen-rbs-bike-theft-586087'),
 ('Data Protection Commissioner (2012), Annual Report 2011, pp. 16–17, “Theft of Revenue Laptops”. Historical forced entry; not a visitor/elevator failure.', 'https://www.dataprotection.ie/sites/default/files/uploads/2018-12/AnnualReport2011.pdf'),
 ('Data Protection Commission (n.d.), Transparency. Use for the full-notice obligations.', 'https://www.dataprotection.ie/en/organisations/know-your-obligations/transparency'),
 ('Data Protection Commission (n.d.), Is my consent required for my data to be processed? Consent is not universally required.', 'https://www.dataprotection.ie/en/faqs/general/my-consent-required-my-data-be-processed'),
-('Association for Computing Machinery (2018), Code of Ethics and Professional Conduct, principles 1.2 and 1.6. Suggested professional reference for this project.', 'https://www.acm.org/binaries/content/assets/about/acm-code-of-ethics-booklet.pdf'),
+('Association for Computing Machinery (2018), Code of Ethics and Professional Conduct, principles 1.2, 1.3 and 1.6: harm, honesty and privacy. Canonical page read on 15 November; automated/headless requests may be blocked.', 'https://www.acm.org/code-of-ethics'),
 ]
 
 def text(doc, value, style=None):
@@ -124,7 +125,7 @@ def build(who):
     text(d, f'{name}  |  Student {student}\nYour proposed slot: {slot}  |  {slides}')
     text(d, 'Shared narrative', 'Heading 1')
     text(d, 'An office visit request becomes an access authorization only after staff approval, for a particular destination and time. A camera-read QR lets a simulated checkpoint ask the server whether access is allowed.')
-    text(d, 'Rehearsal draft aligned with the hosted prototype and issue #11 evidence. Forms, private QR/download, confirmed revocation, dedicated reader and synchronized gate/elevator display are implemented. The hosted URL is https://heaven-access.vercel.app; final slides and the new reader’s native-camera check remain separate. Felipe reports successful online tests. Delivery uses the online link and live demonstration, with the local build as backup. No video will be produced. Speaking topics and timing are unchanged; rehearse together before delivery.')
+    text(d, 'Briefing aligned with the numbered presentation, hosted prototype and issue #11 evidence. Forms, private QR/download, confirmed revocation, dedicated reader and synchronized gate/elevator display are implemented. The hosted URL is https://heaven-access.vercel.app; the new reader’s native-camera check remains separate from automated evidence. Felipe reports successful online tests. Delivery uses the online link and live demonstration, with the local build as backup. No video will be produced. Speaking topics and timing are unchanged; rehearse together before delivery.')
     text(d, 'One clock for all four speakers', 'Heading 2')
     table(d,['Time','Speaker','Purpose'],[(v[2],k,v[3]) for k,v in SPEAKERS.items()]+[('11:00–12:00','Buffer','Transitions or short recovery; do not add content.')])
     text(d, 'The brief permits 12 minutes including the demo. Target 11 minutes. Q&A follows; its duration is unspecified. All members must attend and understand the whole assignment.')
@@ -146,15 +147,15 @@ def build(who):
     d.add_page_break()
     text(d,'Synchronization and evidence','Heading 1')
     text(d,'Working slide and handoff map','Heading 2')
-    text(d,'1 Cover → Dani. 2 Problem/evidence/analysis → Dani. 3 Creative process/alternatives → Cris. 4 Solution/flow → Cris. 5 Demo → Felipe. 6 Responsibilities → Bella. 7 Evaluation/viability/sustainability/limits → Bella. 8 References → Bella closes. Keep the references visible for Q&A. Include the CCT cover material and all four names/student numbers.')
+    text(d,'The portrait CCT assessment sheet is unnumbered. Presentation page 1: title/name-number table; 2: agenda; 3: introductory problem/proposal; 4: evidence/analysis → Dani. Pages 5: discussion/alternatives; 6: complete actor flow → Cris. Pages 7: actual prototype views; 8: central validation and live demo → Felipe. Pages 9: responsibilities; 10: evaluation/sustainability/regular occupants; 11–12: references → Bella closes. Use the displayed 1/12–12/12 numbers, not the PDF viewer’s offset page index. References support the close/Q&A; do not read the bibliography aloud.')
     text(d,'Demo sequence shared by everyone','Heading 2')
     text(d,'Use fictional details and a seeded destination. Public form → pending pass → reception approval → QR/download on phone 1 → /device/reader on phone 2 → tablet unlock/relock → confirmed revocation and saved-image refusal (or expiry, if rehearsed). Gate and elevator show the same authorization; choose one mode for the live sequence. Show one refusal, not every branch; repeat/manual release is optional. Check the real/demo clock, destination, camera permission and links before starting. Cut optional branches before cutting reasoning or legal/ethical coverage.')
     text(d,'Delivery and recovery — no video','Heading 2')
     text(d,'Use https://heaven-access.vercel.app in the presentation PDF and for the live demo on Vercel + Neon. Keep a prepared local build/database as backup. If the camera fails, state that limitation and, if useful, show an explicit manual override without calling it a QR success. If the network fails, use the local build. Do not substitute a recording or pretend a failed step succeeded.')
     text(d,'Before the final rehearsal','Heading 2')
-    text(d,'Use one final deck and build. Align the provisional slide numbers, verified public URL and evidence with issues #11/#13; update all four briefings together. Read the adjacent speakers’ handoffs and rehearse with a timer. Bella briefly covers her recurring-occupant question as future work; do not add employee enrollment, biometrics or cross-building functions to the MVP. Live date, attendance and delivery confirmation remain in issue #13.')
+    text(d,'Use the numbered PDF in docs/submission/output/Heaven-Access-Presentation.pdf and the verified public URL. These four v5 briefings share its page map; recheck issue #11 evidence before rehearsal. Read the adjacent speakers’ handoffs and rehearse with a timer. Bella briefly covers her recurring-occupant question as future work; do not add employee enrollment, biometrics or cross-building functions to the MVP. Live date, attendance and delivery confirmation remain in issue #13.')
     text(d,'Evidence and references','Heading 2')
-    text(d,'Third-party material needs Harvard citations on the relevant slide and a bibliography. These compact source notes are reading pointers, not a substitute for the final bibliography. Accessed 13 November 2026; the DPC report publication year should be reconfirmed for final export.')
+    text(d,'Third-party material needs Harvard citations on the relevant slide and a bibliography. These compact source notes are reading pointers, not a substitute for the final bibliography. Sources checked 15 November 2026; the DPC annual report was published in 2012. The presentation’s selected Harvard entries and undated suffixes are authoritative for its citations.')
     for label,url in SOURCES: link(d,label,url)
     text(d,'Internal sources: docs/brief.pdf (12-minute presentation and individual Q&A); docs/team.md (names/numbers); docs/references.md (case details/limits); issues #1, #3, #11, #12 and #13 (decisions, privacy, actual tests and preparation). No formal interview study or cost/environmental measurement is available.','Caption')
     path=OUT/f'Heaven-Access-{who}-Briefing.docx'; d.save(path)
