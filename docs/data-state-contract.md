@@ -15,7 +15,7 @@ The QR is reusable from 30 minutes before through 30 minutes after the scheduled
 | Staff account | ID, username, password hash; a single staff role. Seeded, without account-management UI. |
 | Staff session | Random session secret stored as a hash, staff ID, real creation/expiry times. Cookie carries the secret; never use the demo clock for sessions. |
 | Destination | ID, company label, room label and optional floor label. Seeded reference data. |
-| Visit | ID, visitor name, destination ID, scheduled instant, decision (`pending`, `approved`, `rejected`), decision actor/time, real creation time and notice version and real server acknowledgement time at successful submission. |
+| Visit | ID, visitor name, destination ID, scheduled instant, decision (`pending`, `approved`, `rejected`), decision actor/time, optional separate real revocation actor/time (exposed as effective decision `revoked`), real creation time and notice version and real server acknowledgement time at successful submission. |
 | Visitor credentials | Visit ID, separate random visitor-page and QR secrets. The visitor-page capability must never be accepted as an access QR; the QR must never expose the visitor page or visit list. See credential handling below. |
 | Access event | ID, visit ID, device ID, method (`qr` or `manual`), real occurrence time, effective visit-validation time, selected destination, manual actor/reason where applicable, and request deduplication key. Store successful unlocks; rejected reads return a result but do not create counted access events. |
 | Demo device/settings | One fixed simulated device, selected destination, `unlockedUntil` in real server time, clock offset and revision. No device-management or destination CRUD screens. |
@@ -30,6 +30,7 @@ Accepted credential handling: use independent unpredictable bearer secrets and n
 | --- | --- |
 | `pending` | Awaiting staff decision. No usable QR. Staff may approve/reject while the requested window has not ended. |
 | `rejected` | Staff rejected the request. No usable QR; a new request is possible. |
+| `revoked` | Staff revoked a previously approved pass. No QR is shown and saved images cannot authorize new openings. A new request and approval are required. Clock replay does not restore access. |
 | `approved_early` | Approved, but effective time is before `validFrom`. Show QR and the time it becomes usable; access is denied until then. |
 | `approved_valid` | Approved and `validFrom <= effectiveNow <= validUntil`. QR may authorize the selected destination. |
 | `expired` | Effective time is after `validUntil`; overrides pending/approved display. No QR access or approval of this old visit; create a new request. |
@@ -51,6 +52,7 @@ Paths below define the accepted contract; changing their spelling does not requi
 | `POST /api/staff/login`; `POST /api/staff/logout` | Staff | Credentials to establish a cookie session; logout invalidates it. No session secrets in response JSON. |
 | `GET /api/staff/visits` | Staff session | Visit summary/detail data, decision, effective display state, QR access count and separate manual-release count. Never return visitor/QR secrets. |
 | `POST /api/staff/visits/:id/decision` | Staff session | `approve` or `reject`; pending requests only, checked atomically. Conflicting/repeated decisions do not issue additional credentials. |
+| `POST /api/staff/visits/:id/revoke` | Staff session | Empty JSON object. Revoke an approved pass with UI confirmation; preserve the original approval, record real revocation actor/time and reject future QR authorizations. Safe to retry without changing the first audit record. |
 | `GET /api/device` | Staff session | Fixed device ID, configured destination, lock deadline/state, clock mode/effective time and revision. |
 | `POST /api/device/scan` | Staff session | Decoded QR secret, expected device revision and unique request ID. Server validates the configured destination and clock; client cannot nominate a different destination/time. Return authorization result and lock deadline. |
 | `POST /api/device/manual-release` | Staff session | Selected visit ID, short reason, expected revision and request ID. Explicit manual override with attributable staff actor; keep separate from QR authorization/counts. |
@@ -73,7 +75,11 @@ Accepted technical defaults:
 - A pending request whose window has ended cannot be approved. Do not silently change its time. Local times in a DST gap or overlap are rejected with a clear correction request rather than guessed; store accepted times as unambiguous instants.
 - Poll once per second while visible, with only one in-flight read per screen. Refresh on focus/reconnect and after mutations. Show connection errors and recover from server state; do not create access records from a polling read or a visual state transition.
 
-Use stable result codes: `granted`, `already_unlocked`, `invalid_qr`, `not_approved`, `too_early`, `expired`, `wrong_destination`, `stale_device_state`, `unauthenticated`, `invalid_input` and `conflict`. Unknown/invalid credentials must not disclose another visitor's information. Database/network failures never authorize new QR access.
+Use stable result codes: `granted`, `already_unlocked`, `invalid_qr`, `not_approved`, `revoked`, `too_early`, `expired`, `wrong_destination`, `stale_device_state`, `unauthenticated`, `invalid_input` and `conflict`.
+
+The authenticated `/device/reader` page isolates the existing camera/feedback for a second phone, while `/device` retains controls and `/device/display` shows the same simulated device on a tablet. Revocation serializes with scans, preserves original approval/access history and stops new QR openings; a previously granted opening completes its original deadline. Explicit audited manual override remains available without restoring the pass.
+
+Unknown/invalid credentials must not disclose another visitor's information. Database/network failures never authorize new QR access.
 
 ## Accepted privacy interaction — 13 November 2026
 

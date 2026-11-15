@@ -14,6 +14,8 @@ type Visit = {
   scheduledAt: string;
   state: VisitState;
   decision: Decision;
+  revokedAt: string | null;
+  revokedBy: number | null;
   qrAccessCount: number;
   manualReleaseCount: number;
 };
@@ -26,6 +28,7 @@ type ManualAction = {
 const LABELS: Record<VisitState, string> = {
   pending: "Pending approval",
   rejected: "Rejected",
+  revoked: "Access revoked",
   approved_early: "Approved · not valid yet",
   approved_valid: "Approved · valid now",
   expired: "Expired",
@@ -51,6 +54,7 @@ export function Reception() {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [manualId, setManualId] = useState<string | null>(null);
+  const [revokeId, setRevokeId] = useState<string | null>(null);
   const [retry, setRetry] = useState<ManualAction | null>(null);
   const [filter, setFilter] = useState("all");
   async function manual(action: ManualAction) {
@@ -85,6 +89,7 @@ export function Reception() {
           New visitor request
         </a>
         <a href="/device">Camera and demonstration controls</a>
+        <a href="/device/reader">Dedicated QR reader</a>
         <a href="/device/display" target="_blank" rel="noreferrer">
           Open gate / elevator display
         </a>
@@ -121,6 +126,7 @@ export function Reception() {
           <option value="pending">Pending approval</option>
           <option value="approved">Approved</option>
           <option value="rejected">Rejected</option>
+          <option value="revoked">Revoked</option>
         </select>
       </label>
       <p>
@@ -184,6 +190,65 @@ export function Reception() {
           {visit.state === "expired" && (
             <p>A new request and approval are required; this visit cannot be renewed.</p>
           )}
+          {visit.revokedAt && (
+            <p>
+              Revoked: {time(visit.revokedAt)} (Europe/Dublin) · Staff #{visit.revokedBy}.
+            </p>
+          )}
+          {visit.decision === "approved" && (
+            <button
+              type="button"
+              className="danger-button"
+              disabled={disabled}
+              aria-expanded={revokeId === visit.id}
+              onClick={() => setRevokeId(revokeId === visit.id ? null : visit.id)}
+            >
+              Revoke access
+            </button>
+          )}
+          {visit.decision === "approved" && revokeId === visit.id && (
+            <form
+              className="stack manual-warning"
+              onSubmit={async (event) => {
+                event.preventDefault();
+                setBusy(true);
+                setMessage("");
+                try {
+                  await sendJson(`/api/staff/visits/${visit.id}/revoke`, {});
+                  setMessage(
+                    `Access for ${visit.visitorName} revoked. Saved QR images no longer authorize entry.`,
+                  );
+                  setRevokeId(null);
+                } catch (failure) {
+                  setMessage(
+                    failure instanceof Error
+                      ? failure.message
+                      : "Check the refreshed visit before trying again.",
+                  );
+                } finally {
+                  setBusy(false);
+                  refresh();
+                }
+              }}
+            >
+              <p>
+                This blocks future QR access, including downloaded images. An opening already
+                granted finishes normally. A new request is required for approval again.
+              </p>
+              <label className="check">
+                <input type="checkbox" required disabled={disabled} />I confirm revocation for{" "}
+                {visit.visitorName}.
+              </label>
+              <div className="actions">
+                <button className="danger-button" type="submit" disabled={disabled}>
+                  Confirm revocation
+                </button>
+                <button type="button" disabled={busy} onClick={() => setRevokeId(null)}>
+                  Cancel
+                </button>
+              </div>
+            </form>
+          )}
           <button
             type="button"
             disabled={disabled}
@@ -236,6 +301,7 @@ export function Reception() {
             await sendJson("/api/staff/logout", {});
             setRetry(null);
             setManualId(null);
+            setRevokeId(null);
             setMessage("");
           } catch (failure) {
             setMessage(failure instanceof Error ? failure.message : "Sign-out unavailable.");

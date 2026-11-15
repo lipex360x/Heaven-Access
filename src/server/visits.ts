@@ -19,11 +19,15 @@ type VisitRow = {
   created_at: Date;
   decided_at: Date | null;
   decision_by: number | null;
+  revoked_at: Date | null;
+  revoked_by: number | null;
   qr_secret: string | null;
   qr_count?: number;
   manual_count?: number;
 };
-const VISIT_COLUMNS = `v.id, v.visitor_name, v.destination_id, v.scheduled_at, v.decision,
+const VISIT_COLUMNS = `v.id, v.visitor_name, v.destination_id, v.scheduled_at,
+  CASE WHEN v.revoked_at IS NOT NULL THEN 'revoked' ELSE v.decision END AS decision,
+  v.revoked_at, v.revoked_by,
   v.created_at, v.decided_at, v.decision_by, d.company_label, d.room_label, d.floor_label`;
 
 export async function effectiveNow(
@@ -132,6 +136,8 @@ export async function staffVisits() {
       createdAt: row.created_at.toISOString(),
       decidedAt: row.decided_at?.toISOString() ?? null,
       decisionBy: row.decision_by,
+      revokedAt: row.revoked_at?.toISOString() ?? null,
+      revokedBy: row.revoked_by,
       qrAccessCount: row.qr_count,
       manualReleaseCount: row.manual_count,
     })),
@@ -167,5 +173,30 @@ export async function decideVisit(id: string, decision: unknown, staffId: number
       [id, state, staffId, state === "approved" ? newSecret("haqr_") : null],
     );
     return { visitId: id, decision: state };
+  });
+}
+
+export async function revokeVisit(id: string, staffId: number) {
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id))
+    throw new ApiError("invalid_input", 400, "Choose an approved visit to revoke.");
+  return transaction(async (client) => {
+    // Serialize against scans using the same device → visit lock order.
+    // An already granted opening keeps its original real-time deadline.
+    await client.query("SELECT id FROM demo_device WHERE id = 1 FOR UPDATE");
+    const result = await client.query<{ decision: Decision }>(
+      "SELECT decision FROM visits WHERE id = $1 FOR UPDATE",
+      [id],
+    );
+    const visit = result.rows[0];
+    if (!visit) throw new ApiError("invalid_input", 404, "Visit not found.");
+    if (visit.decision !== "approved")
+      throw new ApiError("conflict", 409, "Only an approved visit can be revoked.");
+    // Repeating an uncertain request must preserve the first revocation actor/time.
+    await client.query(
+      `UPDATE visits SET revoked_at = clock_timestamp(), revoked_by = $2
+       WHERE id = $1 AND revoked_at IS NULL`,
+      [id, staffId],
+    );
+    return { visitId: id, decision: "revoked" };
   });
 }
