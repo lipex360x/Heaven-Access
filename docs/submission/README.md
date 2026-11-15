@@ -1,46 +1,54 @@
 # Heaven Access presentation source
 
-[Issue #37](https://github.com/lipex360x/Heaven-Access/issues/37) owns the presentation PDF, acceptance tasks and actual progress. This directory contains the editable docx_builder source and supporting assets. The current generated file is a **structure draft**, not a submission-ready presentation.
+[Issue #37](https://github.com/lipex360x/Heaven-Access/issues/37) owns the presentation PDF, acceptance tasks and review evidence. [Issue #13](https://github.com/lipex360x/Heaven-Access/issues/13) owns final briefing alignment, rehearsal, live Q&A and Moodle upload/confirmation. File generation does not establish submission.
 
-## Files and generation
+## Presentation artifacts
 
-- `content.yaml`: assessment/team fields, alphabetically ordered full names with matching student numbers, shared styles and the eight presentation-page slots. Dates on the cover are `15/11/2026`, as requested. This is not proof of a Moodle upload.
-- `templates/CA Cover Sheet.docx`: byte-identical copy of the cover supplied by Felipe from his Virtualisation project. Its declaration is preserved; the actual submitters review the final cover before submission.
-- `prepare_template.py`: derives `templates/Presentation-Template.docx` using python-docx. It keeps the CCT page portrait, adds a 16:9 landscape body section and labels the appended pages as a structure draft. It does not generate presentation content.
-- `inputs/`: prepared problem/alternative and prototype/evaluation text plus `verified-sources.md`, which contains the selected checked Harvard sources and claim/access limits. `../legal-ethical-note.md` supplies the academic legal/ethical analysis. These are inputs for final page assembly, not evidence that a final PDF exists.
-- `assets/`: editable figure sources; `images/`: rendered figures for YAML.
-- `output/Heaven-Access-Presentation-Structure.docx`: generated structural preview, opened in Microsoft Word. Do not upload this draft as the final PDF.
+- `output/Heaven-Access-Presentation.pdf`: current presentation for review/submission, subject to the final review gates in #37.
+- `output/Heaven-Access-Presentation.docx`: editable generated document, automatically opened in Microsoft Word after export.
+- `content.yaml`: English content, alphabetically ordered cover names with matching student numbers, styles, figures, citations and bibliography. Both cover dates are `15/11/2026`, as requested, without a time.
+- `templates/CA Cover Sheet.docx`: the unchanged supplied CCT cover. `prepare_template.py` derives `templates/Presentation-Template.docx`, preserving the portrait cover and adding landscape presentation pages.
+- `finalize_docx.py`: targeted post-build pass for explicit external hyperlinks, page-break/figure spacing and body-only numbering. docx_builder 0.11.0 emits plain body URLs and separate normal-sized page-break paragraphs; this pass makes links explicit and prevents unintended overflow/blank pages before Word export.
+- `assets/`: editable SVG illustrations, their Python authors and browser-renderable HTML. `images/`: portable PNG renders and sanitised UI captures used by YAML.
+- `inputs/`: prepared evidence, verified sources and implementation/evaluation facts. `../legal-ethical-note.md` contains the fuller academic analysis.
+- `output/Heaven-Access-Presentation-Structure.docx`: historical structural preview, retained for provenance. It is **not** the presentation to upload.
 
-From the repository root, using the existing global document tools:
+Presentation pages are explicitly numbered 1 / 12 through 12 / 12; the CCT assessment sheet is excluded. The body has twelve presentation pages after the separate CCT assessment sheet: title, agenda, introductory problem/proposal, research/evidence, alternatives, complete actor flow, actual prototype views, shared access decision/demo, responsibilities, evaluation/future needs, and two reference pages. The brief sets a twelve-minute live limit including the demo, not a fixed slide count. The agenda/intro introduce the existing narrative rather than creating extra speaking time.
+
+## Rebuild
+
+Use the agreed docx_builder 0.11.0 installation and Python with python-docx. No application/database startup is needed for document assembly. From the repository root:
 
 ```sh
 python3 docs/submission/prepare_template.py
 docx_builder validate docs/submission --strict
-docx_builder build docs/submission --no-finalize --open
+docx_builder build docs/submission --no-finalize
+python3 docs/submission/finalize_docx.py
+docx_builder export pdf docs/submission --open
 ```
 
-The CLI scaffold was initialized in a temporary directory and only its document-directory layout was reused here. No CLAUDE configuration or extra application scaffold was installed in this repository. The final layout is flat: `docs/submission/content.yaml`, rather than a nested report project.
+Run the finalisation pass after every build; rebuilding replaces the DOCX and its explicit links. PDF export requires macOS and Microsoft Word. On another machine, use its own paths and tools; #37 documents the pinned CLI/Python setup and export handoff. Preserve any Word-only edits before rebuilding. Edit the YAML/SVG sources rather than keeping competing versions.
 
-There is no report table of contents: the body is structured as eight presentation pages after the separate required CCT sheet. Existing v4 speaking slots/order remain unchanged. Visible content slots are authoring prompts, not finished analysis or a local task tracker; acceptance status stays in #37. Final text, figures, source checks, link behavior and page design still need the issue's review.
+The exporter passes a full PDF filename to Word in `~/Library/Caches/docx_builder/exports/` and moves the result afterwards. A fixed directory does not itself grant Word folder access: version 0.11.0 has no directory-authorisation/persistence step. File-specific macOS/Word prompts may still occur. This repository does not change the CLI or grant permissions on behalf of the user.
 
-Before regenerating an open document, preserve Word edits and close that generated copy; edit the YAML rather than keeping competing Word-only content. Rebuilding replaces the output file. Native Word automation may be used to inspect pagination; docx_builder itself uses Word automation when exporting PDF.
+Inspect the actual exported PDF for page count and layout. The CLI's Spotlight-based count can lag; for example, `pdfinfo output.pdf` reports the file itself. Do not trust cached DOCX page metadata. Check final links as actual PDF annotations, not merely visible text.
 
-When final content and layout have been reviewed, replace the draft markers/filename and export with the CLI, for example:
+## Visual and source provenance
 
-```sh
-docx_builder build docs/submission --output output/Heaven-Access-Presentation.docx --pdf --open
-```
+`problem-story`, `solution-options`, `demo-architecture`, `responsibility-cards`, `evaluation-story`, `presentation-route` and `problem-proposal-introduction` are project-authored explanatory illustrations, not screenshots or drawings of an audited building. `actor-flow` is the complete implemented actor/responsibility flow on one page. The diagram named `demo-architecture` now explains actors, central validation and shared results; stack names remain supporting Q&A material.
 
-The explicit final-file gate in #37 requires **no Draft label or equivalent unfinished marker anywhere in the final DOCX/PDF**. Inspect body/cover, headers/footers, fields, comments/revisions and metadata, and remove authoring prompts from the YAML and template helper before rebuilding. Check the real exported files; a source edit alone does not prove the final artifact is clean.
+The SVG/HTML/PNG assets are portable and sufficient to rebuild the document. Regenerating the illustration author scripts additionally uses Pillow and an installed Arial font; their current font path is macOS-specific. SVGs can instead be edited directly on another machine. The flow author uses Python's standard library. Render HTML through a separate headless Chrome/CDP profile at 1600x650, or 1600x720 for the actor flow; capture the whole fixed-size page without browser chrome. Preserve unrelated browser instances.
 
-That command is for the reviewed final source, not an assertion that the current placeholders are ready. Check every rendered PDF page, CCT/team cover details, actual public prototype hyperlink/access instructions and Harvard references before handing the artifact to #13 for Moodle submission. The 0.11.0 body URL rendering must be inspected; plain URL text alone does not prove an explicit clickable hyperlink.
+`reception-approved.png`, `visitor-pass-sanitized.png` and `gate-granted.png` are actual hosted UI captures from 15 November 2026, composed into `prototype-screens.png`. They use fictional Alex Demo details. The private pass QR is intentionally covered before publication; raw private pass images/URLs are not repository artifacts. The gate result was triggered using the existing server validation API, not a physical-camera test. The capture visit was subsequently revoked and the shared device observed locked with its clock revision unchanged. The original private captures remain transient outside the repository.
 
-## Cover provenance
+Only ten sources from the larger verified source pack are cited. The final presentation's four undated Data Protection Commission entries have alphabetical title suffixes: n.d.-a = DPIA (S08), n.d.-b = Data Security (S07), n.d.-c = Lawful processing (S05), n.d.-d = Transparency (S06). These differ from the six-entry input register's suffixes; follow each document's matching bibliography. S09, S10 and optional S13 are not copied into the presentation.
+
+The source register records actual reading and access limits. The final ACM link was re-tested headlessly and encountered Cloudflare; its content had been read earlier that day in visible Chrome. An embedded valid hyperlink cannot guarantee that the publisher will allow automated access. The remaining selected sources and public prototype link were revisited during final-file review. Do not describe a blocked request as a successful fresh read.
+
+## Cover provenance and final review
 
 Supplied source: `/Users/lipex360/www/cct/second_semester/virtualisation/ca2/report/templates/CA Cover Sheet.docx`.
 
 Original/copy SHA-256: `e2ff81a5ab78bdd074967d33f7b128750cb6de6f5bf224f5f90874c054d4fd15`.
 
-The copied original is portable with the repository. The source in the other project is never overwritten. The derived presentation template is rebuildable from this copy; only its value-cell styling and appended presentation section differ. The supplied declaration is not rewritten or treated as an independently verified student attestation.
-
-The complete actor/responsibility flow must fit one dedicated, readable presentation page. Use a small set of genuine application screenshots with fictional data; distinguish real UI captures from planning diagrams. The brief has no fixed slide count, but the live presentation including demonstration is limited to twelve minutes.
+The external original and copied declaration are unchanged. The actual submitter must review the populated cover/declaration; a generated date is not evidence of Moodle upload. Final DOCX/PDF artifacts must contain no unfinished labels or authoring placeholders. Review actual rendered pages, headers/footers, metadata, fields, revisions/comments, team details, diagrams, captions, citations and hyperlinks. Live compliance, physical-camera validation, timing rehearsal and upload must not be inferred from a document build.
