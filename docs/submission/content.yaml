@@ -1,0 +1,99 @@
+# Structural draft for issue #37. Final content/review is tracked in GitHub.
+# Preserve the original cover; prepare_template.py creates this derived template.
+cover:
+  template: templates/Presentation-Template.docx
+  output: output/Heaven-Access-Presentation-Structure.docx
+  rows:
+    - Project Skills & Professionalism
+    - Developing and Defending an Innovative IT Solution - Presentation with Q&A
+    - Neil Doyle
+    - |-
+      Daniela Alves Paiva da Silva
+      Felipe Borges Bambirra
+      Isabella Maria de Souza Monteiro
+      Marcia Cristina Schafer dos Santos
+    - |-
+      2026048
+      2026033
+      2026072
+      2026005
+    - "15/11/2026"
+    - "15/11/2026"
+
+# Presentation pages do not need a report table of contents.
+page_numbers: false
+styles:
+  h1: {font_family: Arial, font_size: 28pt, color: "#163B50", space_before: 8pt, space_after: 16pt}
+  h2: {font_family: Arial, font_size: 20pt, color: "#28665C", space_after: 12pt}
+  body: {font_family: Arial, font_size: 18pt, space_after: 14pt}
+  bullet: {font_family: Arial, font_size: 17pt, space_after: 12pt, indent_left: 0.2in}
+  reference: {font_family: Arial, font_size: 12pt, space_after: 8pt}
+
+sections:
+  # Page 1 of the presentation. The supplied CCT sheet is a separate first page.
+  - call: h1
+    text: Heaven Access
+  - call: h2
+    text: Visitor authorization for commercial office buildings
+  - call: body
+    text: Structure draft for a presentation with a live prototype. Content, figures and references are not yet finalized.
+  - call: body
+    text: "Daniela Alves Paiva da Silva (2026048) | Felipe Borges Bambirra (2026033) | Isabella Maria de Souza Monteiro (2026072) | Marcia Cristina Schafer dos Santos (2026005)"
+
+  - call: page_break
+  - call: h1
+    text: The problem and its evidence
+  - call: h2
+    text: Dani | 00:00 to 02:30, including the cover
+  - call: body
+    text: Content slot for the supported office-access challenge, reported security experience and selected incident evidence, with Harvard citations.
+  - call: bullet
+    text: Explain investigation method, root-cause hypothesis, affected stakeholders and the limits of known scale.
+
+  - call: page_break
+  - call: h1
+    text: Developing and comparing the solution
+  - call: h2
+    text: Cris | 02:30 to 05:00, including the flow
+  - call: body
+    text: Content slot for the actual discussion/sketch, considered alternatives, viability and the elevator-interface versus turnstile trade-off.
+
+  - call: page_break
+  - call: h1
+    text: The visitor journey
+  - call: body
+    text: Public request, staff approval, private QR, dedicated camera reader and shared gate/elevator display.
+  - call: body
+    text: Figure slot for the reviewed flow or wireframes. Preserve revocation, assistance and temporary-visitor boundaries.
+
+  - call: page_break
+  - call: h1
+    text: Working prototype
+  - call: h2
+    text: Felipe | 05:00 to 08:30
+  - call: body
+    text: "Prototype: https://heaven-access.vercel.app"
+  - call: body
+    text: Content slot for the temporary-visitor live demo, eight-second opening, one refusal and separate access counts. Add reviewed access instructions and a working hyperlink.
+
+  - call: page_break
+  - call: h1
+    text: Professional responsibilities
+  - call: h2
+    text: Bella | 08:30 to 11:00, including evaluation and closing
+  - call: body
+    text: Content slot for source-backed legal and ethical analysis, notice acknowledgement, minimum data, live-deployment requirements, accessibility and professional practice.
+
+  - call: page_break
+  - call: h1
+    text: Evaluation, viability and future scope
+  - call: body
+    text: Content slot for actual test evidence, residual risks, sustainability trade-offs and Bella's recurring-occupant question.
+  - call: bullet
+    text: Employee recurring credentials, cross-unit blocking and biometrics remain unimplemented future options.
+
+  - call: page_break
+  - call: h1
+    text: References
+  - call: body
+    text: Bibliography slot for the verified sources cited in the final presentation. Use Harvard referencing and actual access dates.

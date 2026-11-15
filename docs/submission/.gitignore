@@ -1,0 +1,3 @@
+# Word lock files and Python bytecode are local, not deliverables.
+~$*.docx
+__pycache__/
