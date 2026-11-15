@@ -118,6 +118,8 @@ Use the configured user/database names if different. The migration is transactio
 
 ## Verification
 
+The maintained [browser integration suite](browser-tests.md) runs with `npm run test:browser` after configuring a dedicated `web-view` Chrome instance. It uses explicit assertions and scoped cleanup to exercise UI approval/revocation, visitor polling, the real QR decoder with synthetic video and the separate display. Physical camera permission/scan remains a separate check.
+
 ```sh
 npm test
 # With the local database initialized and the app running:
