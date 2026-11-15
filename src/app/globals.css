@@ -232,3 +232,27 @@ small {
   height: auto;
   background: white;
 }
+.danger-button {
+  background: #991b1b;
+}
+.reader-page {
+  max-width: 36rem;
+  padding-block: 1.25rem;
+}
+.reader-page h1 {
+  font-size: 1.5rem;
+  margin-block: 0.5rem 1rem;
+}
+.reader-status {
+  text-align: center;
+}
+.reader-status h2 {
+  font-size: clamp(1.5rem, 6vw, 2rem);
+}
+.reader-page .panel {
+  padding: 1rem;
+}
+.reader-page video {
+  max-height: 38svh;
+  object-fit: contain;
+}

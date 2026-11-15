@@ -2,8 +2,14 @@ import { Temporal } from "@js-temporal/polyfill";
 
 export const VISIT_TIME_ZONE = "Europe/Dublin";
 export const VISIT_MARGIN_MS = 30 * 60 * 1000;
-export type Decision = "pending" | "approved" | "rejected";
-export type VisitState = "pending" | "rejected" | "approved_early" | "approved_valid" | "expired";
+export type Decision = "pending" | "approved" | "rejected" | "revoked";
+export type VisitState =
+  | "pending"
+  | "rejected"
+  | "revoked"
+  | "approved_early"
+  | "approved_valid"
+  | "expired";
 
 export function parseVisitTime(localDateTime: string): Date {
   // Only a local date/time; never accept a client-supplied offset or zone.
@@ -29,6 +35,7 @@ export function visitWindow(scheduledAt: Date) {
 
 export function visitState(decision: Decision, scheduledAt: Date, effectiveNow: Date): VisitState {
   if (decision === "rejected") return "rejected";
+  if (decision === "revoked") return "revoked";
   const { validFrom, validUntil } = visitWindow(scheduledAt);
   if (effectiveNow > validUntil) return "expired";
   if (decision === "pending") return "pending";

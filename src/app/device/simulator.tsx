@@ -80,6 +80,7 @@ export function DeviceSimulator() {
         <p role="alert">{error.message} New access is paused until the connection recovers.</p>
       )}
       <GateStatus snapshot={data} />
+      <a href="/device/reader">Open the dedicated QR reader on a camera phone</a>
       <a href="/device/display" target="_blank" rel="noreferrer">
         Open gate display on another screen
       </a>

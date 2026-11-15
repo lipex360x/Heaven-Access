@@ -9,11 +9,13 @@ export function QrCamera({
   revision,
   disabled,
   onCode,
+  compact = false,
 }: {
   locked: boolean;
   revision: number;
   disabled: boolean;
   onCode: (code: string) => Promise<void>;
+  compact?: boolean;
 }) {
   const video = useRef<HTMLVideoElement>(null);
   const stream = useRef<MediaStream | null>(null);
@@ -81,11 +83,20 @@ export function QrCamera({
   }, []);
   return (
     <section className="panel stack" aria-label="QR camera">
-      <h2>Scan visitor QR</h2>
-      <p>
-        Camera images are processed locally and are not recorded or uploaded. Remove the QR from
-        view before presenting it again.
-      </p>
+      {compact ? (
+        <small>
+          Camera processing stays on this phone; no recording or upload. Remove the QR before
+          scanning again.
+        </small>
+      ) : (
+        <>
+          <h2>Scan visitor QR</h2>
+          <p>
+            Camera images are processed locally and are not recorded or uploaded. Remove the QR from
+            view before presenting it again.
+          </p>
+        </>
+      )}
       <video ref={video} muted playsInline aria-label="Live camera preview" hidden={!active} />
       {error && <p role="alert">{error} Ask reception for assisted access.</p>}
       <div className="actions">

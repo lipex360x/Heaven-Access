@@ -7,6 +7,7 @@ export default function Home() {
       <nav className="panel stack" aria-label="Heaven Access interfaces">
         <a href="/register">Request a visit</a>
         <a href="/staff">Reception · review visits</a>
+        <a href="/device/reader">Dedicated QR camera reader</a>
         <a href="/device">Camera reader and demonstration controls</a>
         <a href="/device/display">Gate / elevator display</a>
       </nav>

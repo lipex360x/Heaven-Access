@@ -18,6 +18,7 @@ type Visit = {
 const LABELS: Record<VisitState, string> = {
   pending: "Awaiting approval",
   rejected: "Visit not approved",
+  revoked: "Access revoked",
   approved_early: "Approved · not valid yet",
   approved_valid: "Approved · ready for access",
   expired: "Pass expired",
@@ -115,7 +116,7 @@ function AuthorizedPass({ capability }: { capability: string }) {
       {visit.state === "approved_early" && (
         <p>Your pass becomes usable when the access window starts.</p>
       )}
-      {(visit.state === "expired" || visit.state === "rejected") && (
+      {(visit.state === "expired" || visit.state === "rejected" || visit.state === "revoked") && (
         <p>
           A new request and approval are required. <a href="/register">Request a new visit</a> or
           contact reception.

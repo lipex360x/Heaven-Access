@@ -136,7 +136,8 @@ export async function accessDevice(
       scheduled_at: Date;
       destination_id: number;
     }>(
-      `SELECT id, decision, scheduled_at, destination_id FROM visits WHERE ${method === "qr" ? "qr_secret" : "id"} = $1 FOR UPDATE`,
+      `SELECT id, CASE WHEN revoked_at IS NOT NULL THEN 'revoked' ELSE decision END AS decision,
+       scheduled_at, destination_id FROM visits WHERE ${method === "qr" ? "qr_secret" : "id"} = $1 FOR UPDATE`,
       [method === "qr" ? qrPayload : visitId],
     );
     const visit = found.rows[0];
@@ -147,6 +148,7 @@ export async function accessDevice(
     // Re-sample after a possible visit-lock wait; use real time for the opening/audit.
     const current = await readDevice(client);
     if (method === "qr") {
+      if (visit.decision === "revoked") return finish("revoked", current);
       if (visit.decision !== "approved") return finish("not_approved", current);
       const state = visitState(visit.decision, visit.scheduled_at, new Date(current.effectiveNow));
       if (state === "expired") return finish("expired", current);

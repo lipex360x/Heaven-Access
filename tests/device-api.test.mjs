@@ -85,6 +85,10 @@ test("atomic device access, manual override and advancing demo scenarios", async
       assert.equal((await req("/api/device")).response.status, 401);
       assert.equal((await req("/api/device/scan", {})).response.status, 401);
       assert.equal((await req("/api/device/manual-release", {})).response.status, 401);
+      assert.equal(
+        (await req(`/api/staff/visits/${randomUUID()}/revoke`, {})).response.status,
+        401,
+      );
       assert.equal((await req("/api/demo/settings", {}, "PATCH")).response.status, 401);
       const login = await req("/api/staff/login", {
         username: fixture,
@@ -261,6 +265,81 @@ test("atomic device access, manual override and advancing demo scenarios", async
         assert.equal(event.reason, action.reason);
         assert.equal(event.destination_id, 2);
         assert.ok(Math.abs(Date.now() - event.occurred_at.getTime()) < 10000);
+      },
+    );
+    await t.test(
+      "revocation blocks saved QR images and preserves approval, audit and opening history",
+      async () => {
+        await settings({ effectiveLocal: "2026-11-13T12:00", destinationId: 1 });
+        const visit = await create("revocation");
+        const path = `/api/staff/visits/${visit.id}/revoke`;
+        assert.equal(
+          (await req(path, {})).response.status,
+          409,
+          "Pending visits cannot be revoked",
+        );
+        assert.equal(
+          (await req(path, {}, "POST", { Origin: "https://unrelated.example" })).response.status,
+          403,
+        );
+        await approve(visit);
+        const savedQr = (await own(visit)).qrPayload;
+        const before = (await db.query("SELECT * FROM visits WHERE id=$1", [visit.id])).rows[0];
+        const granted = await scan(savedQr);
+        assert.equal(granted.data.code, "granted");
+        assert.equal((await req(path, {})).data.decision, "revoked");
+        assert.equal(
+          (await device()).unlockedUntil,
+          granted.data.device.unlockedUntil,
+          "Revocation must not interrupt an opening already granted",
+        );
+        const revoked = (await db.query("SELECT * FROM visits WHERE id=$1", [visit.id])).rows[0];
+        assert.equal(revoked.decision, "approved", "Original approval is retained");
+        assert.equal(revoked.decision_by, before.decision_by);
+        assert.equal(revoked.decided_at.toISOString(), before.decided_at.toISOString());
+        assert.equal(revoked.revoked_by, staffId);
+        assert.ok(Math.abs(Date.now() - revoked.revoked_at.getTime()) < 5000);
+        await req(path, {});
+        const repeated = (await db.query("SELECT revoked_at FROM visits WHERE id=$1", [visit.id]))
+          .rows[0];
+        assert.equal(repeated.revoked_at.toISOString(), revoked.revoked_at.toISOString());
+        const pass = await own(visit);
+        assert.equal(pass.state, "revoked");
+        assert.equal(pass.qrPayload, undefined);
+        assert.equal((await approve(visit)).response.status, 409);
+        while (Date.now() <= new Date(granted.data.device.unlockedUntil).getTime() + 30)
+          await delay(100);
+        assert.equal((await scan(savedQr)).data.code, "revoked");
+        assert.equal((await device()).state, "locked");
+        const summary = (await req("/api/staff/visits")).data.visits.find((x) => x.id === visit.id);
+        assert.equal(summary.decision, "revoked");
+        assert.equal(summary.revokedBy, staffId);
+        assert.equal(summary.revokedAt, revoked.revoked_at.toISOString());
+        assert.equal(summary.qrAccessCount, 1);
+        const manual = await req("/api/device/manual-release", {
+          visitId: visit.id,
+          reason: "Explicit assisted override after revocation",
+          expectedRevision: (await device()).revision,
+          requestId: randomUUID(),
+        });
+        assert.equal(manual.data.code, "granted");
+        assert.equal(
+          (await own(visit)).state,
+          "revoked",
+          "Manual override does not restore QR access",
+        );
+        await settings({ destinationId: 1 });
+        const raced = await create("revocation-race");
+        await approve(raced);
+        const racedQr = (await own(raced)).qrPayload;
+        const [read, revoke] = await Promise.all([
+          scan(racedQr),
+          req(`/api/staff/visits/${raced.id}/revoke`, {}),
+        ]);
+        assert.ok(["granted", "revoked"].includes(read.data.code));
+        assert.equal(revoke.response.status, 200);
+        await settings({ destinationId: 1 });
+        assert.equal((await scan(racedQr)).data.code, "revoked");
       },
     );
     await t.test(

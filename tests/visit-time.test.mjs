@@ -44,3 +44,10 @@ test("clock replay changes a derived state without changing the stored visit win
   assert.equal(visitState("approved", scheduled, scheduled), "approved_valid");
   assert.deepEqual(visitWindow(scheduled), bounds);
 });
+
+test("revocation persists before, inside and after the time window, including clock replay", () => {
+  const scheduled = new Date("2026-11-13T12:00:00Z");
+  for (const time of ["2026-11-13T11:00:00Z", "2026-11-13T12:00:00Z", "2026-11-13T13:00:00Z"]) {
+    assert.equal(visitState("revoked", scheduled, new Date(time)), "revoked");
+  }
+});

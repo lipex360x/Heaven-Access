@@ -14,6 +14,7 @@ export type AccessCode =
   | "already_unlocked"
   | "invalid_qr"
   | "not_approved"
+  | "revoked"
   | "too_early"
   | "expired"
   | "wrong_destination"
@@ -28,6 +29,7 @@ export const ACCESS_MESSAGES: Record<AccessCode, string> = {
   already_unlocked: "The gate is already open. No additional access was recorded.",
   invalid_qr: "This is not an available Heaven Access QR pass.",
   not_approved: "This visit is not approved.",
+  revoked: "Access has been revoked. Please contact reception.",
   too_early: "This visit's access window has not started.",
   expired: "This visit has expired. A new request and approval are required.",
   wrong_destination: "This pass does not authorize the selected destination.",
