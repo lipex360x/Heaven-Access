@@ -36,7 +36,7 @@ Import the demonstration notice constants from `src/domain/privacy.ts`. Show the
   "destinationId": 1,
   "scheduledLocal": "2026-11-13T12:00",
   "privacyAcknowledged": true,
-  "noticeVersion": "demo-2026-11-14"
+  "noticeVersion": "demo-2026-11-15"
 }
 ```
 
@@ -133,7 +133,7 @@ Run the two integration suites sequentially. Device checks exercise real HTTP/Po
 
 ## Registration and reception screens
 
-`/register` uses the seeded destinations and requires the initially unchecked acknowledgement. `/privacy` explains actual prototype processing; notice revision `demo-2026-11-14` replaces the earlier summary-only revision. This is a demonstration notice, not an approved live-service policy. Submission navigates to the returned private pass; no form drafts are saved. A failed/unknown submission outcome warns that a request may already exist and disables resubmission until reception can assist, rather than silently retrying and duplicating a visit.
+`/register` uses the seeded destinations and requires the initially unchecked acknowledgement. `/privacy` explains actual prototype processing; notice revision `demo-2026-11-15` adds the existing revocation actor/time, downloaded-QR refusal and retained-history behaviour. New submissions acknowledge this revision; existing records keep their original version. This is a demonstration notice, not an approved live-service policy. Submission navigates to the returned private pass; no form drafts are saved. A failed/unknown submission outcome warns that a request may already exist and disables resubmission until reception can assist, rather than silently retrying and duplicating a visit.
 
 `/staff` reuses the sign-in component and polls its session, latest 200 visits and current device sequentially. Cards show decision/time-derived state, destination/time, QR count and separate manual count. Pending, unexpired requests offer approve/reject. Assisted override requires a reason and confirmation showing the visit state and actual device destination; uncertain manual outcomes retain their exact request ID for retry. Expired/rejected/revoked visitor pages link back to a new request. A connection error pauses staff actions until server state recovers.
 

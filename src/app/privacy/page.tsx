@@ -20,17 +20,25 @@ export default function PrivacyPage() {
         </p>
         <h2>Who can access the information</h2>
         <p>
-          Authenticated demonstration staff can review visit details, approve or reject requests and
-          see separate QR/manual authorization counts. A manual release records its staff actor and
-          reason. Your private pass link grants access to your own visit only; keep it and its QR
-          private.
+          Authenticated demonstration staff can review visit details, approve or reject requests,
+          revoke approved passes and see separate QR/manual authorization counts. A manual release
+          records its staff actor and reason. Your private pass link grants access to your own visit
+          only; keep it and its QR private.
+        </p>
+        <h2>Revocation and retained history</h2>
+        <p>
+          When staff revoke an approved pass, we record the staff account and the real date and time
+          of revocation. The visitor page removes the QR, and future QR authorizations are refused,
+          including downloaded copies. The original approval and access history remain in the
+          database; revocation does not delete personal data. An opening already authorized finishes
+          normally. A separately authorized manual release does not restore the revoked QR.
         </p>
         <h2>Camera and device simulation</h2>
         <p>
           The reader processes camera frames locally to decode QR data. Camera footage is not
-          recorded or uploaded. The server validates the credential, destination and time.
-          Successful openings record an authorization event, not proof of physical passage or
-          current occupancy.
+          recorded or uploaded. The server checks the credential, approval or revocation,
+          destination and time. Successful openings record an authorization event, not proof of
+          physical passage or current occupancy.
         </p>
         <h2>Storage and demonstration limits</h2>
         <p>
