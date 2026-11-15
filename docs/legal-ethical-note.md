@@ -1,0 +1,40 @@
+# Heaven Access: legal, ethical and professional analysis
+
+Prepared on 15 November 2026 for the assessed presentation. Scope: the implemented temporary-visitor prototype and the responsibilities of a future live office-access operator. The analysis and source verification are self-reviewed; this is not a completed live-service notice, a DPIA or a compliance certification. Source IDs and full verified Harvard entries are in [the selected source register](submission/inputs/verified-sources.md), also reproduced in issue #37.
+
+## Analysis tied to the actual prototype
+
+| Issue in Heaven Access | Finding and proportionate recommendation | Evidence |
+| --- | --- | --- |
+| Purpose and minimum visitor data | The public form requests name, destination and scheduled time, plus acknowledgement/version/time. It requests no email, phone, identity document or facial template. Keep the purpose limited to handling the visit and explaining access decisions; a live operator should justify each field and avoid repurposing access logs for employee monitoring. | Implemented form/notice; S03, S07, S11 |
+| Legal basis and acknowledgement | The unchecked acknowledgement records that the notice was presented/accepted before submission. It does not supply an Article 6 basis. For a private office operator, assessing legitimate interests in proportionate visitor security is a candidate: identify the purpose, necessity and effects on visitors, then document the outcome. Do not assume consent or a specific statutory obligation automatically fits. | S03, S05, S10 |
+| Transparency and responsibility | The current /privacy page accurately describes a fictional-data demo. A real operator would need its identity/contact, actual basis, recipients, retention and applicable rights explained. Identify who determines processing purposes and review provider contracts/locations; the hosting region alone is not a transfer/compliance assessment. | S06, S09; current /privacy |
+| Retention and revocation | Current records have no automatic retention/deletion job. Revocation stops future QR openings and preserves approval/history; it does not erase personal data. A live retention period should follow the justified security/audit purpose, with deletion and review procedures. No 30-day legal rule or approved retention duration is claimed. | Current notice/revocation code; S03, S07 |
+| Access to records and QR sharing | Staff authentication, capability-scoped visitor links and server checks limit access. A copied QR remains usable until expiry/revocation within its permission; possession is not verified identity. The published shared demo account cannot identify which individual operated it. Live deployment would require appropriate individual accounts, access review and training. These are recommendations, not new completed features. | Auth/visitor/device code and tests; S07, S11 |
+| Camera and DPIA | Camera frames are decoded on the reader and not stored/uploaded. This is QR decoding, not facial recognition. Screen the actual live design for data-protection risk; a DPIA is required where processing is likely to create high risk. Neither a completed DPIA nor an automatic exemption is asserted. | QR camera code; S08 |
+| Assisted access and mistakes | An explicit reception override with reason/confirmation exists and is counted separately. This supports a practical human route after refusal or smartphone difficulty, but is not proof of an agreed anonymous-access procedure. A live operator should train staff to check errors and apply the route consistently. | Reception/manual-release implementation; S11 |
+| Entry safety and professional honesty | The gate/elevator is simulated. An unlock is authorisation, not verified passage or occupancy. A real checkpoint must preserve safe escape; no lift/fire-safety integration or evacuation register is demonstrated. ACM principles on harm, honesty and privacy support reporting these limits clearly. | S11, S12; implemented display/count semantics |
+
+## Basis and risk assessment for this proposal
+
+Our proposed security purpose is to connect a temporary visit approval with the correct destination/time at entry. Name, destination and time support that workflow; ID copies, face templates and extra contact fields are not necessary for the demonstrated process. The privacy cost is a record of intended visits and authorisations, with disclosure, incorrect refusal and misuse risks. Notice, restricted access, an assisted review route and purpose-limited retention would reduce those effects. This reasoning supports assessing legitimate interests for a private operator rather than treating the checkbox as consent; it does not approve a live basis before the operator, necessity and balancing outcome are established (S03, S05–S07, S10).
+
+For DPIA screening, the implemented prototype has no facial analysis, cross-building matching or recorded video. Its relevant risks are exposed visit records/QRs, inappropriate staff use and inaccurate access decisions. A real deployment's scale, monitoring, denial effects and safeguards still need a documented screening decision. The present limited fictional demo is not evidence of a blanket exemption for a later workplace service (S08).
+
+The GDPR and Ireland's Data Protection Act 2018 frame the live-deployment discussion (S03–S04). These findings describe concrete design implications, not a legal approval of this prototype. Its intended fictional-data use should not be presented as a blanket exemption if someone enters real personal information.
+
+## Viability, sustainability and future boundaries
+
+The demonstration reuses ordinary phones/tablet and simulates hardware. A real elevator connection depends on vendor capability; a suitable turnstile is an alternative requiring cost, installation and safety evaluation. We have no measured deployment cost or incident-reduction result. Reduced paper passes is a possible benefit to compare with hosting, device energy, hardware, maintenance and replacement; no net environmental saving has been measured.
+
+Bella raised recurring occupants. Employee credentials would need a separately designed recurring permission/review/revocation lifecycle, not a visitor pass with an unlimited expiry. Staff application login is not that credential. Cross-unit blocking and optional biometrics remain future scope; the implemented reader uses neither facial recognition nor AI, so the presentation should not describe it as such. S13 is an optional design reference for the visitor/employee distinction, not an implementation requirement.
+
+## Concise text for the responsibilities page
+
+We minimise visitor details and decode camera frames locally. Our notice checkbox acknowledges information; it does not establish a lawful basis. A live operator would need a justified processing basis, clear notice, retention/deletion and appropriate access controls. Revoking a pass blocks its QR but retains history. Reception offers an audited manual route; the shared demo account is not individual staff accountability. Any real checkpoint must preserve safe exit. The prototype is a simulation and does not demonstrate GDPR compliance, verified identity or occupancy (European Parliament and Council, 2016; Data Protection Commission, n.d.-e, n.d.-f, n.d.-c; ACM, 2018; HSA, n.d.).
+
+Use the full organisation names/consistent abbreviations and selected-source suffixes in the final bibliography. Keep DPIA/processor details for concise speaker explanation or Q&A if the page is too dense; do not add an unrelated legal programme to the presentation.
+
+## Readiness boundary
+
+The academic analysis and verified source set are prepared. Actual controller details, a live-service basis/retention decision, processor review, formal DPIA screening, final operating procedures and independent legal/peer review have not been completed. Those limits must remain visible in the presentation; they do not require adding application features to the assessed visitor MVP.

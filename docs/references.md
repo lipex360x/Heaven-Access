@@ -4,6 +4,10 @@ Research accessed on **6 November 2026**. This is an initial evidence register f
 
 [GitHub issues](https://github.com/lipex360x/Heaven-Access/issues) are the Source of Truth for research tasks, decisions and completion. This file stores evidence and bibliography material; verification work is tracked in the research issue.
 
+## Selected presentation sources checked on 15 November 2026
+
+Use [the selected source register](submission/inputs/verified-sources.md) and [the contextual legal/ethical note](legal-ethical-note.md) for the final PDF. That register records actual content checks, Harvard entries, supported claims and access limitations. The older leads below are historical research inputs, not an automatically verified final bibliography. Only sources actually used and checked belong in the final reference pages.
+
 ## Internal contribution and concept provenance
 
 Felipe confirmed that Dani (Daniela Alves Paiva da Silva) supplied the initial research-led project description: the comparison of turnstiles, QR visitor management, elevator authorization, AI cameras and process-only controls, and the suggested combination of a digital visitor pass with floor-specific elevator authorization. Credit Dani's contribution when explaining how the group developed the idea.
@@ -57,8 +61,8 @@ International evidence also demonstrates the limits of access credentials alone.
 - **Finding:** The DPC described appropriate laptop safeguards but physical-security concerns needing attention.
 - **Relevance:** An Irish primary source connecting physical and data security while showing the value of layered safeguards.
 - **Limit:** Historical, pre-GDPR case; not evidence that QR passes prevent forced entry. Fire exits must preserve safe egress.
-- **Reference:** Data Protection Commissioner (2012) *Annual Report 2011*, case study ‘Theft of Revenue Laptops’, p. 16. Available at: https://www.dataprotection.ie/sites/default/files/uploads/2018-12/AnnualReport2011.pdf (Accessed: 6 November 2026).
-- **Verification note:** Case text was surfaced in indexed PDF content. Confirm the report's publication year and page label against the PDF before final submission.
+- **Reference:** Data Protection Commissioner (2012) *Annual Report 2011*, case study ‘Theft of Revenue Laptops’, pp. 16–17. Available at: https://www.dataprotection.ie/sites/default/files/uploads/2018-12/AnnualReport2011.pdf (Accessed: 6 November 2026).
+- **Verification note (15 November 2026):** The official PDF and printed pp. 16–17 were read. The foreword is signed in April 2012, confirming 2012 as the publication year for the report covering 2011. The case concerns forced entry and encrypted equipment; it is not evidence of a visitor/elevator failure or a proven personal-data disclosure.
 
 ## International cases
 
