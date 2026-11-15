@@ -6,7 +6,7 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 
 OUT = Path(__file__).resolve().parent
-VERSION = 'Presentation briefing v5 • 15 November 2026'
+VERSION = 'Presentation briefing v6 • 15 November 2026'
 ISSUE = 'https://github.com/lipex360x/Heaven-Access/issues/13'
 SPEAKERS = {
 'Dani': ('Daniela Alves Paiva da Silva', '2026048', '00:00–02:30', 'Pages 1–4: title, agenda, problem/proposal and evidence'),
@@ -19,7 +19,7 @@ SCRIPT = {
 'Good morning. We are Daniela, Marcia Cristina, Felipe and Isabella. Our project is Heaven Access: a visitor-authorization proposal for commercial buildings containing offices.',
 'Our route is the challenge, the proposal, the live demonstration and the evaluation. In this office-building scenario, a visitor may reach a controlled floor without the visit being checked. We propose connecting reception approval to a destination/time check at the access point. The on-screen gate/elevator is a simulation.',
 'The idea came from my work in security, where I have experienced this type of access-control problem at more than one workplace. We used that experience to frame the question, then examined published cases. We are not presenting my experience as a statistical survey, and we are not identifying employers.',
-'The problem we investigate is a gap between arriving at a building and having a visit checked before reaching a controlled area. Visitors, office occupants, reception and security teams, and building management can all be affected. Our working root-cause hypothesis is that a visit request, staff approval and a physical access decision are not always reliably connected. We have not audited a particular building to prove that cause.',
+'Visitors need clear decisions and assistance. Reception and security need consistent permission checks and reliable records. Office occupants need appropriate visitor access, while building management must consider safety and operations. Our root-cause hypothesis is a gap between visit approval and checkpoint validation. These stakeholder needs are our design analysis, not interview findings or a site audit.',
 'One relevant case involved people following employees through card-controlled doors at RBS premises in Edinburgh. Security interrupted the attempted theft. This demonstrates a real workplace access problem, and also shows that a credential does not stop someone following an authorized person. An Irish DPC report separately describes stolen office laptops after forced entry; that illustrates consequences beyond our direct protection.',
 'We do not know how common these incidents are across office buildings. Our aim is narrower: demonstrate a clearer connection between an approved visit, its destination, its time window and an access decision.',
 'Cris will now explain how our group developed the proposal and compared the alternatives.'
@@ -45,16 +45,17 @@ SCRIPT = {
 'Reception can make an explicit assisted manual release with a reason and confirmation. It is counted separately and does not approve or renew a visit. This does not promise anonymous entry. Professional responsibility includes protecting privacy, avoiding harm and honestly describing limitations, as reflected in the ACM Code of Ethics.',
 'Local and hosted tests verified forms, pass updates, expiry and revocation refusal, repeated-request protection and separate access counts. A maintained browser test used synthetic video for decoding, synchronized opening and saved-QR refusal. Felipe reports successful online tests; the new reader’s physical camera check remains separate. These results do not measure real incident reduction.',
 'Possible savings in paper or disposable passes must be weighed against devices, hosting, installation and maintenance. We have no measured environmental saving or verified deployment cost.',
-'One point I raised is access for employees and other regular occupants. Our prototype covers temporary visitors; recurring credentials with destination and schedule rules would be future work. They must remain revocable. Tailgating, shared codes and other routes remain risks. Our references are shown here; thank you.'
+'A further design question for our proposal is access for employees and other regular occupants. Our prototype covers temporary visitors; recurring credentials with destination and schedule rules would be future work. They must remain revocable. Tailgating, shared codes and other routes remain risks. Our references are shown here; thank you.'
 ],
 }
 CUES = {
 'Dani': [('00:00–00:10','Page 1: title; names are visible, avoid reading the full table.'),('00:10–00:20','Page 2: agenda in one sentence.'),('00:20–00:45','Page 3: setting, problem and proposed solution.'),('00:45–01:15','Page 4: professional experience and method.'),('01:15–02:10','Main case, stakeholders and root-cause hypothesis.'),('02:10–02:30','Scale/scope limit and handoff to Cris.')],
 'Cris': [('02:30–03:15','Actual discussion/sketch and alternatives.'),('03:15–04:00','Why this combination; integration contingency.'),('04:00–04:45','Four screens and accepted visit rules.'),('04:45–05:00','Single-building scope and handoff to Felipe.')],
 'Felipe': [('05:00–05:25','Pages 7–8: central validation in plain language; stack only if asked.'),('05:25–06:15','Request, pending state, approval and QR.'),('06:15–07:15','Actual camera scan, unlock and access count.'),('07:15–08:10','Confirmed revocation/refusal, or rehearsed expiry; optional manual branch.'),('08:10–08:30','Simulation boundary and handoff to Bella.')],
-'Bella': [('08:30–09:30','Privacy interaction and live-deployment obligations.'),('09:30–10:00','Accessibility and professional responsibility.'),('10:00–10:35','Recorded test findings, viability/sustainability limits.'),('10:35–11:00','Visitor-only boundary, Bella’s recurring-access question and references.')],
+'Bella': [('08:30–09:30','Privacy interaction and live-deployment obligations.'),('09:30–10:00','Accessibility and professional responsibility.'),('10:00–10:35','Recorded test findings, viability/sustainability limits.'),('10:35–11:00','Visitor-only boundary, recurring-occupant needs and references.')],
 }
 QA = [
+('Who are the key stakeholders?', 'Visitors need clear decisions and assistance; reception/security need consistent checks and records; occupants need appropriate visitor access; management needs safe, viable operation. These needs are design analysis, not survey findings.'),
 ('What does Heaven Access solve?', 'It connects a requested visit, staff approval, destination and time window to a server-side access decision. It does not establish that every unauthorized entry is prevented.'),
 ('How did you investigate the problem?', 'Dani supplied professional experience; the group discussed/sketched options and used published cases. There was no formal interview study, site audit or representative incident survey.'),
 ('What is original about the proposal?', 'The group applies established visitor-pass and access-control ideas to this office-building scenario. The value to evaluate is the integrated workflow, not an invented claim that QR access is new.'),
@@ -143,7 +144,8 @@ def build(who):
     text(d,'Each member prepares these answers, including topics outside their speaking slot. Give a direct answer, then one reason or limitation. If evidence is missing, say what would need investigation.')
     for q,a in QA:
         p=text(d,q); p.runs[0].bold=True
-        text(d,a)
+        p.paragraph_format.space_after=Pt(3)
+        answer=text(d,a); answer.paragraph_format.space_after=Pt(3)
     d.add_page_break()
     text(d,'Synchronization and evidence','Heading 1')
     text(d,'Working slide and handoff map','Heading 2')
@@ -153,7 +155,7 @@ def build(who):
     text(d,'Delivery and recovery — no video','Heading 2')
     text(d,'Use https://heaven-access.vercel.app in the presentation PDF and for the live demo on Vercel + Neon. Keep a prepared local build/database as backup. If the camera fails, state that limitation and, if useful, show an explicit manual override without calling it a QR success. If the network fails, use the local build. Do not substitute a recording or pretend a failed step succeeded.')
     text(d,'Before the final rehearsal','Heading 2')
-    text(d,'Use the numbered PDF in docs/submission/output/Heaven-Access-Presentation.pdf and the verified public URL. These four v5 briefings share its page map; recheck issue #11 evidence before rehearsal. Read the adjacent speakers’ handoffs and rehearse with a timer. Bella briefly covers her recurring-occupant question as future work; do not add employee enrollment, biometrics or cross-building functions to the MVP. Live date, attendance and delivery confirmation remain in issue #13.')
+    text(d,'Use the numbered PDF in docs/submission/output/Heaven-Access-Presentation.pdf and the verified public URL. These four v6 briefings share its page map; recheck issue #11 evidence before rehearsal. Read the adjacent speakers’ handoffs and rehearse with a timer. Bella briefly presents recurring-occupant needs as a group design question; do not add employee enrollment, biometrics or cross-building functions to the MVP. Live date, attendance and delivery confirmation remain in issue #13.')
     text(d,'Evidence and references','Heading 2')
     text(d,'Third-party material needs Harvard citations on the relevant slide and a bibliography. These compact source notes are reading pointers, not a substitute for the final bibliography. Sources checked 15 November 2026; the DPC annual report was published in 2012. The presentation’s selected Harvard entries and undated suffixes are authoritative for its citations.')
     for label,url in SOURCES: link(d,label,url)

@@ -35,10 +35,9 @@ def label(a,x,y,n,title,detail,w=470,h=160):
 
 # Dani: observable failure vs the narrower claim our prototype can test.
 a=Art('problem-story')
-a.text(20,42,'A visit must be connected to a permission at the checkpoint.',35,bold=True)
-for x,t,b in [(20,'VISITOR','Arrives at an office building'),(555,'RECEPTION','Reviews the intended visit'),(1090,'ACCESS POINT','Checks destination and time')]:
- a.rect(x,85,490,140);a.text(x+24,128,t,24,GREEN,True);a.text(x+24,174,b,29,w=442)
-a.arrow(513,155,550,155,True);a.arrow(1048,155,1085,155,True)
+a.text(20,42,'Stakeholders: who is affected and what they need',35,bold=True)
+for x,title,need in [(20,'VISITORS','Clear decisions and assisted access.'),(420,'RECEPTION / SECURITY','Controlled decisions and reliable records.'),(820,'OFFICE OCCUPANTS','Appropriate access for expected visitors.'),(1220,'BUILDING MANAGEMENT','Safe operation and viable controls.')]:
+ a.rect(x,85,360,150);a.text(x+20,125,title,23,GREEN,True);a.text(x+20,172,need,28,w=320)
 a.rect(20,260,760,245,'#163B50');a.text(44,305,'REAL-WORLD SIGNAL',24,'#B9DDD1',True)
 a.text(44,350,'RBS workplace tailgating',34,'white',True)
 a.text(44,400,'People followed authorised staff inside. Security interrupted an attempted bicycle theft.',30,'white',w=710)
@@ -46,7 +45,7 @@ a.rect(810,260,770,245);a.text(834,305,'WHAT THIS DOES NOT PROVE',24,GREEN,True)
 a.text(834,350,'A QR does not stop a follower.',34,bold=True)
 a.text(834,400,'Our hypothesis is the approval-to-validation gap. We did not audit a building or measure prevalence.',30,w=718)
 a.text(20,554,'Investigation: Dani’s reported experience → desk research → discussion and sketch.',29,GREEN,True)
-a.text(20,604,'Affected: visitors • reception/security • occupants • building management',28)
+a.text(20,604,'These needs are our design analysis, not interview findings. Incident prevalence is unknown.',27)
 a.save()
 # Cris: actual creative process, qualitative comparisons and hardware contingency.
 a=Art('solution-options')
@@ -82,7 +81,7 @@ for x,title,feature,obligation in [
  a.text(x+26,335,'BEFORE LIVE USE',22,GREEN,True);a.text(x+26,380,obligation,29,w=438)
 a.rect(20,570,1560,64,'#FFF0D8');a.text(44,612,'A working simulation is not proof of GDPR compliance, identity, occupancy or hardware safety.',28,bold=True)
 a.save()
-# Bella: evaluation facts, balanced sustainability and her recurring-occupant question.
+# Evaluation facts, balanced sustainability and recurring-occupant needs.
 a=Art('evaluation-story')
 a.rect(20,15,760,260);a.text(44,60,'VERIFIED WORKFLOW',25,GREEN,True)
 a.text(44,110,'Approve • open / relock • revoke • refuse',31,bold=True,w=710)
@@ -95,7 +94,7 @@ a.rect(20,310,760,315);a.text(44,355,'SUSTAINABILITY IS A TRADE-OFF',25,GREEN,Tr
 a.text(44,405,'Potential: fewer paper passes.',31,bold=True)
 a.text(44,457,'Balance against devices, hosting, installation, maintenance and replacement.',29,w=710)
 a.text(44,576,'No net environmental saving measured.',27,GREEN,True)
-a.rect(810,310,770,315);a.text(834,355,'BELLA’S QUESTION',25,GREEN,True)
+a.rect(810,310,770,315);a.text(834,355,'FUTURE ACCESS NEEDS',25,GREEN,True)
 a.text(834,405,'What about regular occupants?',34,bold=True,w=718)
 a.text(834,458,'Future recurring permissions: destinations + schedules + review + revocation.',29,w=718)
 a.text(834,576,'Not an unlimited visitor QR; not implemented.',27,GREEN,True)

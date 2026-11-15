@@ -138,8 +138,8 @@ sections:
 - call: figure
   filename: problem-story.png
   label: Figure 1
-  caption: 'Reported workplace tailgating: The Newsroom (2018). Project hypothesis and method; no prevalence or
-    site audit claimed.'
+  caption: 'Stakeholder needs are project analysis. Reported workplace tailgating: The Newsroom (2018). No prevalence
+    study or site audit is claimed.'
   width: 11.6in
 - call: body
   text: 'Irish context: ten encrypted Revenue laptops were stolen after forced entry, then recovered. This illustrates
@@ -230,8 +230,8 @@ sections:
 - call: figure
   filename: evaluation-story.png
   label: Figure 7
-  caption: 'Test evidence: project issue #11, 15 November 2026. Regular-occupant needs were raised by Bella; the
-    recurring-credential lifecycle is a proposal.'
+  caption: 'Test evidence: project issue #11, 15 November 2026. Recurring credentials are a future group design
+    question; the prototype covers temporary visitors.'
   width: 11.6in
 - call: body
   text: The implemented scope is temporary visitors in one building. Cross-unit blocking and biometrics are also
