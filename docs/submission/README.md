@@ -31,6 +31,8 @@ When final content and layout have been reviewed, replace the draft markers/file
 docx_builder build docs/submission --output output/Heaven-Access-Presentation.docx --pdf --open
 ```
 
+The explicit final-file gate in #37 requires **no Draft label or equivalent unfinished marker anywhere in the final DOCX/PDF**. Inspect body/cover, headers/footers, fields, comments/revisions and metadata, and remove authoring prompts from the YAML and template helper before rebuilding. Check the real exported files; a source edit alone does not prove the final artifact is clean.
+
 That command is for the reviewed final source, not an assertion that the current placeholders are ready. Check every rendered PDF page, CCT/team cover details, actual public prototype hyperlink/access instructions and Harvard references before handing the artifact to #13 for Moodle submission. The 0.11.0 body URL rendering must be inspected; plain URL text alone does not prove an explicit clickable hyperlink.
 
 ## Cover provenance
