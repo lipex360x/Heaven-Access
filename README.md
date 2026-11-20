@@ -8,6 +8,13 @@ The implemented workflow is for temporary visitors. Recurring employee/occupant 
 
 Online prototype: **https://heaven-access.vercel.app**. Use fictional visitor details only. The hosted application uses Vercel and Neon PostgreSQL; local Docker data is separate.
 
+## Reception demo access
+
+Sign in at [/staff](https://heaven-access.vercel.app/staff) with the synthetic demonstration account:
+
+- **Username:** `reception`
+- **Password:** `HeavenDemo-2026!`
+
 ## Current status
 
 The public request form, authenticated reception screen, mobile visitor pass and camera/device simulator are implemented against the shared server API and PostgreSQL. Reception can approve/reject, revoke an approved pass and explicitly release access manually, with QR/manual counts kept separate. Architecture and core visitor rules are defined in the accepted contract; the [API handoff](docs/api.md) describes the endpoints. Consult issues #5/#9/#11 for verification evidence and remaining delivery checks.
